@@ -26,6 +26,7 @@ public:
     void setIndex(int index);
     void setVideoNo(int index);
     void setFormatNo(int no);
+    void setProxyMode(bool p){ _proxyMode = p;}
     void setVideoFormat(QStringList videoformat);
     void setWID(WId wid){_xwinid = wid;}
     void setConnectionPriority(int connectionType);

@@ -97,7 +97,7 @@ void HeartBeat::alive(QString ip, int ID)
         }else{
             // Enter alive loop
             //qDebug()<<"HeartBeat::AliveLoop started ("<<boat->name()<<", "<<ip<<")";
-            heartBeatTimer->stop();
+            //heartBeatTimer->stop();
             checkAliveTimer->start(2000);
             isHearBeatLoop = false;
             boat->connect(primary);
