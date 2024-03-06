@@ -75,8 +75,6 @@ void VideoItem::setBoatID(int ID)
         _requestFormat = true;
         emit requestFormat(this);
     }
-
-
 }
 
 void VideoItem::setIndex(int index)
