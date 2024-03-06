@@ -5,8 +5,11 @@
 #include <QCoreApplication>
 #include <QSettings>
 #include <QHostAddress>
-
+#ifdef DNAPI_QML
+#include "videoitem_qml.h"
+#else
 #include "videoitem.h"
+#endif
 
 class GPBCore;
 
