@@ -5,7 +5,7 @@
 #include "boatmanager.h"
 #include "networkmanager.h"
 #include "heartbeat.h"
-#include "dnvideomanager.h"
+#include "videomanager.h"
 #include "sensormanager.h"
 #include "configmanager.h"
 #include "dnqmlglobal.h"

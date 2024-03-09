@@ -1,4 +1,4 @@
-﻿#include "dnvideomanager.h"
+﻿#include "videomanager.h"
 #include "gpbcore.h"
 #include "QTypes.h"
 #include <QQmlEngine>

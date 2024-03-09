@@ -1,5 +1,5 @@
-﻿#ifndef DNVIDEOMANAGER_H
-#define DNVIDEOMANAGER_H
+﻿#ifndef VIDEOMANAGER_H
+#define VIDEOMANAGER_H
 
 #include <QObject>
 #include <QCoreApplication>
@@ -41,4 +41,4 @@ private:
     GPBCore* _core;
 };
 
-#endif // DNVIDEOMANAGER_H
+#endif // VIDEOMANAGER_H
