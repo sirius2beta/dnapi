@@ -12,7 +12,19 @@ class BoatItem : public QObject
     Q_OBJECT
 public:
     explicit BoatItem(QObject *parent = nullptr);
+    BoatItem(const BoatItem& other, QObject* parent = nullptr);
+    const BoatItem& operator=(const BoatItem& other);
+
     ~BoatItem();
+
+    Q_PROPERTY(int ID READ ID CONSTANT)
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(QString PIP READ PIP  NOTIFY IPChanged)
+    Q_PROPERTY(QString SIP READ SIP  NOTIFY IPChanged)
+    Q_PROPERTY(bool primaryConnected READ primaryConnected  NOTIFY connectStatusChanged)
+    Q_PROPERTY(bool secondaryConnected READ secondaryConnected  NOTIFY connectStatusChanged)
+
+
     QString name(void) {    return _name;   };
     int ID(void) {    return _ID; };
     QString PIP(void) {    return _PIP;    };
@@ -22,6 +34,8 @@ public:
     };
     int OS(void) {    return _OS;   };
     int linkType() { return _linkType; }
+    bool primaryConnected() { return _primaryConnected;}
+    bool secondaryConnected() { return _secondaryConnected;}
 
 
     void setName(QString name);
@@ -30,8 +44,8 @@ public:
     void setSIP(QString SIP);
     void setOS(int OS);
     void setConnectionPriority(int connectionType);
-    void setPrimaryConnected(bool connected){ primaryConnected = connected; }
-    void setSecondaryConnected(bool connected){ secondaryConnected = connected; }
+    void setPrimaryConnected(bool connected){ _primaryConnected = connected; }
+    void setSecondaryConnected(bool connected){ _secondaryConnected = connected; }
 
     Device& getDevbyID(int ID);
     Peripheral getPeriperalbyID(int ID);
@@ -44,18 +58,17 @@ signals:
     void nameChanged(int ID, QString name);
     void IDChanged(int ID);
     void IPChanged(int ID, bool isPrimary);
-    void connected(int ID, bool isPrimary);
-    void disconnected(int ID, bool isPrimary);
+    void connectStatusChanged(int ID, bool isPrimary, bool connected);
     void connectionChanged(int ID);
 private:
-    QString _name;
+    QString _name = QString("null");
     int _ID;
     QString _PIP;
     QString _SIP;
     QString _currentIP;
     int _OS;
-    bool primaryConnected;
-    bool secondaryConnected;
+    bool _primaryConnected;
+    bool _secondaryConnected;
     int _connectionPriority;
     int _linkType;
 

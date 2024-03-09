@@ -8,6 +8,7 @@
 #include "dnvideomanager.h"
 #include "sensormanager.h"
 #include "configmanager.h"
+#include "dnqmlglobal.h"
 
 class GPBCore : public QObject
 {

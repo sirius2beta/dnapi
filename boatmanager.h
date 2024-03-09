@@ -6,18 +6,20 @@
 #include <QSettings>
 #include <QStandardItemModel>
 #include "boatitem.h"
+#include <QMetaType>
+#include <QObject>
+#include <QQmlListProperty>
+
+#include "QmlObjectListModel.h"
 
 class GPBCore;
-
-
 class BoatManager: public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QAbstractItemModel* model READ model)
 public:
     BoatManager(QObject* parent = nullptr, GPBCore* core = nullptr);
     ~BoatManager();
-
+    Q_PROPERTY(QmlObjectListModel* boatListModel READ boatListModel CONSTANT)
     QAbstractItemModel* model() const {return boatItemModel;}
     void init();
     BoatItem* addBoat(int ID, QString boatname, QString PIP, QString SIP);
@@ -27,7 +29,7 @@ public:
     BoatItem* getBoatbyID(int ID);
     int getIDbyInex(int index);
     int getIndexbyID(int ID);
-
+    QmlObjectListModel* boatListModel(void) { return &_boatListModel;}
     QString CurrentIP(QString boatname);
     //void setConnectionType(int connectiontype);
     int size();
@@ -38,16 +40,17 @@ signals:
 public slots:
     void onBoatNameChange(int ID, QString newname);
     void onIPChanged(int ID, bool primary);
-    void onConnected(int ID, bool isprimary);
-    void onDisonnected(int ID, bool isprimary);
+    void onConnectStatusChanged(int ID, bool isprimary, bool isConnected);
+    //void onDisonnected(int ID, bool isprimary);
     void onConnectionTypeChanged(int connectiontype);
 
 private:
     QSettings *settings;
     QStandardItemModel* boatItemModel;
-    QVector<BoatItem*> boatList;
+    QList<BoatItem*> _boatList;
     int _connectionType;
     GPBCore* _core;
+    QmlObjectListModel _boatListModel;
 };
 
 #endif // BOATMANAGER_H

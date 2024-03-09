@@ -1,7 +1,7 @@
 ﻿#include "networkmanager.h"
 #include "QTypes.h"
 #include "gpbcore.h"
-
+#include <QQmlEngine>
 NetworkManager::NetworkManager(QObject *parent, GPBCore *core)
     : QObject{parent}
 {
@@ -14,6 +14,7 @@ NetworkManager::NetworkManager(QObject *parent, GPBCore *core)
 
 void NetworkManager::init()
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     connect(clientSocket,&QUdpSocket::readyRead,this, &NetworkManager::onUDPMsg);
 }
 

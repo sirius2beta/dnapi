@@ -2,11 +2,38 @@
 
 BoatItem::BoatItem(QObject *parent)
     : QObject{parent},
-    primaryConnected(false),
-    secondaryConnected(false),
-    _connectionPriority(0),
-    _linkType(0)
+      _name(QString("")),
+      _primaryConnected(false),
+      _secondaryConnected(false),
+      _connectionPriority(0),
+      _linkType(0)
 {
+}
+
+BoatItem::BoatItem(const BoatItem& other, QObject* parent)
+    :QObject{parent}
+{
+    *this = other;
+}
+
+const BoatItem& BoatItem::operator=(const BoatItem& other)
+{
+    _name = other._name;
+    _ID = other._ID;
+    _PIP = other._PIP;
+    _SIP = other._SIP;
+    _currentIP = other._currentIP;
+    _OS = other._OS;
+    _primaryConnected = other._primaryConnected;
+    _secondaryConnected = other._secondaryConnected;
+    _connectionPriority = other._connectionPriority;
+    _linkType = other._linkType;
+
+
+    _primaryHeartBeat = other._primaryHeartBeat;
+    _secondaryHeartBeat = other._secondaryHeartBeat;
+    return *this;
+
 }
 
 BoatItem::~BoatItem()
@@ -64,10 +91,10 @@ void BoatItem::connect(bool isPrimary)
 
     bool isConnectionChanged = false;
     if(_connectionPriority == 0){
-        if(primaryConnected){
+        if(_primaryConnected){
                 //keep connected
         }else{
-            if(secondaryConnected){
+            if(_secondaryConnected){
                 if(isPrimary){
                     emit connectionChanged(_ID);
                     _currentIP = _PIP;
@@ -86,10 +113,10 @@ void BoatItem::connect(bool isPrimary)
             }
         }
     }else{
-        if(secondaryConnected){
+        if(_secondaryConnected){
                 //keep connected
         }else{
-            if(primaryConnected){
+            if(_primaryConnected){
                 if(isPrimary){
                     //keep connected
                 }else{
@@ -110,39 +137,39 @@ void BoatItem::connect(bool isPrimary)
     }
 
     if(isPrimary){
-        primaryConnected = true;
+        _primaryConnected = true;
     }else{
-        secondaryConnected = true;
+        _secondaryConnected = true;
     }
 
     qDebug()<<"BoatItem::connect "<<(isPrimary?"Primary":"Secondary")<<" "<<QString::number(_ID);
-    emit connected(_ID, isPrimary);
+    emit connectStatusChanged(_ID, isPrimary, true);
 
 }
 
 void BoatItem::disconnect(bool isPrimary)
 {
     if(isPrimary){
-        primaryConnected = false;
+        _primaryConnected = false;
     }else{
-        secondaryConnected = false;
+        _secondaryConnected = false;
     }
 
     if(_connectionPriority == 0){
-        if(primaryConnected){
+        if(_primaryConnected){
             //keep connected
         }else{
-            if(secondaryConnected){
+            if(_secondaryConnected){
                 qDebug()<<"BoatItem:: switch connection";
                 emit connectionChanged(_ID);
                 _currentIP = _SIP;
             }
         }
     }else{
-        if(secondaryConnected){
+        if(_secondaryConnected){
             //keep connected
         }else{
-            if(primaryConnected){
+            if(_primaryConnected){
                 qDebug()<<"BoatItem:: switch connection";
                 emit connectionChanged(_ID);
                 _currentIP = _PIP;
@@ -151,7 +178,7 @@ void BoatItem::disconnect(bool isPrimary)
     }
 
     qDebug()<<"BoatItem::disconnect "<<(isPrimary?"Primary":"Secondary")<<" "<<QString::number(_ID);
-    emit disconnected(_ID, isPrimary);
+    emit connectStatusChanged(_ID, isPrimary, false);
 }
 
 Device& BoatItem::getDevbyID(int ID)

@@ -1,5 +1,6 @@
 ﻿#include "boatmanager.h"
 #include "gpbcore.h"
+#include <QQmlEngine>
 
 BoatManager::BoatManager(QObject* parent, GPBCore *core): QObject(parent),
     _connectionType(0)
@@ -21,6 +22,8 @@ BoatManager::~BoatManager()
 
 void BoatManager::init()
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+
     qDebug()<<"BoatManager::init(): Initiating...";
     settings->beginGroup(QString("%1").arg(_core->config()));
     int size = settings->beginReadArray("boat");
@@ -37,7 +40,9 @@ void BoatManager::init()
         boat->setName(boatname);
         boat->setPIP(boatPIP);
         boat->setSIP(boatSIP);
-        boatList.append(boat);
+        _boatList.append(boat);
+
+        _boatListModel.append(boat);
 
         int current = boatItemModel->rowCount();
         QStandardItem* item1 = new QStandardItem(boatname);
@@ -53,8 +58,8 @@ void BoatManager::init()
 
         connect(boat, &BoatItem::nameChanged, this, &BoatManager::onBoatNameChange);
         connect(boat, &BoatItem::IPChanged, this, &BoatManager::onIPChanged);
-        connect(boat, &BoatItem::connected, this, &BoatManager::onConnected);
-        connect(boat, &BoatItem::disconnected, this, &BoatManager::onDisonnected);
+        connect(boat, &BoatItem::connectStatusChanged, this, &BoatManager::onConnectStatusChanged);
+        //connect(boat, &BoatItem::disconnected, this, &BoatManager::onDisonnected);
 
         HeartBeat* _primaryHeartBeat = new HeartBeat(boat, 50006, true, boat, _core);
         _primaryHeartBeat->HeartBeatLoop();
@@ -76,12 +81,16 @@ void BoatManager::init()
 
 BoatItem* BoatManager::addBoat(int ID, QString boatname, QString PIP, QString SIP)
 {
+
+
     BoatItem* boat = new BoatItem(this);
     boat->setID(ID);
     boat->setName(boatname);
     boat->setPIP(PIP);
     boat->setSIP(SIP);
-    boatList.append(boat);
+    _boatList.append(boat);
+
+    _boatListModel.append(boat);
 
     int current = boatItemModel->rowCount();
     QStandardItem* item1 = new QStandardItem(boatname);
@@ -97,8 +106,8 @@ BoatItem* BoatManager::addBoat(int ID, QString boatname, QString PIP, QString SI
 
     connect(boat, &BoatItem::nameChanged, this, &BoatManager::onBoatNameChange);
     connect(boat, &BoatItem::IPChanged, this, &BoatManager::onIPChanged);
-    connect(boat, &BoatItem::connected, this, &BoatManager::onConnected);
-    connect(boat, &BoatItem::disconnected, this, &BoatManager::onDisonnected);
+    connect(boat, &BoatItem::connectStatusChanged, this, &BoatManager::onConnectStatusChanged);
+    //connect(boat, &BoatItem::disconnected, this, &BoatManager::onDisonnected);
 
     HeartBeat* primaryHeartBeat = new HeartBeat(boat, 50006, true, boat, _core);
     primaryHeartBeat->HeartBeatLoop();
@@ -108,10 +117,6 @@ BoatItem* BoatManager::addBoat(int ID, QString boatname, QString PIP, QString SI
     connect(boat, &BoatItem::connectionChanged, this, &BoatManager::connectionChanged);
     connect(boat, &BoatItem::IPChanged, primaryHeartBeat, &HeartBeat::onChangeIP);
     connect(boat, &BoatItem::IPChanged, secondaryHeartBeat, &HeartBeat::onChangeIP);
-
-
-
-
 
     settings->beginGroup(QString("%1").arg(_core->config()));
     int size = settings->beginReadArray("boat");
@@ -131,16 +136,16 @@ BoatItem* BoatManager::addBoat(int ID, QString boatname, QString PIP, QString SI
 void BoatManager::deleteBoat(int index)
 {
     int ID = getIndexbyID(index);
-    delete boatList[index];
-    boatList.remove(index);
+    delete _boatList[index];
+    _boatList.removeAt(index);
 
     settings->beginGroup(QString("%1").arg(_core->config()));
     settings->remove("");
     settings->beginWriteArray("boat");
 
 
-    for(int i = 0; i<boatList.size(); i++){
-        BoatItem* boat = boatList[i];
+    for(int i = 0; i<_boatList.size(); i++){
+        BoatItem* boat = _boatList[i];
         settings->setArrayIndex(i);
         settings->setValue("boatname",boat->name());
         settings->setValue("PIP", boat->PIP());
@@ -162,20 +167,20 @@ void BoatManager::deleteBoat(int index)
 
 BoatItem* BoatManager::getBoatbyIndex(int index)
 {
-    if(index >= boatList.size()){
+    if(index >= _boatList.size()){
         return 0;
     }
-    return boatList[index];
+    return _boatList[index];
 }
 
 BoatItem* BoatManager::getBoatbyID(int ID)
 {
 
-    for(int i = 0; i<boatList.size(); i++){
+    for(int i = 0; i<_boatList.size(); i++){
 
-        if(boatList[i]->ID() == ID){
+        if(_boatList[i]->ID() == ID){
 
-            return boatList[i];
+            return _boatList[i];
         }
     }
     return 0;
@@ -183,13 +188,13 @@ BoatItem* BoatManager::getBoatbyID(int ID)
 
 int BoatManager::getIDbyInex(int index)
 {
-    return boatList[index]->ID();
+    return _boatList[index]->ID();
 }
 
 int BoatManager::getIndexbyID(int ID)
 {
-    for(int i = 0; i < boatList.size(); i++){
-        if(boatList[i]->ID() == ID){
+    for(int i = 0; i < _boatList.size(); i++){
+        if(_boatList[i]->ID() == ID){
             return i;
         }
     }
@@ -200,9 +205,9 @@ int BoatManager::getIndexbyID(int ID)
 
 QString BoatManager::CurrentIP(QString boatname)
 {
-    for(int i = 0; i<boatList.size(); i++){
-        if(boatList[i]->name() == boatname){
-            return boatList[i]->currentIP();
+    for(int i = 0; i<_boatList.size(); i++){
+        if(_boatList[i]->name() == boatname){
+            return _boatList[i]->currentIP();
         }
     }
     return QString();
@@ -210,7 +215,7 @@ QString BoatManager::CurrentIP(QString boatname)
 
 int BoatManager::size()
 {
-    return boatList.size();
+    return _boatList.size();
 }
 /*
 void BoatManager::setConnectionType(int connectiontype)
@@ -238,7 +243,7 @@ void BoatManager::onIPChanged(int ID, bool primary)
 {
     int index = getIndexbyID(ID);
     qDebug()<<"++:"<<index;
-    BoatItem* boat = boatList[index];
+    BoatItem* boat = _boatList[index];
     if(primary){
         boatItemModel->item(index,1)->setData(boat->PIP());
     }else{
@@ -256,31 +261,28 @@ void BoatManager::onIPChanged(int ID, bool primary)
     settings->endGroup();
 }
 
-void BoatManager::onConnected(int ID, bool isprimary)
+void BoatManager::onConnectStatusChanged(int ID, bool isprimary, bool isConnected)
 {
-    if(isprimary){
-        getBoatbyID(ID)->setPrimaryConnected(true);
-        boatItemModel->item(getIndexbyID(ID),1)->setText("Active");
-        boatItemModel->item(getIndexbyID(ID),1)->setBackground(QBrush(QColor(0,120,0)));
+    if(isConnected){
+        if(isprimary){
+            getBoatbyID(ID)->setPrimaryConnected(true);
+            boatItemModel->item(getIndexbyID(ID),1)->setText("Active");
+            boatItemModel->item(getIndexbyID(ID),1)->setBackground(QBrush(QColor(0,120,0)));
+        }else{
+            getBoatbyID(ID)->setSecondaryConnected(false);
+            boatItemModel->item(getIndexbyID(ID),2)->setText("Active");
+            boatItemModel->item(getIndexbyID(ID),2)->setBackground(QBrush(QColor(0,120,0)));
+        }
     }else{
-        getBoatbyID(ID)->setSecondaryConnected(false);
-        boatItemModel->item(getIndexbyID(ID),2)->setText("Active");
-        boatItemModel->item(getIndexbyID(ID),2)->setBackground(QBrush(QColor(0,120,0)));
-    }
-
-}
-
-void BoatManager::onDisonnected(int ID, bool isprimary)
-{
-
-    if(isprimary){
-        getBoatbyID(ID)->setPrimaryConnected(false);
-        boatItemModel->item(getIndexbyID(ID),1)->setText("SB");
-        boatItemModel->item(getIndexbyID(ID),1)->setBackground(QBrush(QColor(120,0,0)));
-    }else{
-        getBoatbyID(ID)->setSecondaryConnected(false);
-        boatItemModel->item(getIndexbyID(ID),2)->setText("SB");
-        boatItemModel->item(getIndexbyID(ID),2)->setBackground(QBrush(QColor(120,0,0)));
+        if(isprimary){
+            getBoatbyID(ID)->setPrimaryConnected(false);
+            boatItemModel->item(getIndexbyID(ID),1)->setText("SB");
+            boatItemModel->item(getIndexbyID(ID),1)->setBackground(QBrush(QColor(120,0,0)));
+        }else{
+            getBoatbyID(ID)->setSecondaryConnected(false);
+            boatItemModel->item(getIndexbyID(ID),2)->setText("SB");
+            boatItemModel->item(getIndexbyID(ID),2)->setBackground(QBrush(QColor(120,0,0)));
+        }
     }
 
 }
@@ -288,8 +290,8 @@ void BoatManager::onDisonnected(int ID, bool isprimary)
 void BoatManager::onConnectionTypeChanged(int connectiontype)
 {
     _connectionType = connectiontype;
-    for(int i = 0; i< boatList.size(); i++){
-        boatList[i]->setConnectionPriority(connectiontype);
+    for(int i = 0; i< _boatList.size(); i++){
+        _boatList[i]->setConnectionPriority(connectiontype);
     }
     emit connectionTypeChanged(connectiontype);
 }

@@ -1,6 +1,7 @@
 ﻿#include "dnvideomanager.h"
 #include "gpbcore.h"
 #include "QTypes.h"
+#include <QQmlEngine>
 DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
     : QObject{parent},
       _core(core)
@@ -13,6 +14,7 @@ DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
 
 void DNVideoManager::init()
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     int window_count = 4;
     QString _config = _core->config();
     for(int i = 0; i < window_count; i++){

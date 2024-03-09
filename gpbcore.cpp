@@ -1,5 +1,5 @@
 ﻿#include "gpbcore.h"
-
+#include <QQmlEngine>
 GPBCore::GPBCore(QObject *parent, QString config)
     : QObject{parent},
       _config(config)
@@ -28,9 +28,13 @@ GPBCore::~GPBCore(){
 
 void GPBCore::init()
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     _videoManager->init();
     _sensorManager->init();
     _networkManager->init();
+
+    // Register our Qml objects
+    // Register Qml Singletons
 
 }
 

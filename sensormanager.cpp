@@ -2,6 +2,7 @@
 #include "gpbcore.h"
 #include <QByteArray>
 #include <QVariant>
+#include <QQmlEngine>
 SensorManager::SensorManager(QObject *parent, GPBCore* core)
     : QObject{parent},
     _core(core)
