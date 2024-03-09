@@ -9,7 +9,6 @@
 #include <QMetaType>
 #include <QObject>
 #include <QQmlListProperty>
-
 #include "QmlObjectListModel.h"
 
 class GPBCore;

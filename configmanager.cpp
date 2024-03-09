@@ -2,10 +2,13 @@
 #include <QFile>
 #include <QDebug>
 #include <QQmlEngine>
+
+
 ConfigManager::ConfigManager(QObject *parent)
     : QObject{parent}
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+
     QFile file("SensorType.xml");
     reader.setDevice(&file);
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)){

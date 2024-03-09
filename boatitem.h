@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "device.h"
-#include "boatitem.h"
 
 class HeartBeat;
 

@@ -2,6 +2,7 @@
 #include "QTypes.h"
 #include "gpbcore.h"
 #include <QQmlEngine>
+
 NetworkManager::NetworkManager(QObject *parent, GPBCore *core)
     : QObject{parent}
 {

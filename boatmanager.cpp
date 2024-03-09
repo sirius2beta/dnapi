@@ -1,6 +1,8 @@
 ﻿#include "boatmanager.h"
 #include "gpbcore.h"
+#ifdef USE_QML
 #include <QQmlEngine>
+#endif
 
 BoatManager::BoatManager(QObject* parent, GPBCore *core): QObject(parent),
     _connectionType(0)
@@ -22,8 +24,9 @@ BoatManager::~BoatManager()
 
 void BoatManager::init()
 {
+    #ifdef USE_QML
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-
+    #endif
     qDebug()<<"BoatManager::init(): Initiating...";
     settings->beginGroup(QString("%1").arg(_core->config()));
     int size = settings->beginReadArray("boat");

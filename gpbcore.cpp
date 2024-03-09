@@ -1,5 +1,6 @@
 ﻿#include "gpbcore.h"
 #include <QQmlEngine>
+
 GPBCore::GPBCore(QObject *parent, QString config)
     : QObject{parent},
       _config(config)

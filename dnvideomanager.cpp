@@ -2,6 +2,7 @@
 #include "gpbcore.h"
 #include "QTypes.h"
 #include <QQmlEngine>
+
 DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
     : QObject{parent},
       _core(core)
