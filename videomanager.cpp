@@ -3,7 +3,7 @@
 #include "QTypes.h"
 #include <QQmlEngine>
 
-DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
+VideoManager::VideoManager(QObject *parent, GPBCore* core)
     : QObject{parent},
       _core(core)
 {
@@ -13,7 +13,7 @@ DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
 
 }
 
-void DNVideoManager::init()
+void VideoManager::init()
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     int window_count = 4;
@@ -39,7 +39,7 @@ void DNVideoManager::init()
 
 }
 
-void DNVideoManager::addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
+void VideoManager::addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
 {
     VideoItem* newvideoitem = new VideoItem(this, _core, index, title, boatID, videoNo, formatNo, PCPort);
     if(settings->value(QString("%1/w%2/videoinfo").arg(_core->config(),QString::number(newvideoitem->index()))) == 1){
@@ -48,13 +48,13 @@ void DNVideoManager::addVideoItem(int index, QString title, int boatID, int vide
         newvideoitem->setVideoInfo(false);
     }
     videoList.append(newvideoitem);
-    connect(newvideoitem, &VideoItem::videoPlayed, this, &DNVideoManager::onPlay);
-    connect(newvideoitem, &VideoItem::videoStoped, this, &DNVideoManager::onStop);
-    connect(newvideoitem, &VideoItem::requestFormat, this, &DNVideoManager::onRequestFormat);
+    connect(newvideoitem, &VideoItem::videoPlayed, this, &VideoManager::onPlay);
+    connect(newvideoitem, &VideoItem::videoStoped, this, &VideoManager::onStop);
+    connect(newvideoitem, &VideoItem::requestFormat, this, &VideoManager::onRequestFormat);
 
 }
 
-void DNVideoManager::onPlay(VideoItem* videoItem)
+void VideoManager::onPlay(VideoItem* videoItem)
 {
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     QString msg = "video"+QString::number(videoItem->videoNo())+" "+videoItem->videoFormat()+" "+videoItem->encoder()+" nan"+" 90"+" "+QString::number(videoItem->port());
@@ -62,18 +62,18 @@ void DNVideoManager::onPlay(VideoItem* videoItem)
     emit sendMsg(ip, char(COMMAND), msg.toLocal8Bit());
 }
 
-void DNVideoManager::onStop(VideoItem* videoItem)
+void VideoManager::onStop(VideoItem* videoItem)
 {
     QString videoNo = QString("video")+QString::number(videoItem->videoNo());
     if(_core->boatManager()->getBoatbyID(videoItem->boatID()) == 0){
-        qDebug()<<"Fatal:: DNVideoManager::onStop, boat ID:"<< videoItem->boatID()<<" not exist";
+        qDebug()<<"Fatal:: VideoManager::onStop, boat ID:"<< videoItem->boatID()<<" not exist";
         return;
     }
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     emit sendMsg(ip, char(QUIT), videoNo.toLocal8Bit());
 }
 
-void DNVideoManager::onBoatAdded()
+void VideoManager::onBoatAdded()
 {
     for(int i = 0; i<videoList.size(); i++){
         if(videoList[i]->boatID() == -1){
@@ -82,14 +82,14 @@ void DNVideoManager::onBoatAdded()
     }
 }
 
-void DNVideoManager::onRequestFormat(VideoItem* videoItem)
+void VideoManager::onRequestFormat(VideoItem* videoItem)
 {
     QHostAddress addr(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
-    qDebug()<<"DNVideoManager::onRequestFormat: currentIP:"<<_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP();
+    qDebug()<<"VideoManager::onRequestFormat: currentIP:"<<_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP();
     emit sendMsg(addr,char(FORMAT),"qformat");
 }
 
-void DNVideoManager::setVideoFormat(int ID, QStringList videoformat)
+void VideoManager::setVideoFormat(int ID, QStringList videoformat)
 {
     for(int i = 0; i < videoList.size(); i++){
         if(videoList[i]->boatID() == ID){
@@ -100,16 +100,16 @@ void DNVideoManager::setVideoFormat(int ID, QStringList videoformat)
     }
 }
 
-void DNVideoManager::onConnectionChanged(int connectionType)
+void VideoManager::onConnectionChanged(int connectionType)
 {
     for(int i = 0; i < videoList.size(); i++){
         videoList[i]->setConnectionPriority(connectionType);
     }
 }
 
-void DNVideoManager::connectionChanged(int ID)
+void VideoManager::connectionChanged(int ID)
 {
-    qDebug()<<"DNVideoManager::connectionChanged: "<<ID;
+    qDebug()<<"VideoManager::connectionChanged: "<<ID;
     for(int i = 0; i < videoList.size(); i++){
         if(videoList[i]->boatID() == ID){
             if(videoList[i]->isPlaying()){

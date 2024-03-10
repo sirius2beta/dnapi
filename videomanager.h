@@ -13,12 +13,12 @@
 
 class GPBCore;
 
-class DNVideoManager : public QObject
+class VideoManager : public QObject
 {
     Q_OBJECT
 public:
 
-    explicit DNVideoManager(QObject *parent = nullptr, GPBCore* core = nullptr);
+    explicit VideoManager(QObject *parent = nullptr, GPBCore* core = nullptr);
     void init();
     void addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort);
     VideoItem* getVideoItem(int index) { return videoList[index];}
