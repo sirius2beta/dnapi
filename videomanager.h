@@ -5,6 +5,8 @@
 #include <QCoreApplication>
 #include <QSettings>
 #include <QHostAddress>
+#include <gst/gst.h>
+
 #ifdef DNAPI_QML
 #include "videoitem_qml.h"
 #else
@@ -20,9 +22,14 @@ public:
 
     explicit VideoManager(QObject *parent = nullptr, GPBCore* core = nullptr);
     void init();
+    ~VideoManager();
+    void initVideo();
+    void initGstreamer(int argc, char* argv[]);
+    void setVideoTest(QQuickItem* widget);
     void addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort);
     VideoItem* getVideoItem(int index) { return videoList[index];}
     int size() { return videoList.size();  }
+
 
 public slots:
     void onPlay(VideoItem* videoItem);
@@ -39,6 +46,9 @@ private:
     QVector<VideoItem*> videoList;
     QSettings* settings;
     GPBCore* _core;
+    GstElement *_testpipeline;
+    GstElement *_testsink;
+
 };
 
 #endif // VIDEOMANAGER_H

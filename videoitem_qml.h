@@ -1,11 +1,14 @@
 ﻿#ifndef VIDEOITEM_H
 #define VIDEOITEM_H
 
+
 #include <QObject>
 #include <gst/gst.h>
 #include <gst/video/videooverlay.h>
 #include <QWidget>
 #include <QStandardItemModel>
+#include <QQuickWindow>
+#include <QQuickItem>
 
 
 class GPBCore;
@@ -15,11 +18,13 @@ class VideoItem : public QObject
 public:
     explicit VideoItem(QObject *parent = nullptr, GPBCore* core = nullptr, int index=-1, QString title=QString(), int boatID=-1, int videoNo=-1, int formatNo=-1, int PCPort=0);
     ~VideoItem();
+    void initVideo(QQuickItem *widget);
     void setDisplay(WId xwinid);
     void play();
-    void play(QString encoder, bool proxy);
     void stop();
 
+    void setProxy(bool isProxy);
+    void setEncoder(QString encoder);
     void setTitle(QString title);
     void setPCPort(int port);
     void setBoatID(int ID);
@@ -42,6 +47,7 @@ public:
     int connectionPriority() { return _connectionPriority;}
     bool videoInfo() { return _isVideoInfo; }
 
+
     QString encoder() {return _encoder;}
     QString videoFormat();
     QAbstractItemModel* videoNoModel(){ return _videoNoModel;   }
@@ -57,7 +63,6 @@ signals:
 
 private:
     GPBCore* _core;
-
     QString _title;
     int _boatID;
     int _index;
@@ -69,6 +74,7 @@ private:
     QString _encoder;
     bool _proxy;
     bool _requestFormat;
+    QQuickItem* _videoWidget;
 
     GstElement *_pipeline;
     GstElement *_sink;

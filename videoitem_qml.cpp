@@ -1,6 +1,9 @@
-﻿#include "videoitem.h"
+﻿#include "dnapplication.h"
 #include "gpbcore.h"
 #include <QDebug>
+#include <QQuickWindow>
+#include <QQuickItem>
+#include <QQmlEngine>
 
 #define HEARTBEAT 0x10
 #define FORMAT 0x20
@@ -23,8 +26,11 @@ VideoItem::VideoItem(QObject *parent, GPBCore* core, int index, QString title, i
     _isPlaying(false),
     _isVideoInfo(false)
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+
     _videoNoModel = new QStandardItemModel;
     _qualityModel = new QStandardItemModel;
+
     QStandardItem* dummyitem1 = new QStandardItem("fl");
     QStandardItem* dummyitem2 = new QStandardItem("fl");
 
@@ -38,15 +44,42 @@ VideoItem::VideoItem(QObject *parent, GPBCore* core, int index, QString title, i
 
 VideoItem::~VideoItem()
 {
+
     if(_isPlaying == false){
 
     }else{
         gst_element_set_state (_pipeline, GST_STATE_NULL);
         gst_object_unref (_pipeline);
+        gst_object_unref (_sink);
     }
 
     delete _videoNoModel;
     delete _qualityModel;
+}
+
+void VideoItem::initVideo(QQuickItem* widget)
+{
+    _videoWidget = widget;
+
+    QString gstcmd;
+     if(_encoder == "h264"){
+         gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtph264depay ! avdec_h264 ! videoconvert  !\
+          glupload ! qmlglsink name=sink").arg(QString::number(_PCPort));
+     }else{
+          gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtpjpegdepay ! jpegdec ! videoconvert  !\
+          glupload ! qmlglsink name=sink").arg(QString::number(_PCPort));
+     }
+
+    if(!_isPlaying){
+        _pipeline= gst_parse_launch(gstcmd.toLocal8Bit(), NULL);
+        _sink = gst_bin_get_by_name((GstBin*)_pipeline,"sink");
+        g_object_set(_sink, "widget", widget, NULL);
+        gst_element_set_state (_pipeline, GST_STATE_PLAYING);
+
+    }
+
+
+    _isPlaying = true;
 }
 
 void VideoItem::setTitle(QString title)
@@ -172,19 +205,29 @@ void VideoItem::play()
     if(_boatID == -1 || _videoNo == -1 || _formatNo == -1) return;
     qDebug()<<"VideoItem::play, videoNo:"<<_videoNo<<", formatNo:"<<_formatNo;
 
-    QString gstcmd;
-    if(false){
-        if(_encoder == "h264"){
-            gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtph264depay ! avdec_h264 ! videoconvert  !\
-             textoverlay text=\"%2\n%3\nPort:%1\" valignment=top halignment=right font-desc=\"Sans, 14\" !\
-             glimagesink name=mySink2").arg(QString::number(_PCPort),_title, QString::number(_videoNo));
-        }else{
-             gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtpjpegdepay ! jpegdec ! videoconvert  !\
-             textoverlay text=\"%2\n%3\nPort:%1\" valignment=top halignment=right font-desc=\"Sans, 14\" !\
-             glimagesink name=mySink2").arg(QString::number(_PCPort),_title, QString::number(_videoNo));
-        }
+    _isPlaying = true;
+    emit videoPlayed(this);
+}
 
-    }else{
+void VideoItem::stop()
+{   
+    _isPlaying = false;
+    emit videoStoped(this);
+
+}
+
+void VideoItem::setProxy(bool isProxy)
+{
+    _proxy = isProxy;
+
+}
+
+void VideoItem::setEncoder(QString encoder)
+{
+    if(_encoder != encoder){
+        _encoder = encoder;
+        QString gstcmd;
+
         if(_encoder == "h264"){
             gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtph264depay ! avdec_h264 ! videoconvert  !\
              glimagesink name=mySink2").arg(QString::number(_PCPort));
@@ -192,33 +235,17 @@ void VideoItem::play()
              gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtpjpegdepay ! jpegdec ! videoconvert  !\
              glimagesink name=mySink2").arg(QString::number(_PCPort));
         }
-    }
+        gst_element_set_state (_pipeline, GST_STATE_NULL);
 
-    if(!_isPlaying){
         _pipeline= gst_parse_launch(gstcmd.toLocal8Bit(), NULL);
         _sink = gst_bin_get_by_name((GstBin*)_pipeline,"mySink2");
         gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (_sink), _xwinid);
         gst_element_set_state (_pipeline,
             GST_STATE_PLAYING);
 
-    }
-    _isPlaying = true;
-    emit videoPlayed(this);
-}
-
-void VideoItem::play(QString encoder, bool proxy)
-{
-    _encoder = encoder;
-    _proxy = proxy;
-    play();
-}
-
-void VideoItem::stop()
-{
-    if(_isPlaying){
-        gst_element_set_state (_pipeline, GST_STATE_NULL);
-        _isPlaying = false;
-        emit videoStoped(this);
+        if(_videoWidget != nullptr){
+            g_object_set(_sink, "widget", _videoWidget, NULL);
+        }
     }
 }
 

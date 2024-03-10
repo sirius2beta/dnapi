@@ -1,6 +1,7 @@
 ﻿#include "videomanager.h"
 #include "gpbcore.h"
 #include "QTypes.h"
+#include "dnapplication.h"
 #include <QQmlEngine>
 
 VideoManager::VideoManager(QObject *parent, GPBCore* core)
@@ -10,6 +11,13 @@ VideoManager::VideoManager(QObject *parent, GPBCore* core)
     QCoreApplication::setOrganizationName("Ezosirius");
     QCoreApplication::setApplicationName("GPlayer_v1");
     settings = new QSettings;
+
+}
+
+VideoManager::~VideoManager()
+{
+    gst_element_set_state (_testpipeline, GST_STATE_NULL);
+    gst_object_unref (_testpipeline);
 
 }
 
@@ -37,6 +45,31 @@ void VideoManager::init()
     }
 
 
+}
+
+void VideoManager::initVideo()
+{
+    QQuickWindow* root = dnApp()->mainRootWindow();
+    QQuickItem* widget = root->findChild<QQuickItem*>("videoContent");
+    for(int i = 0; i < videoList.size(); i++){
+        if(i == 0){
+            videoList[i]->initVideo(widget);
+            //setVideoTest(widget);
+        }
+    }
+}
+
+void VideoManager::initGstreamer(int argc, char* argv[])
+{
+
+    _testpipeline = gst_parse_launch("videotestsrc ! glupload ! qmlglsink name=sink",NULL);
+    _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
+}
+
+void VideoManager::setVideoTest(QQuickItem* widget)
+{
+    g_object_set(_testsink, "widget", widget, NULL);
+    gst_element_set_state (_testpipeline, GST_STATE_PLAYING);
 }
 
 void VideoManager::addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
