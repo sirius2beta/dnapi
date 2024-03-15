@@ -9,7 +9,7 @@
 #include <QMetaType>
 #include <QObject>
 #include <QQmlListProperty>
-#include "QmlObjectListModel.h"
+#include "qmlobjectlistmodel.h"
 
 class GPBCore;
 class BoatManager: public QObject
@@ -27,7 +27,7 @@ public:
     BoatItem* getBoatbyIndex(int index);
     BoatItem* getBoatbyID(int ID);
     int getIDbyInex(int index);
-    int getIndexbyID(int ID);
+    Q_INVOKABLE int getIndexbyID(int ID);
     QmlObjectListModel* boatListModel(void) { return &_boatListModel;}
     QString CurrentIP(QString boatname);
     //void setConnectionType(int connectiontype);

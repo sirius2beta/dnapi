@@ -13,6 +13,7 @@
 #include "videoitem.h"
 #endif
 
+
 class GPBCore;
 
 class VideoManager : public QObject

@@ -10,6 +10,7 @@
 #include <QQuickWindow>
 #include <QQuickItem>
 
+#include "qmlobjectlistmodel.h"
 
 class GPBCore;
 class VideoItem : public QObject
@@ -18,20 +19,28 @@ class VideoItem : public QObject
 public:
     explicit VideoItem(QObject *parent = nullptr, GPBCore* core = nullptr, int index=-1, QString title=QString(), int boatID=-1, int videoNo=-1, int formatNo=-1, int PCPort=0);
     ~VideoItem();
+    Q_PROPERTY(QStringList videoNoListModel READ videoNoListModel CONSTANT)
+    Q_PROPERTY(int boatID READ boatID NOTIFY boatIDChanged )
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(QString PCPort READ PCPort NOTIFY PCPortChanged)
+    //Q_PROPERTY(QString port READ port NOTIFY IPChanged)
+    //Q_PROPERTY(bool primaryConnected READ primaryConnected  NOTIFY connectStatusChanged)
+    //Q_PROPERTY(bool secondaryConnected READ secondaryConnected  NOTIFY connectStatusChanged)
+
     void initVideo(QQuickItem *widget);
     void setDisplay(WId xwinid);
-    void play();
-    void stop();
+    Q_INVOKABLE void play();
+    Q_INVOKABLE void stop();
 
-    void setProxy(bool isProxy);
-    void setEncoder(QString encoder);
-    void setTitle(QString title);
-    void setPCPort(int port);
-    void setBoatID(int ID);
-    void setIndex(int index);
-    void setVideoNo(int index);
-    void setFormatNo(int no);
-    void setProxyMode(bool p){ _proxyMode = p;}
+    Q_INVOKABLE void setProxy(bool isProxy);
+    Q_INVOKABLE void setEncoder(QString encoder);
+    Q_INVOKABLE void setTitle(QString title);
+    Q_INVOKABLE void setPCPort(int port);
+    Q_INVOKABLE void setBoatID(int ID);
+    Q_INVOKABLE void setIndex(int index);
+    Q_INVOKABLE void setVideoNo(int index);
+    Q_INVOKABLE void setFormatNo(int no);
+    Q_INVOKABLE void setProxyMode(bool p){ _proxyMode = p;}
     void setVideoFormat(QStringList videoformat);
     void setWID(WId wid){_xwinid = wid;}
     void setConnectionPriority(int connectionType);
@@ -46,6 +55,7 @@ public:
     bool isPlaying(){ return _isPlaying;}
     int connectionPriority() { return _connectionPriority;}
     bool videoInfo() { return _isVideoInfo; }
+    QStringList videoNoListModel() { return _videoNoListModel; }
 
 
     QString encoder() {return _encoder;}
@@ -55,6 +65,7 @@ public:
 
 signals:
     void requestFormat(VideoItem* v); //set _requestFormat = true before sending
+    void boatIDChanged(int ID);
     void PCPortChanged(int port);
     void titleChanged(QString title);
     void indexChanged(int index);
@@ -85,6 +96,9 @@ private:
     QStringList _videoFormatList;
     QStandardItemModel* _videoNoModel;
     QStandardItemModel* _qualityModel;
+
+    QStringList _videoNoListModel;
+
 
 };
 

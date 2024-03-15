@@ -146,8 +146,6 @@ void VideoItem::setVideoFormat(QStringList videoformat)
 {
     if(!_requestFormat) return;
     _requestFormat = false;
-    int index = -1;
-    QStandardItem* item = new QStandardItem("fl");
     QString currentvideoNo = QString();
     for(const auto &vf:videoformat){
 
@@ -157,6 +155,8 @@ void VideoItem::setVideoFormat(QStringList videoformat)
             int current = _videoNoModel->rowCount();
             QStandardItem* item = new QStandardItem(currentvideoNo);
             _videoNoModel->setItem(current, 0, item);
+
+            _videoNoListModel.append(QString("video")+QString::number(current));
         }
         QStringList vfl = vf.split(' ');
         if(vfl[2].split('=')[1].toInt()<= 1920){  //limit with<1920
