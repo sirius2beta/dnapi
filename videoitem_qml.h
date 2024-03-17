@@ -10,8 +10,6 @@
 #include <QQuickWindow>
 #include <QQuickItem>
 
-#include "qmlobjectlistmodel.h"
-
 class GPBCore;
 class VideoItem : public QObject
 {
@@ -27,8 +25,7 @@ public:
     //Q_PROPERTY(bool primaryConnected READ primaryConnected  NOTIFY connectStatusChanged)
     //Q_PROPERTY(bool secondaryConnected READ secondaryConnected  NOTIFY connectStatusChanged)
 
-    void initVideo(QQuickItem *widget);
-    void setDisplay(WId xwinid);
+
     Q_INVOKABLE void play();
     Q_INVOKABLE void stop();
 
@@ -41,6 +38,9 @@ public:
     Q_INVOKABLE void setVideoNo(int index);
     Q_INVOKABLE void setFormatNo(int no);
     Q_INVOKABLE void setProxyMode(bool p){ _proxyMode = p;}
+
+    void initVideo(QQuickItem *widget);
+    void setDisplay(WId xwinid);
     void setVideoFormat(QStringList videoformat);
     void setWID(WId wid){_xwinid = wid;}
     void setConnectionPriority(int connectionType);

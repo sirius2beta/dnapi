@@ -2,16 +2,11 @@
 #include <QDebug>
 
 #include "heartbeat.h"
-
-#include "QTypes.h"
+#include "dntypes.h"
 #include "networkmanager.h"
 #include "gpbcore.h"
 
-#define HEARTBEAT 0x10
-#define FORMAT 0x20
-#define COMMAND 0x30
-#define QUIT 0x40
-#define SENSOR 0x50
+
 
 HeartBeat::HeartBeat(QObject *parent, GPBCore *core): QObject(parent)
 {
@@ -107,8 +102,8 @@ void HeartBeat::alive(QString ip, int ID)
             checkAliveTimer->start(2000);
             isHearBeatLoop = false;
             boat->connect(primary);
-            emit sendMsg(QHostAddress(ip), char(FORMAT), QString("q").toLocal8Bit());
-            emit sendMsg(QHostAddress(boat->name()), char(SENSOR), QString("d").toLocal8Bit());
+            emit sendMsg(QHostAddress(ip), DNTypes::Quit, QString("q").toLocal8Bit());
+            emit sendMsg(QHostAddress(boat->name()), DNTypes::Sensor, QString("d").toLocal8Bit());
             qDebug()<<"HeartBeat boatname:"<<boat->name();
 
         }
@@ -132,7 +127,7 @@ void HeartBeat::beat()
         cmd_bytes[0] = boat->ID();
         cmd_bytes[1] = 'S';
     }
-    emit sendMsg(QHostAddress(boatIP), char(HEARTBEAT),cmd_bytes);
+    emit sendMsg(QHostAddress(boatIP), DNTypes::Heartbeat,cmd_bytes);
 }
 
 void HeartBeat::checkAlive()

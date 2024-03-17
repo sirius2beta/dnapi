@@ -5,7 +5,7 @@
 #include "boatmanager.h"
 #include "networkmanager.h"
 #include "heartbeat.h"
-#include "videomanager.h"
+#include "dnvideomanager.h"
 #include "sensormanager.h"
 #include "configmanager.h"
 #include "dnqmlglobal.h"
@@ -21,7 +21,7 @@ public:
 
     BoatManager* boatManager() { return _boatManager; }
     NetworkManager* networkManager() { return _networkManager; }
-    VideoManager* videoManager() { return _videoManager; }
+    DNVideomanager* videoManager() { return _videoManager; }
     SensorManager* sensorManager() { return _sensorManager; }
     ConfigManager* configManager() { return _configManager; }
     QString config() {return _config;}
@@ -32,7 +32,7 @@ private:
     QString _config;
     BoatManager* _boatManager;
     NetworkManager* _networkManager;
-    VideoManager* _videoManager;
+    DNVideomanager* _videoManager;
     SensorManager* _sensorManager;
     ConfigManager* _configManager;
 

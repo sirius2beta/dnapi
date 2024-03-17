@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include <QSettings>
 #include <QHostAddress>
+#include <QQuickItem>
 #include <gst/gst.h>
 
 #ifdef DNAPI_QML
@@ -16,14 +17,14 @@
 
 class GPBCore;
 
-class VideoManager : public QObject
+class DNVideomanager : public QObject
 {
     Q_OBJECT
 public:
 
-    explicit VideoManager(QObject *parent = nullptr, GPBCore* core = nullptr);
+    explicit DNVideomanager(QObject *parent = nullptr, GPBCore* core = nullptr);
     void init();
-    ~VideoManager();
+    ~DNVideomanager();
     void initVideo();
     void initGstreamer(int argc, char* argv[]);
     void setVideoTest(QQuickItem* widget);

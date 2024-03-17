@@ -1,5 +1,6 @@
-﻿#include "dnapplication.h"
+﻿//#include "dnapplication.h"
 #include "gpbcore.h"
+#include "videoitem_qml.h"
 #include <QDebug>
 #include <QQuickWindow>
 #include <QQuickItem>
@@ -56,8 +57,7 @@ VideoItem::~VideoItem()
     delete _videoNoModel;
     delete _qualityModel;
 }
-
-void VideoItem::initVideo(QQuickItem* widget)
+void VideoItem::initVideo(QQuickItem *widget)
 {
     _videoWidget = widget;
 

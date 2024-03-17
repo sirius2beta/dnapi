@@ -9,15 +9,15 @@ GPBCore::GPBCore(QObject *parent, QString config)
     _configManager = new ConfigManager();
     _networkManager = new NetworkManager(this, this);
     _boatManager = new BoatManager(this, this);
-    _videoManager = new VideoManager(this, this);
+    _videoManager = new DNVideomanager(this, this);
     _sensorManager = new SensorManager(this, this);
 
 
-    connect(_videoManager, &VideoManager::sendMsg, _networkManager, &NetworkManager::sendMsg);
-    connect(_networkManager, &NetworkManager::setFormat, _videoManager, &VideoManager::setVideoFormat);
-    connect(_boatManager, &BoatManager::connectionChanged, _videoManager, &VideoManager::connectionChanged);
-    connect(_boatManager, &BoatManager::connectionTypeChanged, _videoManager, &VideoManager::onConnectionChanged);
-    connect(_boatManager, &BoatManager::BoatAdded, _videoManager, &VideoManager::onBoatAdded);
+    connect(_videoManager, &DNVideomanager::sendMsg, _networkManager, &NetworkManager::sendMsg);
+    connect(_networkManager, &NetworkManager::setFormat, _videoManager, &DNVideomanager::setVideoFormat);
+    connect(_boatManager, &BoatManager::connectionChanged, _videoManager, &DNVideomanager::connectionChanged);
+    connect(_boatManager, &BoatManager::connectionTypeChanged, _videoManager, &DNVideomanager::onConnectionChanged);
+    connect(_boatManager, &BoatManager::BoatAdded, _videoManager, &DNVideomanager::onBoatAdded);
     connect(_networkManager, &NetworkManager::sensorMsg, _sensorManager, &SensorManager::onSensorMsg);
 
     init();

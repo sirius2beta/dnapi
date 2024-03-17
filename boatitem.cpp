@@ -89,7 +89,6 @@ Peripheral BoatItem::getPeriperalbyID(int ID)
 void BoatItem::connect(bool isPrimary)
 {
 
-    bool isConnectionChanged = false;
     if(_connectionPriority == 0){
         if(_primaryConnected){
                 //keep connected
