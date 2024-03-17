@@ -233,7 +233,7 @@ void BoatManager::onBoatNameChange(int ID, QString newname)
     qDebug()<<"++id:"<<ID;
     boatItemModel->item(index, 0)->setText(newname);
     settings->beginGroup(QString("%1").arg(_core->config()));
-    int size = settings->beginReadArray("boat");
+    //int size = settings->beginReadArray("boat");
     settings->setArrayIndex(index);
     settings->setValue("boatname",newname);
 
@@ -254,7 +254,7 @@ void BoatManager::onIPChanged(int ID, bool primary)
     }
 
     settings->beginGroup(QString("%1").arg(_core->config()));
-    int size = settings->beginReadArray("boat");
+    //int size = settings->beginReadArray("boat");
 
     settings->setArrayIndex(index);
     settings->setValue("PIP", boat->PIP());

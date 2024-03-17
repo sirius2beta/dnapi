@@ -31,7 +31,7 @@ void SensorManager::init()
     for(int i = 0; i < size; i++){
         settings->setArrayIndex(i);
         int boatID = settings->value("boatID").toInt();
-        DNMetaData::ValueType_t sensorType = DNMetaData::intToType(settings->value("sensorType").toInt());
+        //DNMetaData::ValueType_t sensorType = DNMetaData::intToType(settings->value("sensorType").toInt());
         QString sensorName = settings->value("sensorName").toString();
         SensorItem* item = new SensorItem(this);
         item->setBoatID(boatID);
@@ -57,7 +57,7 @@ void SensorManager::deleteSensor(int index)
 void SensorManager::onSensorMsg(int ID, QByteArray data)
 {
 
-    DNMetaData::ValueType_t datatype;
+    //DNMetaData::ValueType_t datatype;
     int sensortype;
     char* cdata = data.data();
     if(_sensorList.size() == 0) return;

@@ -123,7 +123,7 @@ void VideoItem::setVideoNo(int index)
         return;
     }
     _qualityModel->removeRows(0,_qualityModel->rowCount());
-    int preNo = -1;
+    //int preNo = -1;
     int currentNo = -1;
     int currentindex = -1;
     for(const auto &formatlist:_videoFormatList){

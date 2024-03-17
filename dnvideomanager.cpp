@@ -1,8 +1,8 @@
 ﻿#include "dnvideomanager.h"
-#include "dnapplication.h"
+//#include "dnapplication.h"
 #include "gpbcore.h"
 #include "dntypes.h"
-//#include "QGCApplication.h"
+#include "QGCApplication.h"
 #include <QQmlEngine>
 #include <QQuickItem>
 
@@ -52,7 +52,7 @@ void DNVideoManager::init()
 
 void DNVideoManager::initVideo()
 {
-    QQuickWindow* root = dnApp()->mainRootWindow();
+    QQuickWindow* root = qgcApp()->mainRootWindow();
     QQuickItem* widget = root->findChild<QQuickItem*>("videoContent");
     for(int i = 0; i < videoList.size(); i++){
         if(i == 0){

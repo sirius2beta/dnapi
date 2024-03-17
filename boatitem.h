@@ -46,7 +46,7 @@ public:
     void setPrimaryConnected(bool connected){ _primaryConnected = connected; }
     void setSecondaryConnected(bool connected){ _secondaryConnected = connected; }
 
-    Device& getDevbyID(int ID);
+    Device* getDevbyID(int ID);
     Peripheral getPeriperalbyID(int ID);
     void connect(bool isPrimary);
     void disconnect(bool isPrimary);

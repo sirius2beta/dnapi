@@ -180,12 +180,13 @@ void BoatItem::disconnect(bool isPrimary)
     emit connectStatusChanged(_ID, isPrimary, false);
 }
 
-Device& BoatItem::getDevbyID(int ID)
+Device* BoatItem::getDevbyID(int ID)
 {
 
     for(int i = 0; i<devices.size(); i++){
         if(devices[i].ID == ID){
-            return devices[i];
+            return &devices[i];
         }
     }
+    return 0;
 }
