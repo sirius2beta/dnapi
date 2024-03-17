@@ -22,7 +22,7 @@ public:
     Q_PROPERTY(QStringList videoNoListModel READ videoNoListModel CONSTANT)
     Q_PROPERTY(int boatID READ boatID NOTIFY boatIDChanged )
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
-    Q_PROPERTY(QString PCPort READ PCPort NOTIFY PCPortChanged)
+    Q_PROPERTY(int PCPort READ PCPort NOTIFY PCPortChanged)
     //Q_PROPERTY(QString port READ port NOTIFY IPChanged)
     //Q_PROPERTY(bool primaryConnected READ primaryConnected  NOTIFY connectStatusChanged)
     //Q_PROPERTY(bool secondaryConnected READ secondaryConnected  NOTIFY connectStatusChanged)

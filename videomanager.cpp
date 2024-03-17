@@ -1,8 +1,9 @@
 ﻿#include "videomanager.h"
 #include "gpbcore.h"
-#include "QTypes.h"
+#include "dntypes.h"
 #include "dnapplication.h"
 #include <QQmlEngine>
+
 
 VideoManager::VideoManager(QObject *parent, GPBCore* core)
     : QObject{parent},
@@ -62,6 +63,7 @@ void VideoManager::initVideo()
 void VideoManager::initGstreamer(int argc, char* argv[])
 {
 
+
     _testpipeline = gst_parse_launch("videotestsrc ! glupload ! qmlglsink name=sink",NULL);
     _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
 }
@@ -92,7 +94,7 @@ void VideoManager::onPlay(VideoItem* videoItem)
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     QString msg = "video"+QString::number(videoItem->videoNo())+" "+videoItem->videoFormat()+" "+videoItem->encoder()+" nan"+" 90"+" "+QString::number(videoItem->port());
     if(msg == QString("")) return;
-    emit sendMsg(ip, char(COMMAND), msg.toLocal8Bit());
+    emit sendMsg(ip, DNTypes::Command, msg.toLocal8Bit());
 }
 
 void VideoManager::onStop(VideoItem* videoItem)
@@ -103,7 +105,7 @@ void VideoManager::onStop(VideoItem* videoItem)
         return;
     }
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
-    emit sendMsg(ip, char(QUIT), videoNo.toLocal8Bit());
+    emit sendMsg(ip, char(DNTypes::Quit), videoNo.toLocal8Bit());
 }
 
 void VideoManager::onBoatAdded()
@@ -119,7 +121,7 @@ void VideoManager::onRequestFormat(VideoItem* videoItem)
 {
     QHostAddress addr(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     qDebug()<<"VideoManager::onRequestFormat: currentIP:"<<_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP();
-    emit sendMsg(addr,char(FORMAT),"qformat");
+    emit sendMsg(addr, DNTypes::Format,"qformat");
 }
 
 void VideoManager::setVideoFormat(int ID, QStringList videoformat)

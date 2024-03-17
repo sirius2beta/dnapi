@@ -15,13 +15,13 @@ ConfigManager::ConfigManager(QObject *parent)
         qDebug()<<"file opened";
 
         if (reader.readNextStartElement()) {
-            if (reader.name() == "marinelink"){
+            if (reader.name().toString() == "marinelink"){
                 while(reader.readNextStartElement()){
-                    if(reader.name() == "enum"){
-                        if(reader.attributes().value("name") == "SENSOR_TYPE"){
+                    if(reader.name().toString() == "enum"){
+                        if(reader.attributes().value("name").toString() == "SENSOR_TYPE"){
 
                             readSensorTypes();
-                        }else if(reader.attributes().value("name") == "MESSAGE_TYPE"){
+                        }else if(reader.attributes().value("name").toString() == "MESSAGE_TYPE"){
                             reader.skipCurrentElement();
 
                         }
@@ -44,7 +44,7 @@ void ConfigManager::readSensorTypes()
     _sensorTypeList.clear();
     while(reader.readNextStartElement()){
 
-        if(reader.name() == "entry"){
+        if(reader.name().toString() == "entry"){
             qDebug()<<reader.attributes().value("name");
             int sensorType = reader.attributes().value("value").toInt();
             QString name = reader.attributes().value("name").toString();

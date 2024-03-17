@@ -1,7 +1,8 @@
 ﻿#include "networkmanager.h"
-#include "QTypes.h"
 #include "gpbcore.h"
 #include <QQmlEngine>
+
+#include "dntypes.h"
 
 NetworkManager::NetworkManager(QObject *parent, GPBCore *core)
     : QObject{parent}
@@ -48,7 +49,7 @@ void NetworkManager::onUDPMsg()
         if(data.split(' ').size() >1){
             message = data.split(' ')[1];
         }
-        if(topic == HEARTBEAT){
+        if(topic == DNTypes::Heartbeat){
             int ID = int(data[0]);
             BoatItem* boat = _core->boatManager()->getBoatbyID(ID);
 
@@ -58,7 +59,7 @@ void NetworkManager::onUDPMsg()
             }
 
 
-        }else if(topic == FORMAT){
+        }else if(topic == DNTypes::Format){
             int ID = int(data[0]);
             QString format = data.remove(0,1);
             //qDebug()<<"MainWindow call from FORMAT, boat ID:"<<ID;
@@ -67,7 +68,7 @@ void NetworkManager::onUDPMsg()
                 emit setFormat(ID, format.split('\n'));
             }
 
-        }else if(topic == SENSOR){
+        }else if(topic == DNTypes::Sensor){
             int ID = int(data[0]);
             data.remove(0,1);
             emit sensorMsg(ID, data);

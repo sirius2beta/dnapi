@@ -7,6 +7,12 @@
 #include "networkmanager.h"
 #include "gpbcore.h"
 
+#define HEARTBEAT 0x10
+#define FORMAT 0x20
+#define COMMAND 0x30
+#define QUIT 0x40
+#define SENSOR 0x50
+
 HeartBeat::HeartBeat(QObject *parent, GPBCore *core): QObject(parent)
 {
     _core = core;
