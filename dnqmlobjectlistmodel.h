@@ -1,17 +1,17 @@
-﻿#ifndef QMLOBJECTLISTMODEL_H
-#define QMLOBJECTLISTMODEL_H
+﻿#ifndef DNQMLOBJECTLISTMODEL_H
+#define DNQMLOBJECTLISTMODEL_H
 
 #include <QObject>
 
 #include <QAbstractListModel>
 
-class QmlObjectListModel : public QAbstractListModel
+class DNQmlObjectListModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    QmlObjectListModel(QObject* parent = nullptr);
-    ~QmlObjectListModel() override;
+    DNQmlObjectListModel(QObject* parent = nullptr);
+    ~DNQmlObjectListModel() override;
 
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 
@@ -82,4 +82,4 @@ private:
     static const int TextRole;
 };
 
-#endif // QMLOBJECTLISTMODEL_H
+#endif // DNQMLOBJECTLISTMODEL_H

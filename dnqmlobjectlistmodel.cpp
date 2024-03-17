@@ -1,13 +1,13 @@
-﻿#include "qmlobjectlistmodel.h"
+﻿#include "dnqmlobjectlistmodel.h"
 
 #include <QDebug>
 #include <QQmlEngine>
 
 
-const int QmlObjectListModel::ObjectRole = Qt::UserRole;
-const int QmlObjectListModel::TextRole = Qt::UserRole + 1;
+const int DNQmlObjectListModel::ObjectRole = Qt::UserRole;
+const int DNQmlObjectListModel::TextRole = Qt::UserRole + 1;
 
-QmlObjectListModel::QmlObjectListModel(QObject* parent)
+DNQmlObjectListModel::DNQmlObjectListModel(QObject* parent)
     : QAbstractListModel        (parent)
     , _dirty                    (false)
     , _skipDirtyFirstItem       (false)
@@ -16,12 +16,12 @@ QmlObjectListModel::QmlObjectListModel(QObject* parent)
 
 }
 
-QmlObjectListModel::~QmlObjectListModel()
+DNQmlObjectListModel::~DNQmlObjectListModel()
 {
 
 }
 
-QObject* QmlObjectListModel::get(int index)
+QObject* DNQmlObjectListModel::get(int index)
 {
     if (index < 0 || index >= _objectList.count()) {
         return nullptr;
@@ -29,14 +29,14 @@ QObject* QmlObjectListModel::get(int index)
     return _objectList[index];
 }
 
-int QmlObjectListModel::rowCount(const QModelIndex& parent) const
+int DNQmlObjectListModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
 
     return _objectList.count();
 }
 
-QVariant QmlObjectListModel::data(const QModelIndex &index, int role) const
+QVariant DNQmlObjectListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -55,7 +55,7 @@ QVariant QmlObjectListModel::data(const QModelIndex &index, int role) const
     }
 }
 
-QHash<int, QByteArray> QmlObjectListModel::roleNames(void) const
+QHash<int, QByteArray> DNQmlObjectListModel::roleNames(void) const
 {
     QHash<int, QByteArray> hash;
 
@@ -65,7 +65,7 @@ QHash<int, QByteArray> QmlObjectListModel::roleNames(void) const
     return hash;
 }
 
-bool QmlObjectListModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool DNQmlObjectListModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (index.isValid() && role == ObjectRole) {
         _objectList.replace(index.row(), value.value<QObject*>());
@@ -76,7 +76,7 @@ bool QmlObjectListModel::setData(const QModelIndex& index, const QVariant& value
     return false;
 }
 
-bool QmlObjectListModel::insertRows(int position, int rows, const QModelIndex& parent)
+bool DNQmlObjectListModel::insertRows(int position, int rows, const QModelIndex& parent)
 {
     Q_UNUSED(parent);
 
@@ -92,7 +92,7 @@ bool QmlObjectListModel::insertRows(int position, int rows, const QModelIndex& p
     return true;
 }
 
-bool QmlObjectListModel::removeRows(int position, int rows, const QModelIndex& parent)
+bool DNQmlObjectListModel::removeRows(int position, int rows, const QModelIndex& parent)
 {
     Q_UNUSED(parent);
 
@@ -113,7 +113,7 @@ bool QmlObjectListModel::removeRows(int position, int rows, const QModelIndex& p
     return true;
 }
 
-void QmlObjectListModel::move(int from, int to)
+void DNQmlObjectListModel::move(int from, int to)
 {
     if(0 <= from && from < count() && 0 <= to && to < count() && from != to) {
         // Workaround to allow move item to the bottom. Done according to
@@ -129,7 +129,7 @@ void QmlObjectListModel::move(int from, int to)
     }
 }
 
-QObject* QmlObjectListModel::operator[](int index)
+QObject* DNQmlObjectListModel::operator[](int index)
 {
     if (index < 0 || index >= _objectList.count()) {
         return nullptr;
@@ -137,7 +137,7 @@ QObject* QmlObjectListModel::operator[](int index)
     return _objectList[index];
 }
 
-const QObject* QmlObjectListModel::operator[](int index) const
+const QObject* DNQmlObjectListModel::operator[](int index) const
 {
     if (index < 0 || index >= _objectList.count()) {
         return nullptr;
@@ -145,7 +145,7 @@ const QObject* QmlObjectListModel::operator[](int index) const
     return _objectList[index];
 }
 
-void QmlObjectListModel::clear()
+void DNQmlObjectListModel::clear()
 {
     if (!_externalBeginResetModel) {
         beginResetModel();
@@ -157,7 +157,7 @@ void QmlObjectListModel::clear()
     }
 }
 
-QObject* QmlObjectListModel::removeAt(int i)
+QObject* DNQmlObjectListModel::removeAt(int i)
 {
     QObject* removedObject = _objectList[i];
     if(removedObject) {
@@ -173,7 +173,7 @@ QObject* QmlObjectListModel::removeAt(int i)
     return removedObject;
 }
 
-void QmlObjectListModel::insert(int i, QObject* object)
+void DNQmlObjectListModel::insert(int i, QObject* object)
 {
     if (i < 0 || i > _objectList.count()) {
         qWarning() << "Invalid index index:count" << i << _objectList.count();
@@ -192,7 +192,7 @@ void QmlObjectListModel::insert(int i, QObject* object)
     setDirty(true);
 }
 
-void QmlObjectListModel::insert(int i, QList<QObject*> objects)
+void DNQmlObjectListModel::insert(int i, QList<QObject*> objects)
 {
     if (i < 0 || i > _objectList.count()) {
         qWarning() << "Invalid index index:count" << i << _objectList.count();
@@ -218,17 +218,17 @@ void QmlObjectListModel::insert(int i, QList<QObject*> objects)
     setDirty(true);
 }
 
-void QmlObjectListModel::append(QObject* object)
+void DNQmlObjectListModel::append(QObject* object)
 {
     insert(_objectList.count(), object);
 }
 
-void QmlObjectListModel::append(QList<QObject*> objects)
+void DNQmlObjectListModel::append(QList<QObject*> objects)
 {
     insert(_objectList.count(), objects);
 }
 
-QObjectList QmlObjectListModel::swapObjectList(const QObjectList& newlist)
+QObjectList DNQmlObjectListModel::swapObjectList(const QObjectList& newlist)
 {
     QObjectList oldlist(_objectList);
     if (!_externalBeginResetModel) {
@@ -242,12 +242,12 @@ QObjectList QmlObjectListModel::swapObjectList(const QObjectList& newlist)
     return oldlist;
 }
 
-int QmlObjectListModel::count() const
+int DNQmlObjectListModel::count() const
 {
     return rowCount();
 }
 
-void QmlObjectListModel::setDirty(bool dirty)
+void DNQmlObjectListModel::setDirty(bool dirty)
 {
     if (_dirty != dirty) {
         _dirty = dirty;
@@ -263,7 +263,7 @@ void QmlObjectListModel::setDirty(bool dirty)
     }
 }
 
-void QmlObjectListModel::_childDirtyChanged(bool dirty)
+void DNQmlObjectListModel::_childDirtyChanged(bool dirty)
 {
     _dirty |= dirty;
     // We want to emit dirtyChanged even if the actual value of _dirty didn't change. It can be a useful
@@ -271,7 +271,7 @@ void QmlObjectListModel::_childDirtyChanged(bool dirty)
     emit dirtyChanged(_dirty);
 }
 
-void QmlObjectListModel::deleteListAndContents()
+void DNQmlObjectListModel::deleteListAndContents()
 {
     for (int i=0; i<_objectList.count(); i++) {
         _objectList[i]->deleteLater();
@@ -279,7 +279,7 @@ void QmlObjectListModel::deleteListAndContents()
     deleteLater();
 }
 
-void QmlObjectListModel::clearAndDeleteContents()
+void DNQmlObjectListModel::clearAndDeleteContents()
 {
     beginResetModel();
     for (int i=0; i<_objectList.count(); i++) {
@@ -289,19 +289,19 @@ void QmlObjectListModel::clearAndDeleteContents()
     endResetModel();
 }
 
-void QmlObjectListModel::beginReset()
+void DNQmlObjectListModel::beginReset()
 {
     if (_externalBeginResetModel) {
-        qWarning() << "QmlObjectListModel::beginReset already set";
+        qWarning() << "DNQmlObjectListModel::beginReset already set";
     }
     _externalBeginResetModel = true;
     beginResetModel();
 }
 
-void QmlObjectListModel::endReset()
+void DNQmlObjectListModel::endReset()
 {
     if (!_externalBeginResetModel) {
-        qWarning() << "QmlObjectListModel::endReset begin not set";
+        qWarning() << "DNQmlObjectListModel::endReset begin not set";
     }
     _externalBeginResetModel = false;
     endResetModel();

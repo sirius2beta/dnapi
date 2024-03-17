@@ -1,5 +1,5 @@
-﻿#ifndef VIDEOMANAGER_H
-#define VIDEOMANAGER_H
+﻿#ifndef DNVIDEOMANAGER_H
+#define DNVIDEOMANAGER_H
 
 #include <QObject>
 #include <QCoreApplication>
@@ -17,14 +17,14 @@
 
 class GPBCore;
 
-class DNVideomanager : public QObject
+class DNVideoManager : public QObject
 {
     Q_OBJECT
 public:
 
-    explicit DNVideomanager(QObject *parent = nullptr, GPBCore* core = nullptr);
+    explicit DNVideoManager(QObject *parent = nullptr, GPBCore* core = nullptr);
     void init();
-    ~DNVideomanager();
+    ~DNVideoManager();
     void initVideo();
     void initGstreamer(int argc, char* argv[]);
     void setVideoTest(QQuickItem* widget);
@@ -53,4 +53,4 @@ private:
 
 };
 
-#endif // VIDEOMANAGER_H
+#endif // DNVIDEOMANAGER_H

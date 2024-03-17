@@ -1,12 +1,13 @@
 ﻿#include "dnvideomanager.h"
+#include "dnapplication.h"
 #include "gpbcore.h"
 #include "dntypes.h"
-#include "QGCApplication.h"
+//#include "QGCApplication.h"
 #include <QQmlEngine>
 #include <QQuickItem>
 
 
-DNVideomanager::DNVideomanager(QObject *parent, GPBCore* core)
+DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
     : QObject{parent},
       _core(core)
 {
@@ -16,14 +17,14 @@ DNVideomanager::DNVideomanager(QObject *parent, GPBCore* core)
 
 }
 
-DNVideomanager::~DNVideomanager()
+DNVideoManager::~DNVideoManager()
 {
     gst_element_set_state (_testpipeline, GST_STATE_NULL);
     gst_object_unref (_testpipeline);
 
 }
 
-void DNVideomanager::init()
+void DNVideoManager::init()
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     int window_count = 4;
@@ -49,9 +50,9 @@ void DNVideomanager::init()
 
 }
 
-void DNVideomanager::initVideo()
+void DNVideoManager::initVideo()
 {
-    QQuickWindow* root = qgcApp()->mainRootWindow();
+    QQuickWindow* root = dnApp()->mainRootWindow();
     QQuickItem* widget = root->findChild<QQuickItem*>("videoContent");
     for(int i = 0; i < videoList.size(); i++){
         if(i == 0){
@@ -61,7 +62,7 @@ void DNVideomanager::initVideo()
     }
 }
 
-void DNVideomanager::initGstreamer(int argc, char* argv[])
+void DNVideoManager::initGstreamer(int argc, char* argv[])
 {
 
 
@@ -69,13 +70,13 @@ void DNVideomanager::initGstreamer(int argc, char* argv[])
     _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
 }
 
-void DNVideomanager::setVideoTest(QQuickItem* widget)
+void DNVideoManager::setVideoTest(QQuickItem* widget)
 {
     g_object_set(_testsink, "widget", widget, NULL);
     gst_element_set_state (_testpipeline, GST_STATE_PLAYING);
 }
 
-void DNVideomanager::addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
+void DNVideoManager::addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
 {
     VideoItem* newvideoitem = new VideoItem(this, _core, index, title, boatID, videoNo, formatNo, PCPort);
     if(settings->value(QString("%1/w%2/videoinfo").arg(_core->config(),QString::number(newvideoitem->index()))) == 1){
@@ -84,13 +85,13 @@ void DNVideomanager::addVideoItem(int index, QString title, int boatID, int vide
         newvideoitem->setVideoInfo(false);
     }
     videoList.append(newvideoitem);
-    connect(newvideoitem, &VideoItem::videoPlayed, this, &DNVideomanager::onPlay);
-    connect(newvideoitem, &VideoItem::videoStoped, this, &DNVideomanager::onStop);
-    connect(newvideoitem, &VideoItem::requestFormat, this, &DNVideomanager::onRequestFormat);
+    connect(newvideoitem, &VideoItem::videoPlayed, this, &DNVideoManager::onPlay);
+    connect(newvideoitem, &VideoItem::videoStoped, this, &DNVideoManager::onStop);
+    connect(newvideoitem, &VideoItem::requestFormat, this, &DNVideoManager::onRequestFormat);
 
 }
 
-void DNVideomanager::onPlay(VideoItem* videoItem)
+void DNVideoManager::onPlay(VideoItem* videoItem)
 {
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     QString msg = "video"+QString::number(videoItem->videoNo())+" "+videoItem->videoFormat()+" "+videoItem->encoder()+" nan"+" 90"+" "+QString::number(videoItem->port());
@@ -98,18 +99,18 @@ void DNVideomanager::onPlay(VideoItem* videoItem)
     emit sendMsg(ip, DNTypes::Command, msg.toLocal8Bit());
 }
 
-void DNVideomanager::onStop(VideoItem* videoItem)
+void DNVideoManager::onStop(VideoItem* videoItem)
 {
     QString videoNo = QString("video")+QString::number(videoItem->videoNo());
     if(_core->boatManager()->getBoatbyID(videoItem->boatID()) == 0){
-        qDebug()<<"Fatal:: DNVideomanager::onStop, boat ID:"<< videoItem->boatID()<<" not exist";
+        qDebug()<<"Fatal:: DNVideoManager::onStop, boat ID:"<< videoItem->boatID()<<" not exist";
         return;
     }
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     emit sendMsg(ip, char(DNTypes::Quit), videoNo.toLocal8Bit());
 }
 
-void DNVideomanager::onBoatAdded()
+void DNVideoManager::onBoatAdded()
 {
     for(int i = 0; i<videoList.size(); i++){
         if(videoList[i]->boatID() == -1){
@@ -118,14 +119,14 @@ void DNVideomanager::onBoatAdded()
     }
 }
 
-void DNVideomanager::onRequestFormat(VideoItem* videoItem)
+void DNVideoManager::onRequestFormat(VideoItem* videoItem)
 {
     QHostAddress addr(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
-    qDebug()<<"DNVideomanager::onRequestFormat: currentIP:"<<_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP();
+    qDebug()<<"DNVideoManager::onRequestFormat: currentIP:"<<_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP();
     emit sendMsg(addr, DNTypes::Format,"qformat");
 }
 
-void DNVideomanager::setVideoFormat(int ID, QStringList videoformat)
+void DNVideoManager::setVideoFormat(int ID, QStringList videoformat)
 {
     for(int i = 0; i < videoList.size(); i++){
         if(videoList[i]->boatID() == ID){
@@ -136,16 +137,16 @@ void DNVideomanager::setVideoFormat(int ID, QStringList videoformat)
     }
 }
 
-void DNVideomanager::onConnectionChanged(int connectionType)
+void DNVideoManager::onConnectionChanged(int connectionType)
 {
     for(int i = 0; i < videoList.size(); i++){
         videoList[i]->setConnectionPriority(connectionType);
     }
 }
 
-void DNVideomanager::connectionChanged(int ID)
+void DNVideoManager::connectionChanged(int ID)
 {
-    qDebug()<<"DNVideomanager::connectionChanged: "<<ID;
+    qDebug()<<"DNVideoManager::connectionChanged: "<<ID;
     for(int i = 0; i < videoList.size(); i++){
         if(videoList[i]->boatID() == ID){
             if(videoList[i]->isPlaying()){

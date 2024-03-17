@@ -9,7 +9,7 @@
 #include <QMetaType>
 #include <QObject>
 #include <QQmlListProperty>
-#include "qmlobjectlistmodel.h"
+#include "dnqmlobjectlistmodel.h"
 
 class GPBCore;
 class BoatManager: public QObject
@@ -18,7 +18,7 @@ class BoatManager: public QObject
 public:
     BoatManager(QObject* parent = nullptr, GPBCore* core = nullptr);
     ~BoatManager();
-    Q_PROPERTY(QmlObjectListModel* boatListModel READ boatListModel CONSTANT)
+    Q_PROPERTY(DNQmlObjectListModel* boatListModel READ boatListModel CONSTANT)
     QAbstractItemModel* model() const {return boatItemModel;}
     void init();
     BoatItem* addBoat(int ID, QString boatname, QString PIP, QString SIP);
@@ -28,7 +28,7 @@ public:
     BoatItem* getBoatbyID(int ID);
     int getIDbyInex(int index);
     Q_INVOKABLE int getIndexbyID(int ID);
-    QmlObjectListModel* boatListModel(void) { return &_boatListModel;}
+    DNQmlObjectListModel* boatListModel(void) { return &_boatListModel;}
     QString CurrentIP(QString boatname);
     //void setConnectionType(int connectiontype);
     int size();
@@ -49,7 +49,7 @@ private:
     QList<BoatItem*> _boatList;
     int _connectionType;
     GPBCore* _core;
-    QmlObjectListModel _boatListModel;
+    DNQmlObjectListModel _boatListModel;
 };
 
 #endif // BOATMANAGER_H
