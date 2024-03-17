@@ -1,7 +1,7 @@
-﻿#include "gpbcore.h"
+﻿#include "dncore.h"
 #include <QQmlEngine>
 
-GPBCore::GPBCore(QObject *parent, QString config)
+DNCore::DNCore(QObject *parent, QString config)
     : QObject{parent},
       _config(config)
 {
@@ -23,11 +23,11 @@ GPBCore::GPBCore(QObject *parent, QString config)
     init();
 }
 
-GPBCore::~GPBCore(){
+DNCore::~DNCore(){
     delete _boatManager;
 }
 
-void GPBCore::init()
+void DNCore::init()
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     _videoManager->init();

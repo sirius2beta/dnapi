@@ -1,8 +1,8 @@
 ﻿#include "dnqmlglobal.h"
-#include "gpbcore.h"
+#include "dncore.h"
 #include "QDebug"
 
-DNQmlGlobal::DNQmlGlobal(QObject *parent, GPBCore* core)
+DNQmlGlobal::DNQmlGlobal(QObject *parent, DNCore* core)
     : QObject{parent},
       _core(core),
       _programName(QString("DeNovo Viewer"))

@@ -1,13 +1,13 @@
 ﻿#include "dnvideomanager.h"
 //#include "dnapplication.h"
-#include "gpbcore.h"
+#include "dncore.h"
 #include "dntypes.h"
 #include "QGCApplication.h"
 #include <QQmlEngine>
 #include <QQuickItem>
 
 
-DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
+DNVideoManager::DNVideoManager(QObject *parent, DNCore* core)
     : QObject{parent},
       _core(core)
 {

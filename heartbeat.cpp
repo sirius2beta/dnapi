@@ -4,16 +4,16 @@
 #include "heartbeat.h"
 #include "dntypes.h"
 #include "networkmanager.h"
-#include "gpbcore.h"
+#include "dncore.h"
 
 
 
-HeartBeat::HeartBeat(QObject *parent, GPBCore *core): QObject(parent)
+HeartBeat::HeartBeat(QObject *parent, DNCore *core): QObject(parent)
 {
     _core = core;
 }
 
-HeartBeat::HeartBeat(BoatItem* boat, int port, bool isPrimary, QObject *parent, GPBCore *core): QObject(parent)
+HeartBeat::HeartBeat(BoatItem* boat, int port, bool isPrimary, QObject *parent, DNCore *core): QObject(parent)
 {
 
     _core = core;

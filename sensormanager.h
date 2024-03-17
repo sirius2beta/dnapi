@@ -8,13 +8,13 @@
 #include "dnvalue.h"
 
 
-class GPBCore;
+class DNCore;
 
 class SensorManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit SensorManager(QObject *parent = nullptr, GPBCore *core = nullptr);
+    explicit SensorManager(QObject *parent = nullptr, DNCore *core = nullptr);
     void init();
     int count() { return _sensorList.size(); }
     SensorItem* getSensor(int index){ return _sensorList[index];}
@@ -33,7 +33,7 @@ public slots:
 private:
     QSettings* settings;
     QVector<SensorItem*> _sensorList;
-    GPBCore* _core;
+    DNCore* _core;
     QStandardItemModel* _sensorTypeModel;
 };
 

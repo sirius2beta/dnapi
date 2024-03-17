@@ -1,12 +1,12 @@
 ﻿#include "sensormanager.h"
-#include "gpbcore.h"
+#include "dncore.h"
 #include <QByteArray>
 #include <QVariant>
 #ifdef USE_QML
 #include <QQmlEngine>
 #endif
 
-SensorManager::SensorManager(QObject *parent, GPBCore* core)
+SensorManager::SensorManager(QObject *parent, DNCore* core)
     : QObject{parent},
     _core(core)
 {

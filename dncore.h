@@ -1,5 +1,5 @@
-﻿#ifndef GPBCORE_H
-#define GPBCORE_H
+﻿#ifndef DNCORE_H
+#define DNCORE_H
 
 #include <QObject>
 #include "boatmanager.h"
@@ -10,12 +10,12 @@
 #include "configmanager.h"
 #include "dnqmlglobal.h"
 
-class GPBCore : public QObject
+class DNCore : public QObject
 {
     Q_OBJECT
 public:
-    explicit GPBCore(QObject *parent = nullptr, QString config = 0);
-    ~GPBCore();
+    explicit DNCore(QObject *parent = nullptr, QString config = 0);
+    ~DNCore();
 
     void init();
 
@@ -38,4 +38,4 @@ private:
 
 };
 
-#endif // GPBCORE_H
+#endif // DNCORE_H

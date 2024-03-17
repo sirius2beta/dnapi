@@ -7,13 +7,13 @@
 #include "boatitem.h"
 #include "boatmanager.h"
 
-class GPBCore;
+class DNCore;
 class HeartBeat : public QObject
 {
     Q_OBJECT
 public:
-    explicit HeartBeat(QObject *parent = nullptr, GPBCore *core= nullptr);
-    HeartBeat(BoatItem* boat, int port, bool isPrimary, QObject *parent = nullptr, GPBCore *core = nullptr);
+    explicit HeartBeat(QObject *parent = nullptr, DNCore *core= nullptr);
+    HeartBeat(BoatItem* boat, int port, bool isPrimary, QObject *parent = nullptr, DNCore *core = nullptr);
     void HeartBeatLoop(); //工作函数
     ~HeartBeat();
 
@@ -38,7 +38,7 @@ private:
     bool primary;
     BoatItem* boat;
     BoatManager* boatList;
-    GPBCore* _core;
+    DNCore* _core;
 };
 
 #endif // HEARTBEAT_H

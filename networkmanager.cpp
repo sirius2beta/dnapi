@@ -1,10 +1,10 @@
 ﻿#include "networkmanager.h"
-#include "gpbcore.h"
+#include "dncore.h"
 #include <QQmlEngine>
 
 #include "dntypes.h"
 
-NetworkManager::NetworkManager(QObject *parent, GPBCore *core)
+NetworkManager::NetworkManager(QObject *parent, DNCore *core)
     : QObject{parent}
 {
     _core = core;

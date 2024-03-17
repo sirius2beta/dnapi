@@ -11,12 +11,12 @@
 #include <QQmlListProperty>
 #include "dnqmlobjectlistmodel.h"
 
-class GPBCore;
+class DNCore;
 class BoatManager: public QObject
 {
     Q_OBJECT
 public:
-    BoatManager(QObject* parent = nullptr, GPBCore* core = nullptr);
+    BoatManager(QObject* parent = nullptr, DNCore* core = nullptr);
     ~BoatManager();
     Q_PROPERTY(DNQmlObjectListModel* boatListModel READ boatListModel CONSTANT)
     QAbstractItemModel* model() const {return boatItemModel;}
@@ -48,7 +48,7 @@ private:
     QStandardItemModel* boatItemModel;
     QList<BoatItem*> _boatList;
     int _connectionType;
-    GPBCore* _core;
+    DNCore* _core;
     DNQmlObjectListModel _boatListModel;
 };
 

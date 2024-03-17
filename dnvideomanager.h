@@ -15,14 +15,14 @@
 #endif
 
 
-class GPBCore;
+class DNCore;
 
 class DNVideoManager : public QObject
 {
     Q_OBJECT
 public:
 
-    explicit DNVideoManager(QObject *parent = nullptr, GPBCore* core = nullptr);
+    explicit DNVideoManager(QObject *parent = nullptr, DNCore* core = nullptr);
     void init();
     ~DNVideoManager();
     void initVideo();
@@ -47,7 +47,7 @@ signals:
 private:
     QVector<VideoItem*> videoList;
     QSettings* settings;
-    GPBCore* _core;
+    DNCore* _core;
     GstElement *_testpipeline;
     GstElement *_testsink;
 

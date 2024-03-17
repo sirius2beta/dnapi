@@ -10,12 +10,12 @@
 #include <QQuickWindow>
 #include <QQuickItem>
 
-class GPBCore;
+class DNCore;
 class VideoItem : public QObject
 {
     Q_OBJECT
 public:
-    explicit VideoItem(QObject *parent = nullptr, GPBCore* core = nullptr, int index=-1, QString title=QString(), int boatID=-1, int videoNo=-1, int formatNo=-1, int PCPort=0);
+    explicit VideoItem(QObject *parent = nullptr, DNCore* core = nullptr, int index=-1, QString title=QString(), int boatID=-1, int videoNo=-1, int formatNo=-1, int PCPort=0);
     ~VideoItem();
     Q_PROPERTY(QStringList videoNoListModel READ videoNoListModel CONSTANT)
     Q_PROPERTY(int boatID READ boatID NOTIFY boatIDChanged )
@@ -73,7 +73,7 @@ signals:
     void videoStoped(VideoItem* v);
 
 private:
-    GPBCore* _core;
+    DNCore* _core;
     QString _title;
     int _boatID;
     int _index;

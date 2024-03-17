@@ -1,5 +1,5 @@
 ﻿//#include "dnapplication.h"
-#include "gpbcore.h"
+#include "dncore.h"
 #include "videoitem_qml.h"
 #include <QDebug>
 #include <QQuickWindow>
@@ -11,7 +11,7 @@
 #define COMMAND 0x30
 #define QUIT 0x40
 
-VideoItem::VideoItem(QObject *parent, GPBCore* core, int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
+VideoItem::VideoItem(QObject *parent, DNCore* core, int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
     : QObject{parent},
       _core(core),
       _title(title),

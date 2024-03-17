@@ -6,7 +6,7 @@
 #include "boatmanager.h"
 #include "networkmanager.h"
 
-class GPBCore;
+class DNCore;
 
 class DNQmlGlobal : public QObject
 {
@@ -15,7 +15,7 @@ class DNQmlGlobal : public QObject
 
 
 public:
-    explicit DNQmlGlobal(QObject *parent = nullptr, GPBCore* core = nullptr);
+    explicit DNQmlGlobal(QObject *parent = nullptr, DNCore* core = nullptr);
 
     QString programName() const {return _programName;}
 
@@ -29,7 +29,7 @@ public:
     int boatListmodel() const {return 0;}
 signals:
 private:
-    GPBCore* _core;
+    DNCore* _core;
     NetworkManager* _networkManager = nullptr;
     BoatManager* _boatManager = nullptr;
     QString _programName ;

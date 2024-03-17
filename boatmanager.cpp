@@ -1,10 +1,10 @@
 ﻿#include "boatmanager.h"
-#include "gpbcore.h"
+#include "dncore.h"
 #ifdef USE_QML
 #include <QQmlEngine>
 #endif
 
-BoatManager::BoatManager(QObject* parent, GPBCore *core): QObject(parent),
+BoatManager::BoatManager(QObject* parent, DNCore *core): QObject(parent),
     _connectionType(0)
 {
     _core = core;
