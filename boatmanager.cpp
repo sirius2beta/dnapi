@@ -159,7 +159,7 @@ void BoatManager::deleteBoat(int index)
     settings->endArray();
     settings->endGroup();
 
-    for(int i = 0; i < _core->videoManager()->size(); i++){
+    for(int i = 0; i < _core->videoManager()->count(); i++){
         if(_core->videoManager()->getVideoItem(i)->boatID() == ID){
             _core->videoManager()->getVideoItem(i)->stop();
         }

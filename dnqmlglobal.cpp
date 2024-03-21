@@ -10,5 +10,6 @@ DNQmlGlobal::DNQmlGlobal(QObject *parent, DNCore* core)
 
     _networkManager = core->networkManager();
     _boatManager = core->boatManager();
+    _videoManager = core->videoManager();
 
 }

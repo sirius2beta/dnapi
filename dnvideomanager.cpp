@@ -1,8 +1,8 @@
 ﻿#include "dnvideomanager.h"
-//#include "dnapplication.h"
+#include "dnapplication.h"
 #include "dncore.h"
 #include "dntypes.h"
-#include "QGCApplication.h"
+//#include "QGCApplication.h"
 #include <QQmlEngine>
 #include <QQuickItem>
 
@@ -52,7 +52,7 @@ void DNVideoManager::init()
 
 void DNVideoManager::initVideo()
 {
-    QQuickWindow* root = qgcApp()->mainRootWindow();
+    QQuickWindow* root = dnApp()->mainRootWindow();
     QQuickItem* widget = root->findChild<QQuickItem*>("videoContent");
     for(int i = 0; i < videoList.size(); i++){
         if(i == 0){
@@ -101,7 +101,9 @@ void DNVideoManager::onPlay(VideoItem* videoItem)
 
 void DNVideoManager::onStop(VideoItem* videoItem)
 {
+
     QString videoNo = QString("video")+QString::number(videoItem->videoNo());
+    qDebug()<<"**********************"<<videoNo;
     if(_core->boatManager()->getBoatbyID(videoItem->boatID()) == 0){
         qDebug()<<"Fatal:: DNVideoManager::onStop, boat ID:"<< videoItem->boatID()<<" not exist";
         return;

@@ -41,6 +41,8 @@ VideoItem::VideoItem(QObject *parent, DNCore* core, int index, QString title, in
     _qualityModel->setItem(0,0,dummyitem2);
     _qualityModel->removeRows(0,1);
 
+    _videoNoListModel<<"hi";
+
 }
 
 VideoItem::~VideoItem()
@@ -96,18 +98,25 @@ void VideoItem::setPCPort(int port)
 
 void VideoItem::setBoatID(int ID)
 {
+
     if(_core->boatManager()->getBoatbyID(ID) == 0){
         qDebug()<<"**Fatal:: VideoItem::setBoatID: ID out of range";
         return;
     }
+
     if(_boatID != ID){
-        stop();
+        //stop();
+
+        _videoNoListModel.clear();
+        emit videoNoListModelChanged(_videoNoListModel);
         _videoNoModel->removeRows(0,_videoNoModel->rowCount());
         _boatID = ID;
         _qualityModel->removeRows(0,_qualityModel->rowCount());
         _requestFormat = true;
         emit requestFormat(this);
+
     }
+
 }
 
 void VideoItem::setIndex(int index)
@@ -147,6 +156,7 @@ void VideoItem::setVideoFormat(QStringList videoformat)
     if(!_requestFormat) return;
     _requestFormat = false;
     QString currentvideoNo = QString();
+    qDebug()<<" VideoItem::setVideoNo: got videoFormat";
     for(const auto &vf:videoformat){
 
         QString videoNo = vf.split(' ')[0];
@@ -155,6 +165,8 @@ void VideoItem::setVideoFormat(QStringList videoformat)
             int current = _videoNoModel->rowCount();
             QStandardItem* item = new QStandardItem(currentvideoNo);
             _videoNoModel->setItem(current, 0, item);
+            _videoNoListModel<<currentvideoNo;
+            emit videoNoListModelChanged(_videoNoListModel);
 
             _videoNoListModel.append(QString("video")+QString::number(current));
         }
@@ -211,8 +223,10 @@ void VideoItem::play()
 
 void VideoItem::stop()
 {   
-    _isPlaying = false;
-    emit videoStoped(this);
+    if(_isPlaying){
+        //_isPlaying = false;
+        //emit videoStoped(this);
+    }
 
 }
 

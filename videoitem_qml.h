@@ -17,7 +17,7 @@ class VideoItem : public QObject
 public:
     explicit VideoItem(QObject *parent = nullptr, DNCore* core = nullptr, int index=-1, QString title=QString(), int boatID=-1, int videoNo=-1, int formatNo=-1, int PCPort=0);
     ~VideoItem();
-    Q_PROPERTY(QStringList videoNoListModel READ videoNoListModel CONSTANT)
+    Q_PROPERTY(QStringList videoNoListModel READ videoNoListModel NOTIFY videoNoListModelChanged)
     Q_PROPERTY(int boatID READ boatID NOTIFY boatIDChanged )
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(int PCPort READ PCPort NOTIFY PCPortChanged)
@@ -71,6 +71,7 @@ signals:
     void indexChanged(int index);
     void videoPlayed(VideoItem* v);
     void videoStoped(VideoItem* v);
+    void videoNoListModelChanged(QStringList model);
 
 private:
     DNCore* _core;

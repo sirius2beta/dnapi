@@ -26,7 +26,7 @@ public:
 
     BoatItem* getBoatbyIndex(int index);
     BoatItem* getBoatbyID(int ID);
-    int getIDbyInex(int index);
+    Q_INVOKABLE int getIDbyInex(int index);
     Q_INVOKABLE int getIndexbyID(int ID);
     DNQmlObjectListModel* boatListModel(void) { return &_boatListModel;}
     QString CurrentIP(QString boatname);
