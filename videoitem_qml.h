@@ -9,6 +9,7 @@
 #include <QStandardItemModel>
 #include <QQuickWindow>
 #include <QQuickItem>
+#include <QMap>
 
 class DNCore;
 class VideoItem : public QObject
@@ -18,6 +19,7 @@ public:
     explicit VideoItem(QObject *parent = nullptr, DNCore* core = nullptr, int index=-1, QString title=QString(), int boatID=-1, int videoNo=-1, int formatNo=-1, int PCPort=0);
     ~VideoItem();
     Q_PROPERTY(QStringList videoNoListModel READ videoNoListModel NOTIFY videoNoListModelChanged)
+    Q_PROPERTY(QStringList qualityListModel READ qualityListModel NOTIFY qualityListModelChanged)
     Q_PROPERTY(int boatID READ boatID NOTIFY boatIDChanged )
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(int PCPort READ PCPort NOTIFY PCPortChanged)
@@ -35,13 +37,13 @@ public:
     Q_INVOKABLE void setPCPort(int port);
     Q_INVOKABLE void setBoatID(int ID);
     Q_INVOKABLE void setIndex(int index);
-    Q_INVOKABLE void setVideoNo(int index);
+    Q_INVOKABLE void setVideoIndex(int index);
     Q_INVOKABLE void setFormatNo(int no);
     Q_INVOKABLE void setProxyMode(bool p){ _proxyMode = p;}
 
     void initVideo(QQuickItem *widget);
     void setDisplay(WId xwinid);
-    void setVideoFormat(QStringList videoformat);
+    void setVideoFormat(QByteArray data);
     void setWID(WId wid){_xwinid = wid;}
     void setConnectionPriority(int connectionType);
     void setVideoInfo(bool i) { _isVideoInfo = i; }
@@ -51,17 +53,16 @@ public:
     int PCPort() {  return _PCPort; }
     int port() {return _proxy?(_PCPort+100):_PCPort;}
     int index() {return _index; }
-    int videoNo() { return _videoNo;}
+    int videoNo() { return _videoNoListModel[_videoIndex].toInt();}
     bool isPlaying(){ return _isPlaying;}
     int connectionPriority() { return _connectionPriority;}
     bool videoInfo() { return _isVideoInfo; }
     QStringList videoNoListModel() { return _videoNoListModel; }
+    QStringList qualityListModel() { return _qualityListModel; }
 
 
     QString encoder() {return _encoder;}
     QString videoFormat();
-    QAbstractItemModel* videoNoModel(){ return _videoNoModel;   }
-    QAbstractItemModel* qualityModel(){ return _qualityModel;   }
 
 signals:
     void requestFormat(VideoItem* v); //set _requestFormat = true before sending
@@ -72,13 +73,14 @@ signals:
     void videoPlayed(VideoItem* v);
     void videoStoped(VideoItem* v);
     void videoNoListModelChanged(QStringList model);
+    void qualityListModelChanged(QStringList model);
 
 private:
     DNCore* _core;
     QString _title;
     int _boatID;
     int _index;
-    int _videoNo;
+    int _videoIndex;
     int _formatNo;
     int _PCPort;
     int _connectionPriority;
@@ -94,11 +96,10 @@ private:
     bool _isVideoInfo;
 
     bool _proxyMode;
-    QStringList _videoFormatList;
-    QStandardItemModel* _videoNoModel;
-    QStandardItemModel* _qualityModel;
+    QMap<int, QList<int>> _videoFormatList;
 
     QStringList _videoNoListModel;
+    QStringList _qualityListModel;
 
 
 };

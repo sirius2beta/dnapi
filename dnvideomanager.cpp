@@ -116,7 +116,7 @@ void DNVideoManager::onBoatAdded()
 {
     for(int i = 0; i<videoList.size(); i++){
         if(videoList[i]->boatID() == -1){
-            videoList[i]->setVideoNo(0);
+            videoList[i]->setVideoIndex(0);
         }
     }
 }
@@ -128,13 +128,12 @@ void DNVideoManager::onRequestFormat(VideoItem* videoItem)
     emit sendMsg(addr, DNTypes::Format,"qformat");
 }
 
-void DNVideoManager::setVideoFormat(int ID, QStringList videoformat)
+void DNVideoManager::setVideoFormat(int ID, QByteArray data)
 {
     for(int i = 0; i < videoList.size(); i++){
         if(videoList[i]->boatID() == ID){
             qDebug()<<"set format, index:"<<_core->boatManager()->getIndexbyID(ID);
-            videoList[i]->setVideoFormat(videoformat);
-
+            videoList[i]->setVideoFormat(data);
         }
     }
 }

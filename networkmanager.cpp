@@ -61,12 +61,12 @@ void NetworkManager::onUDPMsg()
 
         }else if(topic == DNTypes::Format){
             int ID = int(data[0]);
-            QString format = data.remove(0,1);
-            //qDebug()<<"MainWindow call from FORMAT, boat ID:"<<ID;
-            qDebug()<<"Net format ID:"<<ID;
-            if(format != ""){
-                emit setFormat(ID, format.split('\n'));
-            }
+            data.remove(0,1);
+
+
+
+            emit setFormat(ID, data);
+
 
         }else if(topic == DNTypes::Sensor){
             int ID = int(data[0]);

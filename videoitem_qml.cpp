@@ -17,7 +17,7 @@ VideoItem::VideoItem(QObject *parent, DNCore* core, int index, QString title, in
       _title(title),
       _boatID(boatID),
       _index(index),
-    _videoNo(videoNo),
+    _videoIndex(videoNo),
     _formatNo(formatNo),
     _PCPort(PCPort),
     _connectionPriority(0),
@@ -28,20 +28,6 @@ VideoItem::VideoItem(QObject *parent, DNCore* core, int index, QString title, in
     _isVideoInfo(false)
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-
-    _videoNoModel = new QStandardItemModel;
-    _qualityModel = new QStandardItemModel;
-
-    QStandardItem* dummyitem1 = new QStandardItem("fl");
-    QStandardItem* dummyitem2 = new QStandardItem("fl");
-
-    //set and remove item so QCombobox can keep index updated
-    _videoNoModel->setItem(0,0,dummyitem1);
-    _videoNoModel->removeRows(0,1);
-    _qualityModel->setItem(0,0,dummyitem2);
-    _qualityModel->removeRows(0,1);
-
-    _videoNoListModel<<"hi";
 
 }
 
@@ -55,9 +41,6 @@ VideoItem::~VideoItem()
         gst_object_unref (_pipeline);
         gst_object_unref (_sink);
     }
-
-    delete _videoNoModel;
-    delete _qualityModel;
 }
 void VideoItem::initVideo(QQuickItem *widget)
 {
@@ -106,12 +89,13 @@ void VideoItem::setBoatID(int ID)
 
     if(_boatID != ID){
         //stop();
-
+        //new list model
         _videoNoListModel.clear();
+        _qualityListModel.clear();
         emit videoNoListModelChanged(_videoNoListModel);
-        _videoNoModel->removeRows(0,_videoNoModel->rowCount());
+        emit qualityListModelChanged(_qualityListModel);
+
         _boatID = ID;
-        _qualityModel->removeRows(0,_qualityModel->rowCount());
         _requestFormat = true;
         emit requestFormat(this);
 
@@ -125,65 +109,61 @@ void VideoItem::setIndex(int index)
     emit indexChanged(index);
 }
 
-void VideoItem::setVideoNo(int index)
+void VideoItem::setVideoIndex(int index)
 {
-    if(index >= _videoNoModel->rowCount()){
+    if(index >= _videoNoListModel.size()){
         qDebug()<<"**Fatal:: VideoItem::setVideoNo: index out of range";
         return;
     }
-    _qualityModel->removeRows(0,_qualityModel->rowCount());
-    //int preNo = -1;
-    int currentNo = -1;
-    int currentindex = -1;
-    for(const auto &formatlist:_videoFormatList){
-        if(formatlist.split(' ')[0].split('o')[1].toInt() != currentNo){
-            currentNo = formatlist.split(' ')[0].split('o')[1].toInt();
-            currentindex ++;
-        }
-        if(currentindex == index){
-            QStringList fl = formatlist.split(' ');
-            fl.pop_front();
-            int current = _qualityModel->rowCount();
-            QStandardItem* item = new QStandardItem(fl.join(" "));
-            _qualityModel->setItem(current, 0, item);
-            _videoNo = currentNo;
-        }
+    _videoIndex = index;
+    _qualityListModel.clear();
+
+    QList<int> h = _videoFormatList[_videoNoListModel.at(index).toInt()];
+    qDebug()<<"VideoItem::h: "<<h.size();
+    for(int i = 0; i< h.size(); i++){
+        _qualityListModel<<QString::number(h[i]);
     }
+    if(_qualityListModel.size() > 0){
+        _formatNo = 0;
+    }
+    emit qualityListModelChanged(_qualityListModel);
 }
 
-void VideoItem::setVideoFormat(QStringList videoformat)
+void VideoItem::setVideoFormat(QByteArray data)
 {
     if(!_requestFormat) return;
     _requestFormat = false;
     QString currentvideoNo = QString();
     qDebug()<<" VideoItem::setVideoNo: got videoFormat";
-    for(const auto &vf:videoformat){
-
-        QString videoNo = vf.split(' ')[0];
-        if(currentvideoNo != videoNo){
-            currentvideoNo = videoNo;
-            int current = _videoNoModel->rowCount();
-            QStandardItem* item = new QStandardItem(currentvideoNo);
-            _videoNoModel->setItem(current, 0, item);
-            _videoNoListModel<<currentvideoNo;
-            emit videoNoListModelChanged(_videoNoListModel);
-
-            _videoNoListModel.append(QString("video")+QString::number(current));
-        }
-        QStringList vfl = vf.split(' ');
-        if(vfl[2].split('=')[1].toInt()<= 1920){  //limit with<1920
-            QString vfstring = vfl.join(' ');
-            _videoFormatList<<vfstring; //save videoformat of videox to videoFormatList
-        }
+    _videoFormatList.clear();
+    int videoNo;
+    int formatNo;
+    int readorder = 0;
+    if(data.size()%2 != 0 || data.size()/2 == 0){
+        qDebug()<<"**Fatal::VideoItem::setVideoNo: wrong format message:"<<data.size();
+        return;
     }
-    if(_videoNoModel->rowCount() >0){
-        setVideoNo(0);
+    for(int i = 0; i < data.size(); i+=2){
+        videoNo = int(data[i]);
+        formatNo = int(data[i+1]);
+        _videoFormatList[videoNo].append(formatNo);
+    }
+
+    QMap<int, QList<int>>::const_iterator h = _videoFormatList.constBegin();
+    while(h != _videoFormatList.constEnd()){
+        _videoNoListModel<<QString::number(h.key());
+        emit videoNoListModelChanged(_videoNoListModel);
+        ++h;
+    }
+
+    if(_videoNoListModel.size() >0){
+        setVideoIndex(0);
     }
 }
 
 void VideoItem::setFormatNo(int no)
 {
-    if(no >= _qualityModel->rowCount()){
+    if(no >= _qualityListModel.size()){
         qDebug()<<"**Fatal:: VideoItem::setFormatNo: index out of range";
         return;
     }
@@ -213,9 +193,9 @@ void VideoItem::setConnectionPriority(int connectionType)
 
 void VideoItem::play()
 {
+    qDebug()<<"VideoItem::play, videoIndex:"<<_videoIndex<<", formatNo:"<<_formatNo;
+    if(_boatID == -1 || _videoIndex == -1 || _formatNo == -1) return;
 
-    if(_boatID == -1 || _videoNo == -1 || _formatNo == -1) return;
-    qDebug()<<"VideoItem::play, videoNo:"<<_videoNo<<", formatNo:"<<_formatNo;
 
     _isPlaying = true;
     emit videoPlayed(this);
@@ -269,6 +249,6 @@ QString VideoItem::videoFormat()
         qDebug()<<"**Warning: VideoItem::videoFormat: _formatNo = -1";
         return QString("");
     }
-    return _qualityModel->item(_formatNo, 0)->text();
+    return _qualityListModel[_formatNo];
 
 }

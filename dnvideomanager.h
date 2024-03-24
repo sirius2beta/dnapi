@@ -41,7 +41,7 @@ public slots:
     void onStop(VideoItem* videoItem);
     void onBoatAdded();
     void onRequestFormat(VideoItem* videoItem);
-    void setVideoFormat(int ID, QStringList videoformat);
+    void setVideoFormat(int ID, QByteArray data);
     void onConnectionChanged(int connectionType);
     void connectionChanged(int ID);
 signals:

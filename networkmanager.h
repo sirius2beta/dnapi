@@ -16,7 +16,7 @@ public:
 
 signals:
     void AliveResponse(QString ip, int ID);
-    void setFormat(int ID, QStringList format);
+    void setFormat(int ID, QByteArray data);
     void sensorMsg(int ID, QByteArray data);
 public slots:
     void sendMsg(QHostAddress addr, char topic, QByteArray command);
