@@ -82,26 +82,41 @@ void BoatManager::init()
     qDebug()<<"BoatManager::init(): Initiate complete";
 }
 
-BoatItem* BoatManager::addBoat(int ID, QString boatname, QString PIP, QString SIP)
+void BoatManager::addBoat()
 {
+
+    QVector<bool> indexfree(256, true);
+        int index = 0;
+        for(int i = 0; i< size(); i++){
+            indexfree[getBoatbyIndex(i)->ID()] = false;
+
+        }
+        for(int i =0; i<256; i++){
+            if(indexfree[i] == true){
+                index = i;
+
+                break;
+            }
+        }
+
 
 
     BoatItem* boat = new BoatItem(this);
-    boat->setID(ID);
-    boat->setName(boatname);
-    boat->setPIP(PIP);
-    boat->setSIP(SIP);
+    boat->setID(index);
+    boat->setName("unknown");
+    boat->setPIP("");
+    boat->setSIP("");
     _boatList.append(boat);
 
     _boatListModel.append(boat);
 
     int current = boatItemModel->rowCount();
-    QStandardItem* item1 = new QStandardItem(boatname);
+    QStandardItem* item1 = new QStandardItem("unknown");
     QStandardItem* item2 = new QStandardItem(QString("SB"));
-    item2->setData(PIP);
+    item2->setData("");
     item2->setBackground(QBrush(QColor(120,0,0)));
     QStandardItem* item3 = new QStandardItem(QString("SB"));
-    item3->setData(SIP);
+    item3->setData("");
     item3->setBackground(QBrush(QColor(120,0,0)));
     boatItemModel->setItem(current,0,item1);
     boatItemModel->setItem(current,1,item2);
@@ -126,21 +141,22 @@ BoatItem* BoatManager::addBoat(int ID, QString boatname, QString PIP, QString SI
     settings->endArray();
     settings->beginWriteArray("boat");
     settings->setArrayIndex(size);
-    settings->setValue(QString("boatname"), boatname);
-    settings->setValue(QString("ID"), ID);
+    settings->setValue(QString("boatname"), "unknown");
+    settings->setValue(QString("ID"), index);
     settings->setValue(QString("PIP"), "");
     settings->setValue(QString("SIP"), "");
     settings->endArray();
     settings->endGroup();
 
-    return boat;
 }
 
 void BoatManager::deleteBoat(int index)
 {
     int ID = getIndexbyID(index);
+    _boatListModel.removeAt(index);
     delete _boatList[index];
     _boatList.removeAt(index);
+
 
     settings->beginGroup(QString("%1").arg(_core->config()));
     settings->remove("");

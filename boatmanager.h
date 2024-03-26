@@ -21,8 +21,8 @@ public:
     Q_PROPERTY(DNQmlObjectListModel* boatListModel READ boatListModel CONSTANT)
     QAbstractItemModel* model() const {return boatItemModel;}
     void init();
-    BoatItem* addBoat(int ID, QString boatname, QString PIP, QString SIP);
-    void deleteBoat(int index);
+    Q_INVOKABLE void addBoat();
+    Q_INVOKABLE void deleteBoat(int index);
 
     BoatItem* getBoatbyIndex(int index);
     BoatItem* getBoatbyID(int ID);

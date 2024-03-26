@@ -19,7 +19,7 @@ signals:
     void setFormat(int ID, QByteArray data);
     void sensorMsg(int ID, QByteArray data);
 public slots:
-    void sendMsg(QHostAddress addr, char topic, QByteArray command);
+    void sendMsg(QHostAddress addr, char topic, QByteArray command = "");
 
 protected slots:
     void onUDPMsg();

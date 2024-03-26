@@ -125,7 +125,7 @@ void DNVideoManager::onRequestFormat(VideoItem* videoItem)
 {
     QHostAddress addr(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     qDebug()<<"DNVideoManager::onRequestFormat: currentIP:"<<_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP();
-    emit sendMsg(addr, DNTypes::Format,"qformat");
+    emit sendMsg(addr, DNTypes::Format, "");
 }
 
 void DNVideoManager::setVideoFormat(int ID, QByteArray data)
