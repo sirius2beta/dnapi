@@ -24,7 +24,7 @@ public:
     Q_INVOKABLE void addBoat();
     Q_INVOKABLE void deleteBoat(int index);
 
-    BoatItem* getBoatbyIndex(int index);
+    Q_INVOKABLE BoatItem* getBoatbyIndex(int index);
     BoatItem* getBoatbyID(int ID);
     Q_INVOKABLE int getIDbyInex(int index);
     Q_INVOKABLE int getIndexbyID(int ID);

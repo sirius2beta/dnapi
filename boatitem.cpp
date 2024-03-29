@@ -54,14 +54,20 @@ void BoatItem::setID(int ID)
 
 void BoatItem::setPIP(QString PIP)
 {
-    _PIP = PIP;
-    emit IPChanged(_ID, true);
+    if(PIP != _PIP){
+        _PIP = PIP;
+        emit IPChanged(_ID, true);
+        emit PIPChanged(PIP);
+    }
 }
 
 void BoatItem::setSIP(QString SIP)
 {
-    _SIP = SIP;
-    emit IPChanged(_ID, false);
+    if(SIP != _SIP){
+        _SIP = SIP;
+        emit IPChanged(_ID, false);
+        emit SIPChanged(SIP);
+    }
 }
 
 void BoatItem::setOS(int OS)

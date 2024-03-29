@@ -270,7 +270,7 @@ void BoatManager::onIPChanged(int ID, bool primary)
     }
 
     settings->beginGroup(QString("%1").arg(_core->config()));
-    //int size = settings->beginReadArray("boat");
+    settings->beginReadArray("boat");
 
     settings->setArrayIndex(index);
     settings->setValue("PIP", boat->PIP());

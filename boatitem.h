@@ -18,8 +18,8 @@ public:
 
     Q_PROPERTY(int ID READ ID CONSTANT)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
-    Q_PROPERTY(QString PIP READ PIP  NOTIFY IPChanged)
-    Q_PROPERTY(QString SIP READ SIP  NOTIFY IPChanged)
+    Q_PROPERTY(QString PIP READ PIP WRITE setPIP NOTIFY PIPChanged)
+    Q_PROPERTY(QString SIP READ SIP WRITE setSIP NOTIFY SIPChanged)
     Q_PROPERTY(bool primaryConnected READ primaryConnected  NOTIFY connectStatusChanged)
     Q_PROPERTY(bool secondaryConnected READ secondaryConnected  NOTIFY connectStatusChanged)
 
@@ -55,6 +55,8 @@ public:
     QList<Device> devices;
 signals:
     void nameChanged(int ID, QString name);
+    void PIPChanged(QString IP); // for qml
+    void SIPChanged(QString IP); //for qml
     void IDChanged(int ID);
     void IPChanged(int ID, bool isPrimary);
     void connectStatusChanged(int ID, bool isPrimary, bool connected);
