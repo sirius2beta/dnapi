@@ -20,8 +20,8 @@ public:
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(QString PIP READ PIP WRITE setPIP NOTIFY PIPChanged)
     Q_PROPERTY(QString SIP READ SIP WRITE setSIP NOTIFY SIPChanged)
-    Q_PROPERTY(bool primaryConnected READ primaryConnected  NOTIFY connectStatusChanged)
-    Q_PROPERTY(bool secondaryConnected READ secondaryConnected  NOTIFY connectStatusChanged)
+    Q_PROPERTY(bool primaryConnected READ primaryConnected  NOTIFY primaryConnectedChanged)
+    Q_PROPERTY(bool secondaryConnected READ secondaryConnected  NOTIFY secondaryConnectedChanged)
 
 
     QString name(void) {    return _name;   };
@@ -60,6 +60,8 @@ signals:
     void IDChanged(int ID);
     void IPChanged(int ID, bool isPrimary);
     void connectStatusChanged(int ID, bool isPrimary, bool connected);
+    void primaryConnectedChanged(bool isConnected);
+    void secondaryConnectedChanged(bool isConnected);
     void connectionChanged(int ID);
 private:
     QString _name = QString("null");

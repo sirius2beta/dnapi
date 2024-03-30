@@ -53,7 +53,17 @@ public:
     int PCPort() {  return _PCPort; }
     int port() {return _proxy?(_PCPort+100):_PCPort;}
     int index() {return _index; }
-    int videoNo() { return _videoNoListModel[_videoIndex].toInt();}
+    int videoNo() {
+        //qDebug()<<_videoIndex<<","<<_videoNoListModel.size();
+        if(_videoIndex == -1){
+            qDebug()<<_videoIndex<<","<<_videoNoListModel.size();
+            return -1;
+        }else{
+            qDebug()<<_videoIndex<<",,"<<_videoNoListModel.size();
+            return _videoNoListModel[_videoIndex].toInt();
+        }
+    }
+    int formatIndex() { return _qualityListModel[_formatNo].toInt();}
     bool isPlaying(){ return _isPlaying;}
     int connectionPriority() { return _connectionPriority;}
     bool videoInfo() { return _isVideoInfo; }
@@ -77,10 +87,12 @@ signals:
 
 private:
     DNCore* _core;
+    bool _initialized;
     QString _title;
     int _boatID;
     int _index;
     int _videoIndex;
+    int _preVideoIndex;
     int _formatNo;
     int _PCPort;
     int _connectionPriority;

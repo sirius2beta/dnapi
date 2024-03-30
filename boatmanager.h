@@ -18,7 +18,7 @@ class BoatManager: public QObject
 public:
     BoatManager(QObject* parent = nullptr, DNCore* core = nullptr);
     ~BoatManager();
-    Q_PROPERTY(DNQmlObjectListModel* boatListModel READ boatListModel CONSTANT)
+    Q_PROPERTY(DNQmlObjectListModel* boatListModel READ boatListModel NOTIFY onboatListModelChanged)
     QAbstractItemModel* model() const {return boatItemModel;}
     void init();
     Q_INVOKABLE void addBoat();
@@ -33,9 +33,10 @@ public:
     //void setConnectionType(int connectiontype);
     int size();
 signals:
-    void BoatAdded();
+    void boatAdded();
     void connectionTypeChanged(int connectiontype);
     void connectionChanged(int ID);
+    void onboatListModelChanged(DNQmlObjectListModel* model);
 public slots:
     void onBoatNameChange(int ID, QString newname);
     void onIPChanged(int ID, bool primary);

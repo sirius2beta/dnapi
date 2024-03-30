@@ -5,6 +5,7 @@
 //#include "QGCApplication.h"
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <cstring>
 
 
 DNVideoManager::DNVideoManager(QObject *parent, DNCore* core)
@@ -79,6 +80,7 @@ void DNVideoManager::setVideoTest(QQuickItem* widget)
 void DNVideoManager::addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
 {
     VideoItem* newvideoitem = new VideoItem(this, _core, index, title, boatID, videoNo, formatNo, PCPort);
+    QQmlEngine::setObjectOwnership(newvideoitem, QQmlEngine::CppOwnership);
     if(settings->value(QString("%1/w%2/videoinfo").arg(_core->config(),QString::number(newvideoitem->index()))) == 1){
         newvideoitem->setVideoInfo(true);
     }else{
@@ -94,13 +96,30 @@ void DNVideoManager::addVideoItem(int index, QString title, int boatID, int vide
 void DNVideoManager::onPlay(VideoItem* videoItem)
 {
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
-    QString msg = "video"+QString::number(videoItem->videoNo())+" "+videoItem->videoFormat()+" "+videoItem->encoder()+" nan"+" 90"+" "+QString::number(videoItem->port());
-    if(msg == QString("")) return;
-    emit sendMsg(ip, DNTypes::Command, msg.toLocal8Bit());
+    char rawdata[7];
+
+    uint8_t videoInexraw = videoItem->videoNo();
+    uint8_t formatIndexraw = videoItem->formatIndex();
+    uint8_t encoder = videoItem->encoder() == QString("h264")? 0:1;
+    int32_t port = videoItem->port();
+
+    memcpy(rawdata, &videoInexraw, sizeof(uint8_t));
+    memcpy(rawdata+1, &formatIndexraw, sizeof(uint8_t));
+    memcpy(rawdata+2, &encoder, sizeof(uint8_t));
+
+    memcpy(rawdata+3, &port, sizeof(int32_t));
+    QByteArray msg = QByteArray(rawdata,7);
+    qDebug()<<"DNVideoManager::onPlay:send: "+msg;
+    //if(msg == QString("")) return;
+    emit sendMsg(ip, DNTypes::Command, msg);
 }
 
 void DNVideoManager::onStop(VideoItem* videoItem)
 {
+
+    if(videoItem->videoNo() == -1){
+        return;
+    }
 
     QString videoNo = QString("video")+QString::number(videoItem->videoNo());
     qDebug()<<"**********************"<<videoNo;
@@ -110,15 +129,18 @@ void DNVideoManager::onStop(VideoItem* videoItem)
     }
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     emit sendMsg(ip, char(DNTypes::Quit), videoNo.toLocal8Bit());
+
 }
 
 void DNVideoManager::onBoatAdded()
 {
+    /*
     for(int i = 0; i<videoList.size(); i++){
         if(videoList[i]->boatID() == -1){
             videoList[i]->setVideoIndex(0);
         }
     }
+    */
 }
 
 void DNVideoManager::onRequestFormat(VideoItem* videoItem)

@@ -24,9 +24,9 @@ BoatManager::~BoatManager()
 
 void BoatManager::init()
 {
-    #ifdef USE_QML
+
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-    #endif
+
     qDebug()<<"BoatManager::init(): Initiating...";
     settings->beginGroup(QString("%1").arg(_core->config()));
     int size = settings->beginReadArray("boat");
@@ -102,6 +102,7 @@ void BoatManager::addBoat()
 
 
     BoatItem* boat = new BoatItem(this);
+    QQmlEngine::setObjectOwnership(boat, QQmlEngine::CppOwnership);
     boat->setID(index);
     boat->setName("unknown");
     boat->setPIP("");
@@ -109,6 +110,8 @@ void BoatManager::addBoat()
     _boatList.append(boat);
 
     _boatListModel.append(boat);
+    emit onboatListModelChanged(&_boatListModel);
+    emit boatAdded();
 
     int current = boatItemModel->rowCount();
     QStandardItem* item1 = new QStandardItem("unknown");
@@ -207,6 +210,9 @@ BoatItem* BoatManager::getBoatbyID(int ID)
 
 int BoatManager::getIDbyInex(int index)
 {
+    if(_boatList.size() == 0){
+        return -1;
+    }
     return _boatList[index]->ID();
 }
 

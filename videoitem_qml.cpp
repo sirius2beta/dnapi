@@ -14,10 +14,12 @@
 VideoItem::VideoItem(QObject *parent, DNCore* core, int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
     : QObject{parent},
       _core(core),
+      _initialized(false),
       _title(title),
       _boatID(boatID),
       _index(index),
     _videoIndex(videoNo),
+    _preVideoIndex(-1),
     _formatNo(formatNo),
     _PCPort(PCPort),
     _connectionPriority(0),
@@ -34,7 +36,7 @@ VideoItem::VideoItem(QObject *parent, DNCore* core, int index, QString title, in
 VideoItem::~VideoItem()
 {
 
-    if(_isPlaying == false){
+    if(_initialized == false){
 
     }else{
         gst_element_set_state (_pipeline, GST_STATE_NULL);
@@ -65,6 +67,7 @@ void VideoItem::initVideo(QQuickItem *widget)
 
 
     _isPlaying = true;
+    _initialized = true;
 }
 
 void VideoItem::setTitle(QString title)
@@ -88,7 +91,7 @@ void VideoItem::setBoatID(int ID)
     }
 
     if(_boatID != ID){
-        //stop();
+        stop();
         //new list model
         _videoNoListModel.clear();
         _qualityListModel.clear();
@@ -97,6 +100,7 @@ void VideoItem::setBoatID(int ID)
 
         _boatID = ID;
         _requestFormat = true;
+        _preVideoIndex = -1;
         emit requestFormat(this);
 
     }
@@ -195,8 +199,13 @@ void VideoItem::play()
 {
     qDebug()<<"VideoItem::play, videoIndex:"<<_videoIndex<<", formatNo:"<<_formatNo;
     if(_boatID == -1 || _videoIndex == -1 || _formatNo == -1) return;
-
-
+    int tempIndex = _videoIndex;
+    if(_isPlaying && _preVideoIndex!=-1){
+        _videoIndex = _preVideoIndex;
+        stop();
+    }
+    _videoIndex =tempIndex;
+    _preVideoIndex = _videoIndex;
     _isPlaying = true;
     emit videoPlayed(this);
 }
@@ -204,8 +213,8 @@ void VideoItem::play()
 void VideoItem::stop()
 {   
     if(_isPlaying){
-        //_isPlaying = false;
-        //emit videoStoped(this);
+        _isPlaying = false;
+        emit videoStoped(this);
     }
 
 }
