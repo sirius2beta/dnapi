@@ -16,11 +16,13 @@ NetworkManager::NetworkManager(QObject *parent, DNCore *core)
 
 void NetworkManager::init()
 {
+
+
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     connect(clientSocket,&QUdpSocket::readyRead,this, &NetworkManager::onUDPMsg);
 }
 
-void NetworkManager::sendMsg(QHostAddress addr, char topic, QByteArray command)
+void NetworkManager::sendMsg(QHostAddress addr, uint8_t topic, QByteArray command)
 {
     QByteArray cmd;
     cmd.resize(1);
@@ -31,6 +33,12 @@ void NetworkManager::sendMsg(QHostAddress addr, char topic, QByteArray command)
 
 void NetworkManager::onUDPMsg()
 {
+    static const char* msg_heartbeat = "HEARTBEAT";
+    static const char* msg_format = "FORMAT";
+    static const char* msg_command = "COMMAND";
+    static const char* msg_quit = "QUIT";
+    static const char* msg_sensor = "SENSOR";
+
     while(clientSocket->hasPendingDatagrams()){
         QByteArray data;
         QHostAddress addr;
@@ -38,19 +46,22 @@ void NetworkManager::onUDPMsg()
         data.resize(clientSocket->pendingDatagramSize());
         clientSocket->readDatagram(data.data(),data.size(),&addr);
 
-        char topic = data[0];
+        uint8_t topic = data[0];
         data.remove(0,1);
 
         ip = QHostAddress(addr.toIPv4Address()).toString();
-
 
         QStringList dataList = QString(data).split(' ');
         QString message;
         if(data.split(' ').size() >1){
             message = data.split(' ')[1];
         }
-        if(topic == DNTypes::Heartbeat){
+
+        QString msgType = _core->configManager()->messageChar(topic);
+        qDebug() << topic<<","<<_core->configManager()->messageChar(0) <<", "<<msg_heartbeat;
+        if(msgType == msg_heartbeat){
             int ID = int(data[0]);
+            qDebug() << ID;
             BoatItem* boat = _core->boatManager()->getBoatbyID(ID);
 
             if( boat != 0){
@@ -59,7 +70,7 @@ void NetworkManager::onUDPMsg()
             }
 
 
-        }else if(topic == DNTypes::Format){
+        }else if(msgType == msg_format){
             int ID = int(data[0]);
             data.remove(0,1);
 
@@ -68,14 +79,14 @@ void NetworkManager::onUDPMsg()
             emit setFormat(ID, data);
 
 
-        }else if(topic == DNTypes::Sensor){
+        }else if(msgType == msg_sensor){
             int ID = int(data[0]);
             data.remove(0,1);
             emit sensorMsg(ID, data);
         }
         const QString content = QLatin1String(" Received Topic: ")
                     + topic
-                                + QLatin1String(" Message: ");
+                                + QLatin1String(" Message: ") + data;
         //qDebug() << content;
     }
 }

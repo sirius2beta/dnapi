@@ -5,6 +5,8 @@ DNCore::DNCore(QObject *parent, QString config)
     : QObject{parent},
       _config(config)
 {
+
+
     settings = new QSettings("Ezosirius", "GPlayer_v1",this);
     _configManager = new ConfigManager();
     _networkManager = new NetworkManager(this, this);

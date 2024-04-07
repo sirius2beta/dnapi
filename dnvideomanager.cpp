@@ -111,7 +111,7 @@ void DNVideoManager::onPlay(VideoItem* videoItem)
     QByteArray msg = QByteArray(rawdata,7);
     qDebug()<<"DNVideoManager::onPlay:send: "+msg;
     //if(msg == QString("")) return;
-    emit sendMsg(ip, DNTypes::Command, msg);
+    emit sendMsg(ip, _core->configManager()->message("COMMAND"), msg);
 }
 
 void DNVideoManager::onStop(VideoItem* videoItem)
@@ -128,7 +128,7 @@ void DNVideoManager::onStop(VideoItem* videoItem)
         return;
     }
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
-    emit sendMsg(ip, char(DNTypes::Quit), videoNo.toLocal8Bit());
+    emit sendMsg(ip, _core->configManager()->message("QUIT"), videoNo.toLocal8Bit());
 
 }
 
@@ -147,7 +147,7 @@ void DNVideoManager::onRequestFormat(VideoItem* videoItem)
 {
     QHostAddress addr(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     qDebug()<<"DNVideoManager::onRequestFormat: currentIP:"<<_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP();
-    emit sendMsg(addr, DNTypes::Format, "");
+    emit sendMsg(addr, _core->configManager()->message("FORMAT"), "");
 }
 
 void DNVideoManager::setVideoFormat(int ID, QByteArray data)

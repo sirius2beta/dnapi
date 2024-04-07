@@ -20,6 +20,7 @@ public:
     ~VideoItem();
     Q_PROPERTY(QStringList videoNoListModel READ videoNoListModel NOTIFY videoNoListModelChanged)
     Q_PROPERTY(QStringList qualityListModel READ qualityListModel NOTIFY qualityListModelChanged)
+    Q_PROPERTY(QStringList formatListStringModel READ formatListStringModel NOTIFY formatListStringModelChanged)
     Q_PROPERTY(int boatID READ boatID NOTIFY boatIDChanged )
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(int PCPort READ PCPort NOTIFY PCPortChanged)
@@ -63,12 +64,13 @@ public:
             return _videoNoListModel[_videoIndex].toInt();
         }
     }
-    int formatIndex() { return _qualityListModel[_formatNo].toInt();}
+    int formatIndex() { return _formatListModel[_formatNo].toInt();}
     bool isPlaying(){ return _isPlaying;}
     int connectionPriority() { return _connectionPriority;}
     bool videoInfo() { return _isVideoInfo; }
     QStringList videoNoListModel() { return _videoNoListModel; }
-    QStringList qualityListModel() { return _qualityListModel; }
+    QStringList qualityListModel() { return _formatListModel; }
+    QStringList formatListStringModel() {return _formatStringListModel; }
 
 
     QString encoder() {return _encoder;}
@@ -84,6 +86,7 @@ signals:
     void videoStoped(VideoItem* v);
     void videoNoListModelChanged(QStringList model);
     void qualityListModelChanged(QStringList model);
+    void formatListStringModelChanged(QStringList model);
 
 private:
     DNCore* _core;
@@ -111,7 +114,8 @@ private:
     QMap<int, QList<int>> _videoFormatList;
 
     QStringList _videoNoListModel;
-    QStringList _qualityListModel;
+    QStringList _formatListModel;
+    QStringList _formatStringListModel;
 
 
 };

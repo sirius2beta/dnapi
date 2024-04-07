@@ -6,6 +6,7 @@
 #include "boatmanager.h"
 #include "networkmanager.h"
 #include "dnvideomanager.h"
+#include "sensormanager.h"
 
 class DNCore;
 
@@ -24,11 +25,13 @@ public:
     Q_PROPERTY(NetworkManager* networkManager READ networkManager CONSTANT);
     Q_PROPERTY(BoatManager* boatManager READ boatManager CONSTANT);
     Q_PROPERTY(DNVideoManager* videoManager READ videoManager CONSTANT);
+    Q_PROPERTY(SensorManager* sensorManager READ sensorManager CONSTANT);
     Q_PROPERTY(int boatListmodel READ boatListmodel CONSTANT)
 
     NetworkManager* networkManager() { return _networkManager; }
     BoatManager* boatManager() { return _boatManager; }
     DNVideoManager* videoManager() { return _videoManager; }
+    SensorManager* sensorManager() {return _sensorManager;}
     int boatListmodel() const {return 0;}
 signals:
 private:
@@ -36,6 +39,7 @@ private:
     NetworkManager* _networkManager = nullptr;
     BoatManager* _boatManager = nullptr;
     DNVideoManager* _videoManager = nullptr;
+    SensorManager* _sensorManager = nullptr;
     QString _programName ;
 };
 

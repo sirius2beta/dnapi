@@ -10,38 +10,36 @@ SensorManager::SensorManager(QObject *parent, DNCore* core)
     : QObject{parent},
     _core(core)
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     settings = new QSettings("Ezosirius", "GPlayer_v1", this);
     _sensorTypeModel = new QStandardItemModel;
 }
 
 void SensorManager::init()
 {
-    qDebug()<<"sensorManager::init(): Initiating...";
-    settings->beginGroup(QString("%1").arg(_core->config()));
+    qDebug()<<"sensorManager:: Initiating...";
 
-    for(int i = 0; i< _core->configManager()->sensorTypeList().size(); i++){
-        QString name = _core->configManager()->sensorTypeList()[i].name();
-        QStandardItem* item = new QStandardItem(name);
-        _sensorTypeModel->setItem(i,0,item);
-        qDebug()<<"  - Add sensor name: "<<name;
+    _sensorGroupList = _core->configManager()->sensorGropList();
+    for(int i = 0; i< _sensorGroupList.count(); i++){
+        DNQmlObjectListModel* model = new DNQmlObjectListModel(this);
+        for(int j = 0; j < _sensorGroupList[i].count(); j++){
+            model->append(_sensorGroupList[i][j]);
+
+        }
+        _sensorGroupListModel.append(model);
     }
 
-    int size = settings->beginReadArray("sensor");
+    qDebug()<<"sensorManager:: Initiate complete";
+}
 
-    for(int i = 0; i < size; i++){
-        settings->setArrayIndex(i);
-        int boatID = settings->value("boatID").toInt();
-        //DNMetaData::ValueType_t sensorType = DNMetaData::intToType(settings->value("sensorType").toInt());
-        QString sensorName = settings->value("sensorName").toString();
-        SensorItem* item = new SensorItem(this);
-        item->setBoatID(boatID);
-        item->setName(sensorName);
-        addSensor(item);
-
+DNQmlObjectListModel* SensorManager::getSensorModel(int index)
+{
+    if(index<_sensorGroupList.size()){
+        return _sensorGroupListModel[index];
+    }else{
+        qDebug()<<"**Fatal: sensorManager:: getSensorModel: index out of range";
+        return nullptr;
     }
-    settings->endArray();
-    settings->endGroup();
-    qDebug()<<"sensorManager::init(): Initiate complete";
 }
 
 void SensorManager::addSensor(SensorItem* sensorItem)
@@ -70,6 +68,7 @@ void SensorManager::onSensorMsg(int ID, QByteArray data)
             qDebug()<<"SensorManager:: on msg: sensor type:"<<sensortype;
             cdata+=4;
         }else if(readorder == 1){
+            /*
             //QByteArray sensordata(data.data()+i,1);
             readorder = -1;
             if(sensortype >= _core->configManager()->sensorTypeList().size()){
@@ -105,6 +104,7 @@ void SensorManager::onSensorMsg(int ID, QByteArray data)
                     _sensorList[i]->setValue(value);
                 }
             }
+            */
         }
 
         readorder ++;

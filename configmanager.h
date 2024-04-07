@@ -1,4 +1,4 @@
-#ifndef CONFIGMANAGER_H
+﻿#ifndef CONFIGMANAGER_H
 #define CONFIGMANAGER_H
 
 #include <QObject>
@@ -7,20 +7,34 @@
 #include <QStandardItemModel>
 
 #include "dnvalue.h"
+#include "sensorgroup.h"
+
+#include "QDebug"
 
 class ConfigManager : public QObject
 {
     Q_OBJECT
 public:
     explicit ConfigManager(QObject *parent = nullptr);
-    QVector<DNValue> sensorTypeList() { return _sensorTypeList; };
+    int message(QString msg);
+    QString messageChar(uint8_t index);
+    QString videoFormatString(uint8_t index){ return _videoFormatTypeList[index]; }
+    QVector<SensorGroup> sensorGropList() { return _sensorGropList;};
+
 signals:
 protected:
     void readSensorTypes();
+    void readMessageTypes();
+    void readVideoFormatTypes();
 private:
     QXmlStreamReader reader;
     QStandardItemModel* s;
-    QVector<DNValue> _sensorTypeList;
+
+    QVector<SensorGroup> _sensorGropList;
+
+
+    QMap<QString, uint8_t> _messageTypeMap;
+    QVector<QString> _videoFormatTypeList;
 };
 
 #endif // CONFIGMANAGER_H

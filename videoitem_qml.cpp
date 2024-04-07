@@ -6,10 +6,6 @@
 #include <QQuickItem>
 #include <QQmlEngine>
 
-#define HEARTBEAT 0x10
-#define FORMAT 0x20
-#define COMMAND 0x30
-#define QUIT 0x40
 
 VideoItem::VideoItem(QObject *parent, DNCore* core, int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
     : QObject{parent},
@@ -94,9 +90,11 @@ void VideoItem::setBoatID(int ID)
         stop();
         //new list model
         _videoNoListModel.clear();
-        _qualityListModel.clear();
+        _formatListModel.clear();
+        _formatStringListModel.clear();
         emit videoNoListModelChanged(_videoNoListModel);
-        emit qualityListModelChanged(_qualityListModel);
+        emit qualityListModelChanged(_formatListModel);
+        emit formatListStringModelChanged(_formatStringListModel);
 
         _boatID = ID;
         _requestFormat = true;
@@ -120,17 +118,20 @@ void VideoItem::setVideoIndex(int index)
         return;
     }
     _videoIndex = index;
-    _qualityListModel.clear();
+    _formatListModel.clear();
+    _formatStringListModel.clear();
 
     QList<int> h = _videoFormatList[_videoNoListModel.at(index).toInt()];
     qDebug()<<"VideoItem::h: "<<h.size();
     for(int i = 0; i< h.size(); i++){
-        _qualityListModel<<QString::number(h[i]);
+        _formatListModel<<QString::number(h[i]);
+        _formatStringListModel<<_core->configManager()->videoFormatString(h[i]);
     }
-    if(_qualityListModel.size() > 0){
+    if(_formatListModel.size() > 0){
         _formatNo = 0;
     }
-    emit qualityListModelChanged(_qualityListModel);
+    emit qualityListModelChanged(_formatListModel);
+    emit formatListStringModelChanged(_formatStringListModel);
 }
 
 void VideoItem::setVideoFormat(QByteArray data)
@@ -167,7 +168,7 @@ void VideoItem::setVideoFormat(QByteArray data)
 
 void VideoItem::setFormatNo(int no)
 {
-    if(no >= _qualityListModel.size()){
+    if(no >= _formatListModel.size()){
         qDebug()<<"**Fatal:: VideoItem::setFormatNo: index out of range";
         return;
     }
@@ -258,6 +259,6 @@ QString VideoItem::videoFormat()
         qDebug()<<"**Warning: VideoItem::videoFormat: _formatNo = -1";
         return QString("");
     }
-    return _qualityListModel[_formatNo];
+    return _formatListModel[_formatNo];
 
 }

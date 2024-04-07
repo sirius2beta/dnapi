@@ -92,6 +92,7 @@ void HeartBeat::HeartBeatLoop()
 void HeartBeat::alive(QString ip, int ID)
 {
     if((ip == boatIP) && (ID == boat->ID())){
+        qDebug()<<"get HeartBeat boatname:"<<boat->name();
         if(isHearBeatLoop == false){
 
             isAlive = true;
@@ -102,8 +103,8 @@ void HeartBeat::alive(QString ip, int ID)
             checkAliveTimer->start(2000);
             isHearBeatLoop = false;
             boat->connect(primary);
-            emit sendMsg(QHostAddress(ip), DNTypes::Format, QString("q").toLocal8Bit());
-            emit sendMsg(QHostAddress(boat->name()), DNTypes::Sensor, QString("d").toLocal8Bit());
+            emit sendMsg(QHostAddress(ip), _core->configManager()->message("FORMAT"), QString("q").toLocal8Bit());
+            emit sendMsg(QHostAddress(boat->name()), _core->configManager()->message("Sensor"), QString("d").toLocal8Bit());
             qDebug()<<"HeartBeat boatname:"<<boat->name();
 
         }
@@ -127,7 +128,7 @@ void HeartBeat::beat()
         cmd_bytes[0] = boat->ID();
         cmd_bytes[1] = 'S';
     }
-    emit sendMsg(QHostAddress(boatIP), DNTypes::Heartbeat,cmd_bytes);
+    emit sendMsg(QHostAddress(boatIP), _core->configManager()->message("HEARTBEAT"),cmd_bytes);
 }
 
 void HeartBeat::checkAlive()
