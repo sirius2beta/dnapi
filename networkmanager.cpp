@@ -85,7 +85,7 @@ void NetworkManager::onUDPMsg()
             emit sensorMsg(ID, data);
         }
         const QString content = QLatin1String(" Received Topic: ")
-                    + topic
+                    + QChar(topic)
                                 + QLatin1String(" Message: ") + data;
         //qDebug() << content;
     }

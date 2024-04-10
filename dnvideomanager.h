@@ -8,11 +8,8 @@
 #include <QQuickItem>
 #include <gst/gst.h>
 
-#ifdef DNAPI_QML
-#include "videoitem_qml.h"
-#else
 #include "videoitem.h"
-#endif
+
 
 
 class DNCore;
@@ -29,7 +26,7 @@ public:
     Q_INVOKABLE VideoItem* getVideoItem(int index) { return videoList[index];}
     void init();
     void initVideo();
-    void initGstreamer(int argc, char* argv[]);
+    void initGstreamer();
     void setVideoTest(QQuickItem* widget);
     void addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort);
 

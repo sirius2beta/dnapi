@@ -1,8 +1,6 @@
 ﻿#include "boatmanager.h"
 #include "dncore.h"
-#ifdef USE_QML
 #include <QQmlEngine>
-#endif
 
 BoatManager::BoatManager(QObject* parent, DNCore *core): QObject(parent),
     _connectionType(0)

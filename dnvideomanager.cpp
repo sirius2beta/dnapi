@@ -55,24 +55,32 @@ void DNVideoManager::initVideo()
 {
     QQuickWindow* root = dnApp()->mainRootWindow();
     QQuickItem* widget = root->findChild<QQuickItem*>("videoContent");
+
     for(int i = 0; i < videoList.size(); i++){
         if(i == 0){
-            videoList[i]->initVideo(widget);
-            //setVideoTest(widget);
+            //videoList[i]->initVideo(widget);
+            setVideoTest(widget);
         }
     }
 }
 
-void DNVideoManager::initGstreamer(int argc, char* argv[])
+void DNVideoManager::initGstreamer()
 {
 
 
-    _testpipeline = gst_parse_launch("videotestsrc ! glupload ! qmlglsink name=sink",NULL);
+    _testpipeline = gst_parse_launch("videotestsrc ! glupload ! qml6glsink name=sink",NULL);
     _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
 }
 
 void DNVideoManager::setVideoTest(QQuickItem* widget)
+
 {
+    GstElement* qmlglsink;
+    if ((qmlglsink = gst_element_factory_make("qmlglsink ", NULL)) == NULL) {
+        qDebug()<<"**Fatal qmlglsink failed";
+    }
+    _testpipeline = gst_parse_launch("videotestsrc ! glupload ! glcolorconvert ! qmlglsink name=sink",NULL);
+    _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
     g_object_set(_testsink, "widget", widget, NULL);
     gst_element_set_state (_testpipeline, GST_STATE_PLAYING);
 }

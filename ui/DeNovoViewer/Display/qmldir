@@ -1,0 +1,8 @@
+﻿Module DenovoViewer.Display
+
+VideoView   1.0 VideoView.qml
+SubVideoView 1.0 SubVideoView.qml
+BoatManagerUI 1.0 BoatManagerUI.qml
+AquaUI 1.0 AquaUI.qml
+BoatStatusView 1.0 BoatStatusView.qml
+DNPopup 1.0 DNPopup.qml
