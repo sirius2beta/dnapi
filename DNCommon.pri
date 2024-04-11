@@ -2,8 +2,9 @@ INCLUDEPATH += \
     $$PWD \
 
 SOURCES += \
+    $$PWD/controlmanager.cpp \
+    $$PWD/dncontrol.cpp \
         $$PWD/dnqmlglobal.cpp \
-        $$PWD/dntypes.cpp \
         $$PWD/dnqmlobjectlistmodel.cpp \
         $$PWD/boatitem.cpp \
         $$PWD/boatmanager.cpp \
@@ -19,11 +20,13 @@ SOURCES += \
         $$PWD/networkmanager.cpp \
         $$PWD/device.cpp \
         $$PWD/videoitem.cpp \
+    $$PWD/winchcontrol.cpp
 
 
 HEADERS += \
+    $$PWD/controlmanager.h \
+    $$PWD/dncontrol.h \
     $$PWD/dnqmlglobal.h \
-    $$PWD/dntypes.h \
     $$PWD/dnvideomanager.h \
     $$PWD/dnvideomanager.h \
     $$PWD/dnqmlobjectlistmodel.h \
@@ -40,7 +43,7 @@ HEADERS += \
     $$PWD/networkmanager.h \
     $$PWD/device.h \
     $$PWD/videoitem.h \
-    dnapplication.h
+    $$PWD/winchcontrol.h
 
 RESOURCES += \
     $$PWD/DeNovo.qrc \

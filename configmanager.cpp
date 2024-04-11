@@ -26,6 +26,9 @@ ConfigManager::ConfigManager(QObject *parent)
 
                         }else if(reader.attributes().value("name").toString() == "VIDEO_FORMAT"){
                             readVideoFormatTypes();
+                        }else if(reader.attributes().value("name").toString() == "CONTROL_TYPE"){
+                            readControlTypes();
+
                         }else{
                             reader.skipCurrentElement();
                         }
@@ -75,7 +78,7 @@ void ConfigManager::readSensorTypes()
             SensorGroup sg(nullptr, reader.attributes().value("name").toString());
             qDebug()<<reader.attributes().value("name");
             // readElementText at last to prevent breaking loop
-            int senesorIndex = 0;
+
             while(reader.readNextStartElement()){
 
                 if(reader.name().toString() == "sensor"){
@@ -115,7 +118,7 @@ void ConfigManager::readMessageTypes()
             _messageTypeMap[name] = messageType;
             qDebug()<<messageType<<","<<name;
             // readElementText at last to prevent breaking loop
-            QString s = reader.readElementText();
+            reader.readElementText();
         }
     }
 
@@ -132,7 +135,25 @@ void ConfigManager::readVideoFormatTypes()
             _videoFormatTypeList.append(name);
             qDebug()<<messageType<<","<<name;
             // readElementText at last to prevent breaking loop
-            QString s = reader.readElementText();
+            reader.readElementText();
+        }
+    }
+
+}
+
+
+void ConfigManager::readControlTypes()
+{
+
+    while(reader.readNextStartElement()){
+
+        if(reader.name().toString() == "entry"){
+            uint8_t controlType = reader.attributes().value("value").toInt();
+            QString name = reader.attributes().value("name").toString();
+            _controlTypeList.append(name);
+            qDebug()<<controlType<<","<<name;
+            // readElementText at last to prevent breaking loop
+            reader.readElementText();
         }
     }
 

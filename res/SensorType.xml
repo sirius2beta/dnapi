@@ -49,4 +49,7 @@
         <entry value="1" name="ESP32_BT" idVendor="1d6b" idProduct="0002"></entry>
         <entry value="2" name="Pixhawk" idVendor="1d6b" idProduct="0002"></entry>
     </enum>
+    <enum name="CONTROL_TYPE">
+        <entry value="0" name="WINCH"></entry>
+        <entry value="1" name="COOLING_SYSTEM_POWER"></entry>
 </marinelink>

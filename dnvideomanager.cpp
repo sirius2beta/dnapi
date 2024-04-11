@@ -1,7 +1,6 @@
 ﻿#include "dnvideomanager.h"
 #include "dnapplication.h"
 #include "dncore.h"
-#include "dntypes.h"
 //#include "QGCApplication.h"
 #include <QQmlEngine>
 #include <QQuickItem>

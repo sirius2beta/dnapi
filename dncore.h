@@ -9,6 +9,7 @@
 #include "sensormanager.h"
 #include "configmanager.h"
 #include "dnqmlglobal.h"
+#include "controlmanager.h"
 
 class DNCore : public QObject
 {
@@ -24,6 +25,7 @@ public:
     DNVideoManager* videoManager() { return _videoManager; }
     SensorManager* sensorManager() { return _sensorManager; }
     ConfigManager* configManager() { return _configManager; }
+    ControlManager* controlManager() { return _controlManager; }
     QString config() {return _config;}
 
 
@@ -35,6 +37,7 @@ private:
     DNVideoManager* _videoManager;
     SensorManager* _sensorManager;
     ConfigManager* _configManager;
+    ControlManager* _controlManager;
 
 };
 

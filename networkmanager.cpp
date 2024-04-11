@@ -2,7 +2,6 @@
 #include "dncore.h"
 #include <QQmlEngine>
 
-#include "dntypes.h"
 
 NetworkManager::NetworkManager(QObject *parent, DNCore *core)
     : QObject{parent}

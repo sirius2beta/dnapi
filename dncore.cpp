@@ -13,6 +13,7 @@ DNCore::DNCore(QObject *parent, QString config)
     _boatManager = new BoatManager(this, this);
     _videoManager = new DNVideoManager(this, this);
     _sensorManager = new SensorManager(this, this);
+    _controlManager = new ControlManager(this, this);
 
 
     connect(_videoManager, &DNVideoManager::sendMsg, _networkManager, &NetworkManager::sendMsg);
@@ -35,6 +36,7 @@ void DNCore::init()
     _videoManager->init();
     _sensorManager->init();
     _networkManager->init();
+    _controlManager->init();
 
     // Register our Qml objects
     // Register Qml Singletons

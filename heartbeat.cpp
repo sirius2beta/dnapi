@@ -2,7 +2,6 @@
 #include <QDebug>
 
 #include "heartbeat.h"
-#include "dntypes.h"
 #include "networkmanager.h"
 #include "dncore.h"
 
