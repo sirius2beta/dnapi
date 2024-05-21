@@ -39,6 +39,7 @@ private:
     BoatItem* boat;
     BoatManager* boatList;
     DNCore* _core;
+
 };
 
 #endif // HEARTBEAT_H

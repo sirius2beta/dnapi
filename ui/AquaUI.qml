@@ -8,7 +8,7 @@ import DeNovoViewer.Boat 1.0
 
 Item {
 
-    ListModel {
+    ListModel {  //not used
         id: demoModel
         ListElement {
             name: "Temperature"

@@ -87,6 +87,7 @@ Window {
         radius: 10
         height:250
         color: "#333333"
+        clip: true;
 
         RowLayout{
             anchors.fill: parent
@@ -121,7 +122,7 @@ Window {
                     }
                 }
             }
-
+            // map not used for now
             Item{
                 Layout.preferredWidth: 400
                 Layout.fillHeight: true

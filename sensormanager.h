@@ -20,13 +20,10 @@ public:
     Q_PROPERTY(DNQmlObjectListModel* aquaModel READ aquaModel CONSTANT)
     explicit SensorManager(QObject *parent = nullptr, DNCore *core = nullptr);
     void init();
-    int count() { return _sensorList.size(); }
-    SensorItem* getSensor(int index){ return _sensorList[index];}
+    int count() { return _sensorGroupListModel.size(); }
     DNQmlObjectListModel* aquaModel(void){return _sensorGroupListModel[1]; }
     Q_INVOKABLE DNQmlObjectListModel* getSensorModel(int index);
-    void addSensor(SensorItem *sensorItem);
-    void deleteSensor(int index);
-    QAbstractItemModel* sensorTypeModel() { return _sensorTypeModel;}
+
     enum dataType{ int_type = 0, float_type = 1};
 
 
@@ -34,14 +31,12 @@ signals:
     void sensorDataChanged(int ID, DNValue& value);
 
 public slots:
-    void onSensorMsg(int ID, QByteArray data);
+    void onSensorMsg(int ID, QByteArray data); //處理來自networkmanager的訊息
 
 private:
     QSettings* settings;
-    QVector<SensorItem*> _sensorList;
-    QVector<SensorGroup> _sensorGroupList;
     DNCore* _core;
-    QStandardItemModel* _sensorTypeModel;
+
     QList<DNQmlObjectListModel*> _sensorGroupListModel;
 };
 

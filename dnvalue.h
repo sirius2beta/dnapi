@@ -14,10 +14,12 @@ public:
     DNValue(const DNValue& other, QObject *parent = nullptr);
     const DNValue& operator = (const DNValue& other);
     QVariant data() { return _rawValue; }
+    QByteArray bytesData();
     DNMetaData::ValueType_t dataType() { return _type; }
     ~DNValue();
-
+    static QVariant parseString(QString s, DNMetaData::ValueType_t type);
     void setValue(QVariant value) { _rawValue = value; }
+    void setValue(QString s) { _rawValue = parseString(s, _type);}
 
 private:
 

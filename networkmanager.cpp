@@ -1,6 +1,8 @@
 ﻿#include "networkmanager.h"
 #include "dncore.h"
 #include <QQmlEngine>
+#include "configmanager.h"
+
 
 
 NetworkManager::NetworkManager(QObject *parent, DNCore *core)
@@ -30,13 +32,19 @@ void NetworkManager::sendMsg(QHostAddress addr, uint8_t topic, QByteArray comman
     serverSocket->writeDatagram(cmd,cmd.size(), addr, 50006);
 }
 
+void NetworkManager::sendMsgbyID(int boatID, uint8_t topic, QByteArray command)
+{
+    BoatItem* boat = _core->boatManager()->getBoatbyID(boatID);
+    if(boat != 0){
+        sendMsg(QHostAddress(boat->currentIP()), topic, command);
+    }else{
+        qDebug()<<"\u001b[38;5;203m"<<"**Fatal error: NetworkManager::sendMsgbyID boatID outof range"<<"\033[0m";
+    }
+}
+
 void NetworkManager::onUDPMsg()
 {
-    static const char* msg_heartbeat = "HEARTBEAT";
-    static const char* msg_format = "FORMAT";
-    static const char* msg_command = "COMMAND";
-    static const char* msg_quit = "QUIT";
-    static const char* msg_sensor = "SENSOR";
+
 
     while(clientSocket->hasPendingDatagrams()){
         QByteArray data;
@@ -57,8 +65,8 @@ void NetworkManager::onUDPMsg()
         }
 
         QString msgType = _core->configManager()->messageChar(topic);
-        qDebug() << topic<<","<<_core->configManager()->messageChar(0) <<", "<<msg_heartbeat;
-        if(msgType == msg_heartbeat){
+        qDebug() << topic<<","<<msgType;
+        if(msgType == ConfigManager::msg_heartbeat()){
             int ID = int(data[0]);
             qDebug() << ID;
             BoatItem* boat = _core->boatManager()->getBoatbyID(ID);
@@ -69,7 +77,7 @@ void NetworkManager::onUDPMsg()
             }
 
 
-        }else if(msgType == msg_format){
+        }else if(msgType == ConfigManager::msg_format()){
             int ID = int(data[0]);
             data.remove(0,1);
 
@@ -78,7 +86,8 @@ void NetworkManager::onUDPMsg()
             emit setFormat(ID, data);
 
 
-        }else if(msgType == msg_sensor){
+        }else if(msgType == ConfigManager::msg_sensor()){
+            qDebug()<<"NetworkManager:: on sensor msg";
             int ID = int(data[0]);
             data.remove(0,1);
             emit sensorMsg(ID, data);

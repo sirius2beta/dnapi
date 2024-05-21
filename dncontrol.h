@@ -11,7 +11,7 @@ public:
 
 
 signals:
-
+    void sendMsg(QByteArray msg);
 private:
     int _controlType;
 

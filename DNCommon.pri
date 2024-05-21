@@ -2,6 +2,7 @@ INCLUDEPATH += \
     $$PWD \
 
 SOURCES += \
+    $$PWD/controlitem.cpp \
     $$PWD/controlmanager.cpp \
     $$PWD/dncontrol.cpp \
         $$PWD/dnqmlglobal.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 
 HEADERS += \
+    $$PWD/controlitem.h \
     $$PWD/controlmanager.h \
     $$PWD/dncontrol.h \
     $$PWD/dnqmlglobal.h \

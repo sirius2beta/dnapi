@@ -126,16 +126,17 @@ void ConfigManager::readMessageTypes()
 
 void ConfigManager::readVideoFormatTypes()
 {
-
+    qDebug()<<"ConfigManager::read videoformat types";
     while(reader.readNextStartElement()){
 
         if(reader.name().toString() == "entry"){
-            uint8_t messageType = reader.attributes().value("value").toInt();
+            uint8_t videoType = reader.attributes().value("value").toInt();
             QString name = reader.attributes().value("name").toString();
             _videoFormatTypeList.append(name);
-            qDebug()<<messageType<<","<<name;
+            qDebug()<<"  -"<<videoType<<","<<name;
             // readElementText at last to prevent breaking loop
             reader.readElementText();
+
         }
     }
 
@@ -144,16 +145,34 @@ void ConfigManager::readVideoFormatTypes()
 
 void ConfigManager::readControlTypes()
 {
-
+    qDebug()<<"ConfigManager::read control types";
     while(reader.readNextStartElement()){
 
         if(reader.name().toString() == "entry"){
+
             uint8_t controlType = reader.attributes().value("value").toInt();
             QString name = reader.attributes().value("name").toString();
-            _controlTypeList.append(name);
-            qDebug()<<controlType<<","<<name;
+            QVector<DNValue> fields;
+
+            qDebug()<<"  -"<<controlType<<","<<name;
             // readElementText at last to prevent breaking loop
-            reader.readElementText();
+            //reader.readElementText();
+            while(reader.readNextStartElement()){
+
+                if(reader.name().toString() == "field"){
+                    QString fieldName = reader.attributes().value("name").toString();
+                    QString type = reader.attributes().value("type").toString();
+                    DNValue value(0, DNMetaData::stringToType(type));
+                    qDebug()<<fieldName<<type;
+                    // readElementText at last to prevent breaking loop
+
+                    reader.readElementText();
+                }else{
+                    //reader.skipCurrentElement();
+                }
+            }
+            ControlItem control(nullptr, name, controlType, fields);
+            _controlTypeList.append(control);
         }
     }
 

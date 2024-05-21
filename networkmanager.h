@@ -20,6 +20,7 @@ signals:
     void sensorMsg(int ID, QByteArray data);
 public slots:
     void sendMsg(QHostAddress addr, uint8_t topic, QByteArray command = "");
+    void sendMsgbyID(int boatID, uint8_t topic, QByteArray command = "");
 
 protected slots:
     void onUDPMsg();

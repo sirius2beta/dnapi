@@ -1,4 +1,4 @@
-#ifndef DNMETADATA_H
+﻿#ifndef DNMETADATA_H
 #define DNMETADATA_H
 
 #include <QObject>

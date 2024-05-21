@@ -50,6 +50,11 @@
         <entry value="2" name="Pixhawk" idVendor="1d6b" idProduct="0002"></entry>
     </enum>
     <enum name="CONTROL_TYPE">
-        <entry value="0" name="WINCH"></entry>
+        <entry value="0" name="WINCH" dev="0">
+            <field type="int" name="dir_pin"></field>
+            <field type="int" name="step_pin"></field>
+            <field type="int" name="max_speed"></field>
+            <field type="int" name="acceleration"></field>
+        </entry>
         <entry value="1" name="COOLING_SYSTEM_POWER"></entry>
 </marinelink>

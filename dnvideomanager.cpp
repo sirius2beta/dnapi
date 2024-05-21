@@ -57,8 +57,8 @@ void DNVideoManager::initVideo()
 
     for(int i = 0; i < videoList.size(); i++){
         if(i == 0){
-            //videoList[i]->initVideo(widget);
-            setVideoTest(widget);
+            videoList[i]->initVideo(widget);
+            //setVideoTest(widget);
         }
     }
 }
