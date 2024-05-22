@@ -56,28 +56,73 @@ Item {
     Component {
         id: sensorDelegate
         Item {
-            width: _sensorListView.width; height: 35
+            width: _sensorListView.width; height: 20
             RowLayout{
 
                 Text {
                     Layout.preferredWidth: 150
+                    Layout.fillHeight: true
                     wrapMode: Text.WordWrap
                     font.family: "Segoe UI"
                     font.pointSize: 10
-                    lineHeight: 0.6
+                    lineHeight: 0.8
                     color:"#b8bbc0"
-                    text: object.name
+                    text: object.name.toLowerCase()
+                }
+                Item {
+                    Layout.fillWidth: true
+                }
+                Rectangle{
+                    Layout.preferredWidth: 50
+                    Layout.fillHeight: true
+                    color: "#007700"
+                    Text {
+
+                        font.family: "Segoe UI"
+                        font.pointSize: 10
+                        color:"white"
+
+                        text: object.displayValue
+                    }
+                }
+
+
+
+            }
+        }
+    }
+    Component {
+        id: sensorDelegate2
+        Item {
+            width: _sensorListView.width; height: 20
+            RowLayout{
+
+                Text {
+                    Layout.preferredWidth: 150
+                    Layout.fillHeight: true
+                    wrapMode: Text.WordWrap
+                    font.family: "Segoe UI"
+                    font.pointSize: 10
+                    lineHeight: 0.8
+                    color:"#b8bbc0"
+                    text: object.name.toLowerCase()
                 }
                 Item {
                     Layout.fillWidth: true
                 }
 
-                Text {
+                Rectangle{
                     Layout.preferredWidth: 50
-                    font.family: "Segoe UI"
-                    font.pointSize: 12
-                    color:"white"
-                    text: object.displayValue
+                    Layout.fillHeight: true
+                    color: "#007700"
+                    Text {
+
+                        font.family: "Segoe UI"
+                        font.pointSize: 10
+                        color:"white"
+
+                        text: object.displayValue
+                    }
                 }
 
             }
@@ -114,6 +159,7 @@ Item {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: 10
+            clip: true
             Item{
                 Layout.preferredWidth: 150
                 Layout.fillHeight: true
@@ -125,17 +171,66 @@ Item {
                     source: "qrc:/res/topview.png"
                 }
             }
-
-
-            ListView{
+            Item {
                 Layout.preferredWidth: 300
                 Layout.preferredHeight: parent.height
-                id: _sensorListView
-                clip: true
-                model: DeNovoViewer.sensorManager.cabinModel
-                delegate: sensorDelegate
+                ColumnLayout{
+                    anchors.fill: parent
+                    Text {
+                        text: "Cabin"
+                        Layout.preferredHeight: 10
+                        font.family: "Segoe UI"
+                        font.pointSize: 10
+                        color:"#eeeeee"
+                    }
+                    ToolSeparator {
+                        orientation: Qt.Horizontal
+                        Layout.fillWidth: true
+                        bottomPadding: 0
+                    }
+                    ListView{
+                        topMargin: 0
+                        bottomMargin: 0
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 50
+                        id: _sensorListView
+                        clip: true
+                        model: DeNovoViewer.sensorManager.cabinModel
+                        delegate: sensorDelegate
+
+                    }
+                    Text {
+                        topPadding: 0
+                        text: "Battery"
+
+                        Layout.preferredHeight: 10
+                        font.family: "Segoe UI"
+                        font.pointSize: 10
+                        color:"#eeeeee"
+                    }
+                    ToolSeparator {
+                        orientation: Qt.Horizontal
+                        Layout.fillWidth: true
+                        bottomPadding: 0
+                    }
+                    ListView{
+                        spacing: 2
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 60
+                        id: _battery0ListView
+                        clip: true
+                        model: DeNovoViewer.sensorManager.battery0Model
+                        delegate: sensorDelegate2
+
+                    }
+                }
+
+
 
             }
+
+
+
             Item{
                 Layout.fillWidth: true
             }

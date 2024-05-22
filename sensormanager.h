@@ -19,11 +19,13 @@ public:
 
     Q_PROPERTY(DNQmlObjectListModel* aquaModel READ aquaModel CONSTANT)
     Q_PROPERTY(DNQmlObjectListModel* cabinModel READ cabinModel CONSTANT)
+    Q_PROPERTY(DNQmlObjectListModel* battery0Model READ battery0Model CONSTANT)
     explicit SensorManager(QObject *parent = nullptr, DNCore *core = nullptr);
     void init();
     int count() { return _sensorGroupListModel.size(); }
     DNQmlObjectListModel* cabinModel(void){return _sensorGroupListModel[0]; }
     DNQmlObjectListModel* aquaModel(void){return _sensorGroupListModel[1]; }
+    DNQmlObjectListModel* battery0Model(void){return _sensorGroupListModel[2]; }
     Q_INVOKABLE DNQmlObjectListModel* getSensorModel(int index);
 
     enum dataType{ int_type = 0, float_type = 1};

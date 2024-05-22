@@ -52,7 +52,7 @@ Item {
         }
     }
 
-    Layout.preferredWidth: 500
+    Layout.preferredWidth: 300
     Layout.fillHeight: true
     Layout.alignment: Qt.AlignLeft
     Rectangle{
@@ -83,39 +83,30 @@ Item {
         Component {
             id: sensorDelegate
             Item {
-                width: _sensorListView.width; height: 35
+                width: _sensorListView.width; height: 20
                 RowLayout{
 
                     Text {
-                        Layout.preferredWidth: 350
+                        Layout.preferredWidth: 200
                         wrapMode: Text.WordWrap
                         font.family: "Segoe UI"
-                        font.pointSize: 10
+                        font.pointSize: 9
                         lineHeight: 0.6
                         color:"#b8bbc0"
-                        text: object.name
+                        text: object.name.toLowerCase().split('_').join(' ')
                     }
                     Item {
                         Layout.fillWidth: true
                     }
 
                     Text {
-                        Layout.preferredWidth: 50
+                        Layout.preferredWidth: 30
                         font.family: "Segoe UI"
-                        font.pointSize: 12
+                        font.pointSize: 9
                         color:"white"
                         text: object.displayValue
                     }
-                    Item {
-                        Layout.preferredWidth: 10
-                    }
-                    Text {
-                        Layout.preferredWidth: 50
-                        font.family: "Segoe UI"
-                        font.pointSize: 10
-                        color:"#b8bbc0"
-                        text: object.displayValue
-                    }
+
                 }
             }
         }
