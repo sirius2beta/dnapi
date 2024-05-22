@@ -47,13 +47,49 @@ void SensorManager::onSensorMsg(int ID, QByteArray data)
 {
 
     //DNMetaData::ValueType_t datatype;
-   //qDebug()<<data;
-    uint8_t sensortype;
-    char* cdata = data.data();
-    if(_sensorGroupListModel.size() == 0) return;
-    memcpy(&sensortype, cdata, sizeof(uint8_t));
-    qDebug()<<"SensorManager:: on msg: boat ID:"<<ID;
+    qDebug()<<data;
+    int pos = 0; //byte readed
 
-    qDebug()<<"SensorManager:: on msg: size:"<<data.size()/4<<"bytes";
-    qDebug()<<"SensorManager:: on msg: sensor type:"<<sensortype;
+    uint8_t sensorGroup;
+    DNQmlObjectListModel* sensorGroupModel;
+    char* cdata = data.data();
+    memcpy(&sensorGroup, cdata+pos, sizeof(uint8_t));
+    pos+=sizeof(uint8_t);
+    if(_sensorGroupListModel.size() < sensorGroup){
+        qDebug()<<"**Fatal: sensorManager:: onSensorMsg: incoming sensorGroup index out of range";
+        return;
+    }else{
+         sensorGroupModel = _sensorGroupListModel[sensorGroup];
+    }
+
+    while(data.size()>pos){
+        //get sensor type
+        int8_t sensortype_i;
+        memcpy(&sensortype_i, cdata+pos, sizeof(int8_t));
+        qDebug()<<sensortype_i;
+        pos+=sizeof(uint8_t);
+        if(sensortype_i >= sensorGroupModel->count()){
+            qDebug()<<"**Fatal: sensorManager:: onSensorMsg: incoming sensorType index out of range";
+            return;
+        }
+        SensorItem* sensor = qobject_cast<SensorItem*> (sensorGroupModel->get(sensortype_i));
+
+        //get sensor value
+
+        if(sensor->value().dataType() == DNMetaData::valueTypeFloat){
+            float value;
+            memcpy(&value, cdata+pos, sizeof(float));
+            pos+=sizeof(float);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(float)";
+            sensor->setValue(DNValue(value));
+        }else{
+            uint32_t value;
+            memcpy(&value, cdata+pos, sizeof(uint32_t));
+            pos+=sizeof(float);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint32)";
+            sensor->setValue(DNValue(value));
+        }
+
+
+    }
 }

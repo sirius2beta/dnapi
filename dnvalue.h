@@ -10,6 +10,7 @@ class DNValue : public QObject
     Q_OBJECT
 public:
     DNValue(QObject *parent = nullptr);
+    DNValue(float f);
     DNValue(QVariant _rawValue, DNMetaData::ValueType_t type, QObject *parent = nullptr);
     DNValue(const DNValue& other, QObject *parent = nullptr);
     const DNValue& operator = (const DNValue& other);

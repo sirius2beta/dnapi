@@ -18,9 +18,11 @@ class SensorManager : public QObject
 public:
 
     Q_PROPERTY(DNQmlObjectListModel* aquaModel READ aquaModel CONSTANT)
+    Q_PROPERTY(DNQmlObjectListModel* cabinModel READ cabinModel CONSTANT)
     explicit SensorManager(QObject *parent = nullptr, DNCore *core = nullptr);
     void init();
     int count() { return _sensorGroupListModel.size(); }
+    DNQmlObjectListModel* cabinModel(void){return _sensorGroupListModel[0]; }
     DNQmlObjectListModel* aquaModel(void){return _sensorGroupListModel[1]; }
     Q_INVOKABLE DNQmlObjectListModel* getSensorModel(int index);
 

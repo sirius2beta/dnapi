@@ -7,7 +7,7 @@ import DeNovoViewer 1.0
 import DeNovoViewer.Boat 1.0
 
 Item {
-    Layout.preferredWidth: 500
+    Layout.preferredWidth: 400
     Layout.fillHeight: true
     Layout.alignment: Qt.AlignLeft
     ListModel {
@@ -66,7 +66,7 @@ Item {
                     font.pointSize: 10
                     lineHeight: 0.6
                     color:"#b8bbc0"
-                    text: name
+                    text: object.name
                 }
                 Item {
                     Layout.fillWidth: true
@@ -77,18 +77,9 @@ Item {
                     font.family: "Segoe UI"
                     font.pointSize: 12
                     color:"white"
-                    text: number
+                    text: object.displayValue
                 }
-                Item {
-                    Layout.preferredWidth: 10
-                }
-                Text {
-                    Layout.preferredWidth: 50
-                    font.family: "Segoe UI"
-                    font.pointSize: 10
-                    color:"#b8bbc0"
-                    text: unit
-                }
+
             }
         }
     }
@@ -141,7 +132,7 @@ Item {
                 Layout.preferredHeight: parent.height
                 id: _sensorListView
                 clip: true
-                model: demoModel2
+                model: DeNovoViewer.sensorManager.cabinModel
                 delegate: sensorDelegate
 
             }

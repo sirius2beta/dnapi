@@ -123,6 +123,7 @@ Window {
                 }
             }
             // map not used for now
+            /*
             Item{
                 Layout.preferredWidth: 400
                 Layout.fillHeight: true
@@ -143,13 +144,17 @@ Window {
                     zoomLevel: 14
                 }
             }
-            AquaUI{
-
-            }
+            */
 
             BoatStatusView{
 
             }
+
+
+            AquaUI{
+
+            }
+
 
 
             Item {

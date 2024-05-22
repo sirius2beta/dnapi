@@ -8,6 +8,13 @@ DNValue::DNValue(QObject *parent)
 
 }
 
+DNValue::DNValue(float f)
+    : _rawValue(f),
+    _type(DNMetaData::valueTypeFloat)
+{
+
+}
+
 DNValue::DNValue(QVariant _rawValue, DNMetaData::ValueType_t type, QObject *parent)
     : QObject{parent},
     _rawValue(0),
