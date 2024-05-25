@@ -8,6 +8,7 @@ import DeNovoViewer.Boat 1.0
 
 DNPopup {
     id:root
+    padding: 10
     ColumnLayout{
         anchors.fill: parent
         Rectangle{
@@ -22,17 +23,37 @@ DNPopup {
             }
         }
 
-        TextField {
-            id: pipEdit
-            selectByMouse: true
-            text: DeNovoViewer.boatManager.getBoatbyIndex(boatListView.currentIndex).PIP
-            font.family: "Segoe UI"
+        RowLayout{
+            Text{
+                leftPadding: 10
+                text: 'Primary IP'
+                font.family: "Segoe UI"
+                font.pointSize: 10
+                color: "white"
+            }
+
+            TextField {
+                id: pipEdit
+                selectByMouse: true
+                text: DeNovoViewer.boatManager.getBoatbyIndex(boatListView.currentIndex).PIP
+                font.family: "Segoe UI"
+            }
         }
-        TextField {
-            id: sipEdit
-            selectByMouse: true
-            text: DeNovoViewer.boatManager.getBoatbyIndex(boatListView.currentIndex).SIP
-            font.family: "Segoe UI"
+
+        RowLayout{
+            Text{
+                leftPadding: 10
+                text: 'Secondary IP'
+                font.family: "Segoe UI"
+                font.pointSize: 10
+                color: "white"
+            }
+            TextField {
+                id: sipEdit
+                selectByMouse: true
+                text: DeNovoViewer.boatManager.getBoatbyIndex(boatListView.currentIndex).SIP
+                font.family: "Segoe UI"
+            }
         }
         RowLayout{
             Item{

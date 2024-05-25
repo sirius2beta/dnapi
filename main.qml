@@ -24,16 +24,39 @@ Window {
         anchors.fill:parent
     }
 
-    VideoView{
+    Item{
         id: _centerVideoView
         anchors.bottom: _bottom.top
         anchors.top: parent.top
         anchors.left: _leftTool.right
         anchors.right: _subVideoView.left
         anchors.margins: 15
-        _index:0
-    }
+        VideoView0{
+            id: videoView0
+            pipView: _pipView
+        }
 
+        VideoView1{
+            id: videoView1
+            pipView: _pipView
+
+        }
+
+
+        PipView{
+            id: _pipView
+            anchors.left:           parent.left
+            anchors.bottom:         parent.bottom
+            anchors.margins:        10
+            item1:                  videoView0
+            item2:                  videoView1
+            name: "his"
+            z:1
+            show:                   true
+        }
+
+
+    }
     Rectangle{
         id: _leftTool
         anchors.left: parent.left
@@ -67,6 +90,12 @@ Window {
             }
         }
     }
+
+
+
+
+
+
 
     SubVideoView{
         id: _subVideoView

@@ -19,8 +19,8 @@ DNVideoManager::DNVideoManager(QObject *parent, DNCore* core)
 
 DNVideoManager::~DNVideoManager()
 {
-    gst_element_set_state (_testpipeline, GST_STATE_NULL);
-    gst_object_unref (_testpipeline);
+    //gst_element_set_state (_testpipeline, GST_STATE_NULL);
+    //gst_object_unref (_testpipeline);
 
 }
 
@@ -53,22 +53,22 @@ void DNVideoManager::init()
 void DNVideoManager::initVideo()
 {
     QQuickWindow* root = dnApp()->mainRootWindow();
-    QQuickItem* widget = root->findChild<QQuickItem*>("videoContent");
+    QQuickItem* widget0 = root->findChild<QQuickItem*>("videoContent0");
+    videoList[0]->initVideo(widget0);
+    QQuickItem* widget1 = root->findChild<QQuickItem*>("videoContent1");
+    videoList[1]->initVideo(widget1);
+    //QQuickItem* widget2 = root->findChild<QQuickItem*>("videoContent2");
+    //videoList[2]->initVideo(widget2);
 
-    for(int i = 0; i < videoList.size(); i++){
-        if(i == 0){
-            videoList[i]->initVideo(widget);
-            //setVideoTest(widget);
-        }
-    }
+
 }
 
 void DNVideoManager::initGstreamer()
 {
 
 
-    _testpipeline = gst_parse_launch("videotestsrc ! glupload ! qml6glsink name=sink",NULL);
-    _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
+    //_testpipeline = gst_parse_launch("videotestsrc ! glupload ! qml6glsink name=sink",NULL);
+    //_testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
 }
 
 void DNVideoManager::setVideoTest(QQuickItem* widget)

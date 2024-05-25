@@ -9,6 +9,19 @@ import DeNovoViewer.Boat 1.0
 import org.freedesktop.gstreamer.GLVideoItem 1.0
 
 Item {
+    id: _root
+    property Item pipView
+    property Item pipState: videoPipState
+
+
+    PipState {
+        id:         videoPipState
+        pipView:    _root.pipView
+        isDark:     true
+
+
+    }
+
     Material.theme: Material.Dark
     Material.accent: Material.Purple
     property bool controlHide: true
@@ -29,7 +42,7 @@ Item {
         clip: true
         GstGLVideoItem {
             id: video
-            objectName: "videoContent"
+            objectName: "videoContent0"
             anchors.centerIn: parent
             width: parent.width
             height: parent.height

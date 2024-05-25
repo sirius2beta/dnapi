@@ -4,13 +4,18 @@
     </qresource>
     <qresource prefix="/qml">
         <file alias="DeNovoViewer/Display/qmldir">ui/DeNovoViewer/Display/qmldir</file>
-        <file alias="DeNovoViewer/Display/VideoView.qml">ui/VideoView.qml</file>
+        <file alias="DeNovoViewer/Display/VideoView0.qml">ui/VideoView0.qml</file>
+        <file alias="DeNovoViewer/Display/VideoView1.qml">ui/VideoView1.qml</file>
+        <file alias="DeNovoViewer/Display/VideoView2.qml">ui/VideoView2.qml</file>
         <file alias="DeNovoViewer/Display/SubVideoView.qml">ui/SubVideoView.qml</file>
         <file alias="DeNovoViewer/Display/BoatManagerUI.qml">ui/BoatManagerUI.qml</file>
         <file alias="DeNovoViewer/Display/AquaUI.qml">ui/AquaUI.qml</file>
         <file alias="DeNovoViewer/Display/BoatStatusView.qml">ui/BoatStatusView.qml</file>
         <file alias="DeNovoViewer/Display/DNPopup.qml">ui/DNPopup.qml</file>
         <file alias="DeNovoViewer/Display/EditBoatDialog.qml">ui/EditBoatDialog.qml</file>
+        <file alias="DeNovoViewer/Display/PipView.qml">ui/PipView.qml</file>
+        <file alias="DeNovoViewer/Display/PipState.qml">ui/PipState.qml</file>
+        <file alias="DeNovoViewer/Display/CenterVideoView.qml">ui/CenterVideoView.qml</file>
     </qresource>
     <qresource prefix="/res">
         <file alias="boatManager.png">res/boatManager.png</file>
@@ -20,5 +25,11 @@
         <file alias="topview.png">res/topview.png</file>
         <file alias="videoMiddleIndicater.png">res/videoMiddleIndicater.png</file>
         <file alias="SensorType.xml">res/SensorType.xml</file>
+    </qresource>
+    <qresource prefix="/qmlimages">
+        <file alias="pipResize.svg">res/pipResize.svg</file>
+        <file alias="pipHide.svg">res/pipHide.svg</file>
+        <file alias="PiP.svg">res/PiP.svg</file>
+        <file alias="buttonRight.svg">res/buttonRight.svg</file>
     </qresource>
 </RCC>
