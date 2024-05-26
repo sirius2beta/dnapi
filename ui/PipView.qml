@@ -5,7 +5,7 @@ import QtQuick.Window 2.15
 Item {
     id:         _root
     width:      _pipSize
-    height:     _pipSize * (9/16)
+    height:     _pipSize * (3/4)
     visible:    item2 && item2.pipState !== item2.pipState.window && show
     property string name: "mine"
     property var    item1:                  null    // Required

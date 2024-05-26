@@ -12,14 +12,14 @@ Item {
     id: _root
     property Item pipView
     property Item pipState: videoPipState
+    property bool isFull: videoPipState.state === videoPipState.fullState
+    property string videoObjectName //required, bind to C++ gstreamer g_object_set
 
 
     PipState {
         id:         videoPipState
         pipView:    _root.pipView
         isDark:     true
-
-
     }
 
     Material.theme: Material.Dark
@@ -37,19 +37,20 @@ Item {
     Rectangle{
         id: background
         anchors.fill: parent
-        color: "#333333"
-        radius:10
+        color: isFull?"#333333":"#000000"
+        radius: isFull? 10: 0
         clip: true
         GstGLVideoItem {
             id: video
-            objectName: "videoContent0"
+            objectName: videoObjectName
             anchors.centerIn: parent
             width: parent.width
             height: parent.height
         }
         Item{
+            id: _flightIndicator
             anchors.fill: parent
-
+            visible: isFull
             Image {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -69,6 +70,7 @@ Item {
             width:100
             radius:8
             color: "#333333"
+            visible: isFull
             Rectangle{
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
