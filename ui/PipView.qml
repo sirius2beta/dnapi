@@ -111,7 +111,7 @@ Item {
     // MouseArea to drag in order to resize the PiP area
     MouseArea {
         id:             pipResize
-        anchors.top:    parent.top
+        anchors.bottom:    parent.bottom
         anchors.right:  parent.right
         height:         25
         width:          25
@@ -123,7 +123,7 @@ Item {
 
         // When we push the mouse button down, we un-anchor the mouse area to prevent a resizing loop
         onPressed: (mouse) => {
-            pipResize.anchors.top = undefined // Top doesn't seem to 'detach'
+            pipResize.anchors.bottom = undefined // Top doesn't seem to 'detach'
             pipResize.anchors.right = undefined // This one works right, which is what we really need
             pipResize.initialX = mouse.x
             pipResize.initialWidth = _root.width
@@ -131,7 +131,7 @@ Item {
 
         // When we let go of the mouse button, we re-anchor the mouse area in the correct position
         onReleased: {
-            pipResize.anchors.top = _root.top
+            pipResize.anchors.bottom = _root.bottom
             pipResize.anchors.right = _root.right
         }
 
@@ -153,7 +153,7 @@ Item {
         fillMode:       Image.PreserveAspectFit
         mipmap: true
         anchors.right:  parent.right
-        anchors.top:    parent.top
+        anchors.bottom:    parent.bottom
         visible:        _isExpanded && pipMouseArea.containsMouse
         height:         25
         width:          25
@@ -186,7 +186,8 @@ Item {
         fillMode:       Image.PreserveAspectFit
         anchors.left:   parent.left
         anchors.top:    parent.top
-        visible:        _isExpanded && pipMouseArea.containsMouse
+        visible: false
+        //visible:        _isExpanded && pipMouseArea.containsMouse
         height:         25
         width:          25
         sourceSize.height:  height
@@ -204,7 +205,8 @@ Item {
         fillMode:       Image.PreserveAspectFit
         anchors.left:   parent.left
         anchors.bottom: parent.bottom
-        visible:        _isExpanded && pipMouseArea.containsMouse
+        visible: false
+        //visible:        _isExpanded && pipMouseArea.containsMouse
         height:         25
         width:          25
         sourceSize.height:  height
@@ -221,7 +223,8 @@ Item {
         height:                 20
         width:                  20
         radius:                 3
-        visible:                !_isExpanded
+        visible: false
+        //visible:                !_isExpanded
         color:                  _fullItem.pipState.isDark ? Qt.rgba(0,0,0,0.75) : Qt.rgba(0,0,0,0.5)
         Image {
             width:              parent.width  * 0.75

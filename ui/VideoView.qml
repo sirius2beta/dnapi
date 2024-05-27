@@ -198,7 +198,4 @@ Item {
         setIndex(_index)
     }
 
-
-
-
 }

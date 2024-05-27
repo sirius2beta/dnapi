@@ -19,7 +19,7 @@ Item {
     PipView{
         id: _pipView
         anchors.left:           parent.left
-        anchors.bottom:         parent.bottom
+        anchors.top:         parent.top
         anchors.margins:        10
         item1:                  videoView0
         item2:                  videoView1
