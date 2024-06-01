@@ -1,18 +1,18 @@
 ﻿#include "dnvalue.h"
-
+#include <QQmlEngine>
 DNValue::DNValue(QObject *parent)
     : QObject{parent},
     _rawValue(0),
     _type(DNMetaData::valueTypeUint32)
 {
-
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 DNValue::DNValue(float f)
     : _rawValue(f),
     _type(DNMetaData::valueTypeFloat)
 {
-
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 DNValue::DNValue(QVariant _rawValue, DNMetaData::ValueType_t type, QObject *parent)
@@ -20,7 +20,7 @@ DNValue::DNValue(QVariant _rawValue, DNMetaData::ValueType_t type, QObject *pare
     _rawValue(0),
     _type(type)
 {
-
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 DNValue::DNValue(const DNValue& other, QObject *parent)
@@ -32,6 +32,7 @@ const DNValue& DNValue::operator =(const DNValue& other)
 {
     _rawValue = other._rawValue;
     _type = other._type;
+    _name = other._name;
     return *this;
 }
 

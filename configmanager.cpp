@@ -163,6 +163,8 @@ void ConfigManager::readControlTypes()
                     QString fieldName = reader.attributes().value("name").toString();
                     QString type = reader.attributes().value("type").toString();
                     DNValue value(0, DNMetaData::stringToType(type));
+                    value.setName(fieldName);
+                    fields.append(value);
                     qDebug()<<fieldName<<type;
                     // readElementText at last to prevent breaking loop
 

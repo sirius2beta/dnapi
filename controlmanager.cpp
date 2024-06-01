@@ -2,6 +2,7 @@
 #include "controlmanager.h"
 #include "dncore.h"
 #include "dncontrol.h"
+#include "winchcontrol.h"
 #include "qdebug.h"
 #include "dncore.h"
 ControlManager::ControlManager(QObject *parent, DNCore *core)
@@ -17,17 +18,20 @@ void ControlManager::init()
     qDebug()<<"initializing ControlManager...";
     QVector<ControlItem> controls = _core->configManager()->controlList();
     for(int i = 0; i < controls.size(); i++){
-        ControlItem* newControl = new ControlItem(controls[i],this);
-        connect(newControl, &ControlItem::sendMsg, this, &ControlManager::onMsg);
+        WinchControl* winchControl = new WinchControl(this);
+        winchControl->init(&controls[i]);
+        //ControlItem* newControl = new ControlItem(controls[i],this);
+        winchControl->setBoatID(0);
+        connect(winchControl, &ControlItem::sendMsgbyID, _core->networkManager(), &NetworkManager::sendMsgbyID);
 
-        _controls.append(newControl);
+        _controls.append(winchControl);
     }
-
     qDebug()<<"    ... done";
 }
 
 void ControlManager::sendControlMsg(QByteArray msg)
 {
+    emit sendMsg(_boatID, _core->configManager()->message(ConfigManager::msg_control()), msg);
 }
 
 void ControlManager::setBoatID(int boatID)
@@ -37,5 +41,14 @@ void ControlManager::setBoatID(int boatID)
 
 void ControlManager::onMsg(QByteArray command)
 {
-    emit sendMsg(_boatID, _core->configManager()->message(ConfigManager::msg_control()), command);
+
+}
+
+ControlItem* ControlManager::getDevice(int index)
+{
+    if(index >= _controls.count()){
+        qDebug()<<"\u001b[38;5;203m"<<"**Fatal error:ControlManager::getDevice: index out of range"<<"\033[0m";
+        return 0;
+    }
+    return qobject_cast<ControlItem*>(_controls.get(index));
 }

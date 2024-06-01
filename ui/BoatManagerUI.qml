@@ -141,7 +141,12 @@ Item {
                     }
                 }
             }
-            highlight: Rectangle { color: "#2d464c"; radius: 2 }
+            highlight: Rectangle {
+                border.color: "white"
+                border.width: 1
+                color: "#2d464c";
+                radius: 2
+            }
             focus: true
         }
         Row{

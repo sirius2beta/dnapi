@@ -77,7 +77,9 @@ Item {
                     Layout.fillHeight: true
                     color: "#007700"
                     Text {
-
+                        anchors.fill: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
                         font.family: "Segoe UI"
                         font.pointSize: 10
                         color:"white"
@@ -116,7 +118,9 @@ Item {
                     Layout.fillHeight: true
                     color: "#007700"
                     Text {
-
+                        anchors.fill: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
                         font.family: "Segoe UI"
                         font.pointSize: 10
                         color:"white"

@@ -16,6 +16,7 @@ Window {
     //visibility: Window.FullScreen
     Material.theme: Material.Dark
     Material.accent: Material.Purple
+    property DNValue dnvalue: DNValue{}
 
 
 
@@ -81,6 +82,8 @@ Window {
         anchors.top: parent.top
         anchors.bottom: _bottom.top
         anchors.margins: 15
+        width: 400
+
     }
 
     Rectangle{
@@ -193,4 +196,9 @@ Window {
 
     }
 
+    Component.onCompleted: {
+        DeNovoViewer.controlManager.controls.get(0).setField(0,1000)
+        dnvalue = DeNovoViewer.controlManager.controls.get(0).getField(0);
+        console.log(DeNovoViewer.controlManager.controls.get(0).maxSpeed)
+    }
 }

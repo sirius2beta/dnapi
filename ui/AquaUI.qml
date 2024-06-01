@@ -7,7 +7,6 @@ import DeNovoViewer 1.0
 import DeNovoViewer.Boat 1.0
 
 Item {
-
     ListModel {  //not used
         id: demoModel
         ListElement {

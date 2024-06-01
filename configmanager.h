@@ -6,9 +6,8 @@
 
 #include <QStandardItemModel>
 
-#include "dnvalue.h"
-#include "sensorgroup.h"
 #include "controlitem.h"
+#include "sensorgroup.h"
 
 #include "QDebug"
 

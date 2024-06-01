@@ -5,8 +5,10 @@ import QtQuick.Window 2.15
 Item {
     id:         _root
     width:      _pipSize
-    height:     _pipSize * (3/4)
+    height:     _pipSize * sizeRatio
     visible:    item2 && item2.pipState !== item2.pipState.window && show
+    property real sizeRatio: 3/4
+
     property string name: "mine"
     property var    item1:                  null    // Required
     property var    item2:                  null    // Optional, may come and go

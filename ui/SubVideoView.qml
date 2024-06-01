@@ -1,4 +1,6 @@
 ﻿import QtQuick 2.15
+import QtQuick.Layouts 1.15
+
 
 Item {
     id: _root
@@ -44,7 +46,16 @@ Item {
             }
         }
     }
+    RowLayout{
+        anchors.fill: parent
+        anchors.margins:10
+        spacing: 10
+        implicitWidth: 500
+        WinchControl{
 
+        }
+
+    }
 
 
 

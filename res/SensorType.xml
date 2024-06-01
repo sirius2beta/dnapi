@@ -42,7 +42,7 @@
         </sensorgroup>
     </enum>
     <enum name="CONTROL">
-        <entry value="0" name="WINCH"></entry>
+
     </enum>
     <enum name="MESSAGE_TYPE">
         <entry value="0" name="HEARTBEAT"></entry>
@@ -60,7 +60,11 @@
         <entry value="5" name="TestDev" idVendor="2341" idProduct="8037"></entry>
     </enum>
     <enum name="CONTROL_TYPE">
-        <entry value="0" name="WINCH"></entry>
+        <entry value="0" name="WINCH">
+            <field name="MaxSpeed" type="int" ></field>
+            <field name="Acceleration" type="int" ></field>
+            <field name="Steps" type="int" ></field>
+        </entry>
         <entry value="1" name="COOLING_SYSTEM_POWER"></entry>
     </enum>
     <enum name="DATA_TYPE">

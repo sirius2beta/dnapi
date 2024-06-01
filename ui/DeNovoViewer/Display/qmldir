@@ -10,3 +10,4 @@ PipView 1.0 PipView.qml
 PipState 1.0 PipState.qml
 CenterVideoView 1.0 CenterVideoView.qml
 DNFlyView 1.0 DNFlyView.qml
+WinchControl 1.0 WinchControl.qml

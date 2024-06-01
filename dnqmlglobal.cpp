@@ -12,5 +12,6 @@ DNQmlGlobal::DNQmlGlobal(QObject *parent, DNCore* core)
     _boatManager = core->boatManager();
     _videoManager = core->videoManager();
     _sensorManager = core->sensorManager();
+    _controlManager = core->controlManager();
 
 }

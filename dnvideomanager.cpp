@@ -57,26 +57,22 @@ void DNVideoManager::initVideo()
     videoList[0]->initVideo(widget0);
     QQuickItem* widget1 = root->findChild<QQuickItem*>("videoContent1");
     videoList[1]->initVideo(widget1);
-    //QQuickItem* widget2 = root->findChild<QQuickItem*>("videoContent2");
-    //videoList[2]->initVideo(widget2);
-
-
+    QQuickItem* widget2 = root->findChild<QQuickItem*>("videoContent2");
+    videoList[2]->initVideo(widget2);
 }
 
 void DNVideoManager::initGstreamer()
 {
-
-
     //_testpipeline = gst_parse_launch("videotestsrc ! glupload ! qml6glsink name=sink",NULL);
     //_testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
 }
 
 void DNVideoManager::setVideoTest(QQuickItem* widget)
-
 {
+
     GstElement* qmlglsink;
     if ((qmlglsink = gst_element_factory_make("qmlglsink ", NULL)) == NULL) {
-        qDebug()<<"**Fatal qmlglsink failed";
+        qDebug()<<"\u001b[38;5;203m"<<"**Fatal qmlglsink failed"<<"\033[0m";
     }
     _testpipeline = gst_parse_launch("videotestsrc ! glupload ! glcolorconvert ! qmlglsink name=sink",NULL);
     _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
@@ -129,9 +125,8 @@ void DNVideoManager::onStop(VideoItem* videoItem)
     }
 
     QString videoNo = QString("video")+QString::number(videoItem->videoNo());
-    qDebug()<<"**********************"<<videoNo;
     if(_core->boatManager()->getBoatbyID(videoItem->boatID()) == 0){
-        qDebug()<<"Fatal:: DNVideoManager::onStop, boat ID:"<< videoItem->boatID()<<" not exist";
+        qDebug()<<"\u001b[38;5;203m"<<"Fatal:: DNVideoManager::onStop, boat ID:"<< videoItem->boatID()<<" not exist"<<"\033[0m";
         return;
     }
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
