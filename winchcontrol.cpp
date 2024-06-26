@@ -23,8 +23,6 @@ void WinchControl::run(QString steps)
 
     // message type use raw
     emit sendMsgbyID(boatID(), 5, bt);
-    qDebug()<<"ControlItem::run winch "<<QString::number(m_steps);
-    qDebug()<<bt;
 
 }
 
@@ -39,8 +37,8 @@ void WinchControl::stop()
 
     // message type use raw
     emit sendMsgbyID(boatID(), 5, bt);
-    qDebug()<<"ControlItem::stop winch";
-    qDebug()<<bt;
+    //qDebug()<<"ControlItem::stop winch";
+    //qDebug()<<bt;
 
 }
 
