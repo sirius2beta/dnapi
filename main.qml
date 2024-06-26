@@ -3,6 +3,9 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import QtQuick.Layouts 1.15
+import QtPositioning 5.15
+import QtLocation 5.15
+
 import DeNovoViewer 1.0
 import DeNovoViewer.Boat 1.0
 import DeNovoViewer.Display 1.0
@@ -133,7 +136,7 @@ Window {
                     }
                 }
                 // map not used for now
-                /*
+
                 Item{
                     Layout.preferredWidth: 400
                     Layout.fillHeight: true
@@ -154,7 +157,7 @@ Window {
                         zoomLevel: 14
                     }
                 }
-                */
+
 
                 BoatStatusView{
 
