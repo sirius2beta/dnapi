@@ -49,5 +49,6 @@ HEADERS += \
 
 RESOURCES += \
     $$PWD/DeNovo.qrc \
-    $$PWD/DNImage.qrc
+    $$PWD/DNImage.qrc \
+    $$PWD/../DenovoUI/DenovoUI.qrc
 
