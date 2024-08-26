@@ -158,8 +158,8 @@ Window {
                     Map {
                         anchors.fill: parent
                         plugin: mapPlugin
-                        center: QtPositioning.coordinate(23.5, 121) // Oslo
-                        zoomLevel: 14
+                        center: QtPositioning.coordinate(23.56698, 119.636503) // Oslo 23.566986633107984, 119.63650339349202
+                        zoomLevel: 10
                     }
                 }
 

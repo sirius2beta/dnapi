@@ -52,6 +52,7 @@ void DNVideoManager::init()
 
 void DNVideoManager::initVideo()
 {
+    //有幾個視窗開幾個
     QQuickWindow* root = dnApp()->mainRootWindow();
     QQuickItem* widget0 = root->findChild<QQuickItem*>("videoContent0");
     videoList[0]->initVideo(widget0);
@@ -121,7 +122,6 @@ void DNVideoManager::onStop(VideoItem* videoItem)
 {
 
     if(videoItem->videoNo() == -1){
-        qDebug()<<"stopooooo";
         return;
     }
 

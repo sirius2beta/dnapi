@@ -75,7 +75,7 @@ Item {
             Text{
 
                 font.family: "Segoe UI"
-                text:DeNovoViewer.sensorManager.mav0Model.get(0).displayValue
+                text: " Aqua"
                 font.pixelSize: 20
                 color:"white"
             }
