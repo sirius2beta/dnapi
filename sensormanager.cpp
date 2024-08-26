@@ -28,6 +28,8 @@ void SensorManager::init()
         }
         _sensorGroupListModel.append(model);
     }
+    SensorItem* sensor = qobject_cast<SensorItem*> (_sensorGroupListModel[4]->get(1));
+    qDebug()<<"type:"<<sensor->value().dataType();
     qDebug()<<"sensorManager:: Initiate complete";
 }
 
@@ -83,9 +85,9 @@ void SensorManager::onSensorMsg(int ID, QByteArray data)
             qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(float)";
             sensor->setValue(DNValue(value));
         }else{
-            uint32_t value;
+            int value;
             memcpy(&value, cdata+pos, sizeof(uint32_t));
-            pos+=sizeof(float);
+            pos+=sizeof(uint32_t);
             qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint32)";
             sensor->setValue(DNValue(value));
         }

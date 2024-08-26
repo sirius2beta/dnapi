@@ -15,6 +15,20 @@ DNValue::DNValue(float f)
 QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
+DNValue::DNValue(uint32_t i)
+    : _rawValue(i),
+    _type(DNMetaData::valueTypeUint32)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
+DNValue::DNValue(int i)
+    : _rawValue(i),
+    _type(DNMetaData::valueTypeUint32)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
 DNValue::DNValue(QVariant _rawValue, DNMetaData::ValueType_t type, QObject *parent)
     : QObject{parent},
     _rawValue(0),

@@ -26,6 +26,7 @@
         <file alias="topview.png">res/topview.png</file>
         <file alias="videoMiddleIndicater.png">res/videoMiddleIndicater.png</file>
         <file alias="SensorType.xml">res/SensorType.xml</file>
+        <file alias="headingBox.png">res/headingBox.png</file>
     </qresource>
     <qresource prefix="/qmlimages">
         <file alias="pipResize.svg">res/pipResize.svg</file>

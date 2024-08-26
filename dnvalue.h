@@ -12,6 +12,8 @@ public:
     Q_PROPERTY(QString name READ name CONSTANT)
     DNValue(QObject *parent = nullptr);
     DNValue(float f);
+    DNValue(uint32_t i);
+    DNValue(int i);
     DNValue(QVariant _rawValue, DNMetaData::ValueType_t type, QObject *parent = nullptr);
     DNValue(const DNValue& other, QObject *parent = nullptr);
     const DNValue& operator = (const DNValue& other);

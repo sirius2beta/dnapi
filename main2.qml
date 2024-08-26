@@ -5,6 +5,7 @@ import QtQuick.Window 2.15
 
 import DenovoUI 1.0
 
+
 Window {
     id: window
     width: 1280

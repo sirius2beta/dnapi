@@ -20,7 +20,7 @@ SensorItem::SensorItem(const SensorItem& other, QObject *parent)
 QString SensorItem::displayValue()
 {
     if(_value.dataType() == DNMetaData::valueTypeUint32){
-        return QString::number(_value.data().toUInt());
+        return QString::number(_value.data().toInt());
     }else if(_value.dataType() == DNMetaData::valueTypeFloat){
         return QString::number(_value.data().toFloat());
     }else if(_value.dataType() == DNMetaData::valueTypeBool){

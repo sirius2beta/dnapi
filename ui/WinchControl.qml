@@ -71,6 +71,7 @@ Item {
                 font.family: "Segoe UI"
                 text:" Winch Control"
                 color:"white"
+                font.pixelSize: 20
                 verticalAlignment: Text.AlignVCenter
                 leftPadding: 5
             }
@@ -154,6 +155,7 @@ Item {
                                     Text{
                                         anchors.fill: parent
                                         font.family: "Segoe UI"
+                                        font.pixelSize: 20
                                         text:index + " m"
                                         color:"white"
                                         verticalAlignment: Text.AlignVCenter

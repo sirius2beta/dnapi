@@ -1,6 +1,6 @@
 ﻿import QtQuick 2.15
-
 Item {
+
 
 
     VideoView{
@@ -12,14 +12,11 @@ Item {
     VideoView{
         id: videoView1
         pipView: _pipView
+        _index: 1
         videoObjectName: "videoContent1"
     }
 
-    VideoView{
-        id: videoView2
-        pipView: _pipView2
-        videoObjectName: "videoContent2"
-    }
+
 
 
     PipView{
@@ -35,16 +32,5 @@ Item {
         show:                   true
     }
 
-    PipView{
-        id: _pipView2
-        sizeRatio: 4/3
-        anchors.right:           parent.right
-        anchors.top:         parent.top
-        anchors.margins:        10
-        item1:                  videoView0
-        item2:                  videoView2
-        name: "his"
-        z:1
-        show:                   true
-    }
+
 }

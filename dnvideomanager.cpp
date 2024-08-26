@@ -57,8 +57,8 @@ void DNVideoManager::initVideo()
     videoList[0]->initVideo(widget0);
     QQuickItem* widget1 = root->findChild<QQuickItem*>("videoContent1");
     videoList[1]->initVideo(widget1);
-    QQuickItem* widget2 = root->findChild<QQuickItem*>("videoContent2");
-    videoList[2]->initVideo(widget2);
+    //QQuickItem* widget2 = root->findChild<QQuickItem*>("videoContent2");
+    //videoList[2]->initVideo(widget2);
 }
 
 void DNVideoManager::initGstreamer()
@@ -121,6 +121,7 @@ void DNVideoManager::onStop(VideoItem* videoItem)
 {
 
     if(videoItem->videoNo() == -1){
+        qDebug()<<"stopooooo";
         return;
     }
 

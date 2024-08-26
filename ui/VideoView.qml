@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.15
 
 import DeNovoViewer 1.0
 import DeNovoViewer.Boat 1.0
+import DenovoUI 1.0
 
 import org.freedesktop.gstreamer.GLVideoItem 1.0
 
@@ -14,6 +15,7 @@ Item {
     property Item pipState: videoPipState
     property bool isFull: videoPipState.state === videoPipState.fullState
     property string videoObjectName //required, bind to C++ gstreamer g_object_set
+
 
 
     PipState {
@@ -33,6 +35,7 @@ Item {
         videoItem.setBoatID(DeNovoViewer.boatManager.getIDbyInex(_boatNo.currentIndex))
         console.log("init listview index:",_boatNo.currentIndex)
     }
+
 
     Rectangle{
         id: background
@@ -102,6 +105,7 @@ Item {
             anchors.right: parent.right
             height:0
             color: "#333333"
+            visible: isFull
             clip: true
             Button{
                 id: _playButton
@@ -119,10 +123,26 @@ Item {
                 }
 
             }
+            Button{
+                id: _stopButton
+                anchors.right: _playButton.left
+                anchors.bottom: parent.bottom
+                anchors.margins: 5
+                height: _videoNo.height
+                font.family: "Segoe UI"
+                text: "Stop"
+                onClicked: {
+                    if(videoItem){
+                        videoItem.stop()
+                        console.log("stop")
+                    }
+                }
+
+            }
             ComboBox{
                 id: _qualityNo
 
-                anchors.right: _playButton.left
+                anchors.right: _stopButton.left
                 anchors.bottom: parent.bottom
                 anchors.margins: 5
                 font.family: "Segoe UI"
@@ -191,6 +211,16 @@ Item {
                 }
 
             }
+        }
+        HUD{
+            visible: isFull
+            opacity: 0.8
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.leftMargin: 0
+            anchors.rightMargin: 0
+
         }
     }
 

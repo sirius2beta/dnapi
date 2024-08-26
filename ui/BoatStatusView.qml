@@ -7,7 +7,7 @@ import DeNovoViewer 1.0
 import DeNovoViewer.Boat 1.0
 
 Item {
-    Layout.preferredWidth: 400
+    Layout.preferredWidth: 300
     Layout.fillHeight: true
     Layout.alignment: Qt.AlignLeft
     ListModel {
@@ -64,7 +64,7 @@ Item {
                     Layout.fillHeight: true
                     wrapMode: Text.WordWrap
                     font.family: "Segoe UI"
-                    font.pointSize: 10
+                    font.pixelSize: 16
                     lineHeight: 0.8
                     color:"#b8bbc0"
                     text: object.name.toLowerCase()
@@ -81,7 +81,7 @@ Item {
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
                         font.family: "Segoe UI"
-                        font.pointSize: 10
+                        font.pixelSize: 16
                         color:"white"
 
                         text: object.displayValue
@@ -104,7 +104,7 @@ Item {
                     Layout.fillHeight: true
                     wrapMode: Text.WordWrap
                     font.family: "Segoe UI"
-                    font.pointSize: 10
+                    font.pixelSize: 16
                     lineHeight: 0.8
                     color:"#b8bbc0"
                     text: object.name.toLowerCase()
@@ -122,7 +122,7 @@ Item {
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
                         font.family: "Segoe UI"
-                        font.pointSize: 10
+                        font.pixelSize: 16
                         color:"white"
 
                         text: object.displayValue
@@ -137,6 +137,7 @@ Item {
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
+        anchors.leftMargin: 15
 
         radius:5
         color: "#292b2d"
@@ -146,14 +147,16 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
             radius: 5
-            height:25
+            height:35
             color: "#222222"
 
 
             Text{
 
                 font.family: "Segoe UI"
+                font.pixelSize: 20
                 text:" BoatStatus"
+
                 color:"white"
             }
         }
@@ -162,21 +165,11 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.margins: 10
+            anchors.margins: 15
             clip: true
-            Item{
-                Layout.preferredWidth: 150
-                Layout.fillHeight: true
 
-                Image {
-                    height: parent.height-40
-                    fillMode: Image.PreserveAspectFit
-                    id: _thumbnail2
-                    source: "qrc:/res/topview.png"
-                }
-            }
             Item {
-                Layout.preferredWidth: 300
+                Layout.preferredWidth: 150
                 Layout.preferredHeight: parent.height
                 ColumnLayout{
                     anchors.fill: parent
@@ -184,7 +177,7 @@ Item {
                         text: "Cabin"
                         Layout.preferredHeight: 10
                         font.family: "Segoe UI"
-                        font.pointSize: 10
+                        font.pixelSize: 16
                         color:"#eeeeee"
                     }
                     ToolSeparator {
@@ -195,7 +188,7 @@ Item {
                     ListView{
                         topMargin: 0
                         bottomMargin: 0
-                        Layout.fillWidth: true
+                        Layout.preferredWidth: 250
                         Layout.preferredHeight: 50
                         id: _sensorListView
                         clip: true
@@ -209,7 +202,7 @@ Item {
 
                         Layout.preferredHeight: 10
                         font.family: "Segoe UI"
-                        font.pointSize: 10
+                        font.pixelSize: 16
                         color:"#eeeeee"
                     }
                     ToolSeparator {

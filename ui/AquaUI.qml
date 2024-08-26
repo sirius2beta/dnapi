@@ -68,28 +68,29 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
             radius: 5
-            height:25
+            height:30
             color: "#222222"
 
 
             Text{
 
                 font.family: "Segoe UI"
-                text:" Aqua"
+                text:DeNovoViewer.sensorManager.mav0Model.get(0).displayValue
+                font.pixelSize: 20
                 color:"white"
             }
         }
         Component {
             id: sensorDelegate
             Item {
-                width: _sensorListView.width; height: 20
+                width: _sensorListView.width; height: 25
                 RowLayout{
 
                     Text {
                         Layout.preferredWidth: 200
                         wrapMode: Text.WordWrap
                         font.family: "Segoe UI"
-                        font.pointSize: 9
+                        font.pixelSize: 16
                         lineHeight: 0.6
                         color:"#b8bbc0"
                         text: object.name.toLowerCase().split('_').join(' ')
@@ -101,7 +102,7 @@ Item {
                     Text {
                         Layout.preferredWidth: 30
                         font.family: "Segoe UI"
-                        font.pointSize: 9
+                        font.pixelSize: 16
                         color:"white"
                         text: object.displayValue
                     }

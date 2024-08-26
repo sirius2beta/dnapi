@@ -31,11 +31,12 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
             radius: 5
-            height:25
+            height:35
             color: "#222222"
             Text{
 
                 font.family: "Segoe UI"
+                font.pixelSize: 20
                 text:" BoatManager"
                 color:"white"
             }
@@ -59,13 +60,13 @@ Item {
 
                     width: boatListView.width
                     anchors.margins: 20
-                    height: 65
+                    height: 80
                     Column{
                         Text {
                             anchors.left:parent.left
                             anchors.margins: 10
                             font.family: "Segoe UI"
-                            font.pointSize: 10
+                            font.pixelSize: 20
                             color:"white"
                             text: "<b>"+object.name
                         }
@@ -83,7 +84,7 @@ Item {
 
                                 font.family: "Segoe UI"
                                 color:"white"
-                                font.pointSize: 8
+                                font.pixelSize: 16
                                 text: object.PIP
                             }
                         }
@@ -101,7 +102,7 @@ Item {
 
                                 font.family: "Segoe UI"
                                 color:"white"
-                                font.pointSize: 8
+                                font.pixelSize: 16
                                 text: object.SIP
                             }
                         }
@@ -134,6 +135,7 @@ Item {
                         visible: button_visible && boatListView.focus
                         text: 'edit'
                         font.family: "Segoe UI"
+                        font.pixelSize: 16
                         onClicked: {
                             console.log(boatListView.currentIndex)
                             editBoatDialog.createObject(dnMainWindow).open()
@@ -156,6 +158,7 @@ Item {
                 height:40
                 text: "Del"
                 font.family: "Segoe UI"
+                font.pixelSize: 16
                 onClicked: {
                     DeNovoViewer.boatManager.deleteBoat(boatListView.currentIndex)
                     console.log(boatListView.currentIndex)
@@ -166,6 +169,7 @@ Item {
                 height:40
                 text: "Add"
                 font.family: "Segoe UI"
+                font.pixelSize: 16
                 onClicked: {
                     DeNovoViewer.boatManager.addBoat()
                 }

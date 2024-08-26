@@ -10,6 +10,10 @@ import DeNovoViewer 1.0
 import DeNovoViewer.Boat 1.0
 import DeNovoViewer.Display 1.0
 
+
+import DenovoUI 1.0
+
+
 Window {
     id: dnMainWindow
     width: 1280
@@ -28,12 +32,13 @@ Window {
         anchors.fill:parent
     }
 
+
     DNFlyView{
         id: _centerVideoView
         anchors.bottom: _bottom.top
         anchors.top: parent.top
         anchors.left: _leftTool.right
-        anchors.right: _subVideoView.left
+        anchors.right: _controlView.left
         anchors.margins: 15
 
 
@@ -79,14 +84,13 @@ Window {
 
 
 
-    SubVideoView{
-        id: _subVideoView
+
+    ControlView{
+        id: _controlView
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: _bottom.top
-        anchors.margins: 15
-        width: 400
-
+        width: 200
     }
 
     Rectangle{
@@ -96,7 +100,7 @@ Window {
         anchors.bottom: parent.bottom
         anchors.margins: 15
         radius: 10
-        height:250
+        height:parent.height/4
         color: "#333333"
         clip: true;
         ScrollView{
@@ -131,6 +135,7 @@ Window {
                         Text{
                             font.family: "Segoe UI"
                             text: " Echo"
+                            font.pixelSize:16
                             color: "white"
                         }
                     }
@@ -153,7 +158,7 @@ Window {
                     Map {
                         anchors.fill: parent
                         plugin: mapPlugin
-                        center: QtPositioning.coordinate(59.91, 10.75) // Oslo
+                        center: QtPositioning.coordinate(23.5, 121) // Oslo
                         zoomLevel: 14
                     }
                 }
@@ -199,9 +204,10 @@ Window {
 
     }
 
+
     Component.onCompleted: {
         DeNovoViewer.controlManager.controls.get(0).setField(0,1000)
         dnvalue = DeNovoViewer.controlManager.controls.get(0).getField(0);
-        console.log(DeNovoViewer.controlManager.controls.get(0).maxSpeed)
+        console.log(parseInt(DeNovoViewer.sensorManager.mav1Model.get(1).displayValue))
     }
 }
