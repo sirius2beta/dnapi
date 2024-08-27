@@ -65,10 +65,10 @@ void NetworkManager::onUDPMsg()
         }
 
         QString msgType = _core->configManager()->messageChar(topic);
-        qDebug() << topic<<","<<msgType;
+        //qDebug() << topic<<","<<msgType;
         if(msgType == ConfigManager::msg_heartbeat()){
             int ID = int(data[0]);
-            qDebug() << ID;
+            //qDebug() << ID;
             BoatItem* boat = _core->boatManager()->getBoatbyID(ID);
 
             if( boat != 0){
@@ -87,7 +87,7 @@ void NetworkManager::onUDPMsg()
 
 
         }else if(msgType == ConfigManager::msg_sensor()){
-            qDebug()<<"NetworkManager:: on sensor msg";
+            //qDebug()<<"NetworkManager:: on sensor msg";
             int ID = int(data[0]);
             data.remove(0,1);
             emit sensorMsg(ID, data);

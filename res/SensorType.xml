@@ -44,10 +44,10 @@
             <sensor value="0" name="DEPTH" type="float"></sensor>
         </sensorgroup>
         <sensorgroup value="4" name="MAV1">
-            <sensor value="0" name="FIX_TYPE" type="int"></sensor>
-            <sensor value="1" name="LON" type="int"></sensor>
-            <sensor value="2" name="LAT" type="int"></sensor>
-            <sensor value="3" name="ALT" type="int"></sensor>
+            <sensor value="0" name="FIX_TYPE" type="uint_32"></sensor>
+            <sensor value="1" name="LON" type="int_32"></sensor>
+            <sensor value="2" name="LAT" type="int_32"></sensor>
+            <sensor value="3" name="ALT" type="int_32"></sensor>
         </sensorgroup>
     </enum>
     <enum name="CONTROL">
@@ -70,14 +70,14 @@
     </enum>
     <enum name="CONTROL_TYPE">
         <entry value="0" name="WINCH">
-            <field name="MaxSpeed" type="int" ></field>
-            <field name="Acceleration" type="int" ></field>
-            <field name="Steps" type="int" ></field>
+            <field name="MaxSpeed" type="uint_32" ></field>
+            <field name="Acceleration" type="uint_32" ></field>
+            <field name="Steps" type="uint_32" ></field>
         </entry>
         <entry value="1" name="COOLING_SYSTEM_POWER"></entry>
     </enum>
     <enum name="DATA_TYPE">
-        <entry value="0" name="int"></entry>
+        <entry value="0" name="uint_32"></entry>
         <entry value="1" name="float"></entry>
     </enum>
 </marinelink>

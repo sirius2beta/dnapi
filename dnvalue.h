@@ -11,9 +11,17 @@ class DNValue : public QObject
 public:
     Q_PROPERTY(QString name READ name CONSTANT)
     DNValue(QObject *parent = nullptr);
-    DNValue(float f);
+    DNValue(uint8_t i);
+    DNValue(int8_t i);
+    DNValue(uint16_t i);
+    DNValue(int16_t i);
     DNValue(uint32_t i);
-    DNValue(int i);
+    DNValue(int32_t i);
+    DNValue(uint64_t i);
+    DNValue(int64_t i);
+    DNValue(double f);
+    DNValue(float f);
+
     DNValue(QVariant _rawValue, DNMetaData::ValueType_t type, QObject *parent = nullptr);
     DNValue(const DNValue& other, QObject *parent = nullptr);
     const DNValue& operator = (const DNValue& other);

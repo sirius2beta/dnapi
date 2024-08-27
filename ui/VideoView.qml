@@ -220,6 +220,7 @@ Item {
             anchors.top: parent.top
             anchors.leftMargin: 0
             anchors.rightMargin: 0
+            dist:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(0).displayValue)/100
 
         }
     }

@@ -78,7 +78,61 @@ void SensorManager::onSensorMsg(int ID, QByteArray data)
 
         //get sensor value
 
-        if(sensor->value().dataType() == DNMetaData::valueTypeFloat){
+        if(sensor->value().dataType() == DNMetaData::valueTypeUint8){
+            uint8_t value;
+            memcpy(&value, cdata+pos, sizeof(uint8_t));
+            pos+=sizeof(uint8_t);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint8)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeInt8){
+            int8_t value;
+            memcpy(&value, cdata+pos, sizeof(int8_t));
+            pos+=sizeof(int8_t);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(int8)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeUint16){
+            uint16_t value;
+            memcpy(&value, cdata+pos, sizeof(uint16_t));
+            pos+=sizeof(uint16_t);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint16)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeInt16){
+            int16_t value;
+            memcpy(&value, cdata+pos, sizeof(int16_t));
+            pos+=sizeof(int16_t);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(int16)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeUint32){
+            uint32_t value;
+            memcpy(&value, cdata+pos, sizeof(uint32_t));
+            pos+=sizeof(uint32_t);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint32)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeInt32){
+            int32_t value;
+            memcpy(&value, cdata+pos, sizeof(int32_t));
+            pos+=sizeof(int32_t);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(int32)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeUint64){
+            uint64_t value;
+            memcpy(&value, cdata+pos, sizeof(uint64_t));
+            pos+=sizeof(uint64_t);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint64)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeInt64){
+            int64_t value;
+            memcpy(&value, cdata+pos, sizeof(int64_t));
+            pos+=sizeof(int64_t);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(int64)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeDouble){
+            double value;
+            memcpy(&value, cdata+pos, sizeof(double));
+            pos+=sizeof(double);
+            qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(double)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeFloat){
             float value;
             memcpy(&value, cdata+pos, sizeof(float));
             pos+=sizeof(float);

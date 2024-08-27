@@ -8,9 +8,30 @@ DNValue::DNValue(QObject *parent)
 QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
-DNValue::DNValue(float f)
-    : _rawValue(f),
-    _type(DNMetaData::valueTypeFloat)
+DNValue::DNValue(uint8_t i)
+    : _rawValue(i),
+    _type(DNMetaData::valueTypeUint8)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
+DNValue::DNValue(int8_t i)
+    : _rawValue(i),
+    _type(DNMetaData::valueTypeInt8)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
+DNValue::DNValue(uint16_t i)
+    : _rawValue(i),
+    _type(DNMetaData::valueTypeUint16)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
+DNValue::DNValue(int16_t i)
+    : _rawValue(i),
+    _type(DNMetaData::valueTypeInt16)
 {
 QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
@@ -22,9 +43,36 @@ DNValue::DNValue(uint32_t i)
 QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
-DNValue::DNValue(int i)
+DNValue::DNValue(int32_t i)
     : _rawValue(i),
-    _type(DNMetaData::valueTypeUint32)
+    _type(DNMetaData::valueTypeInt32)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
+DNValue::DNValue(uint64_t i)
+    : _rawValue(i),
+    _type(DNMetaData::valueTypeUint64)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
+DNValue::DNValue(int64_t i)
+    : _rawValue(i),
+    _type(DNMetaData::valueTypeInt64)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+DNValue::DNValue(double f)
+    : _rawValue(f),
+    _type(DNMetaData::valueTypeDouble)
+{
+QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
+DNValue::DNValue(float f)
+    : _rawValue(f),
+    _type(DNMetaData::valueTypeFloat)
 {
 QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }

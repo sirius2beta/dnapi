@@ -8,8 +8,16 @@ class DNMetaData : public QObject
     Q_OBJECT
 public:
     typedef enum {
+        valueTypeUint8,
+        valueTypeInt8,
+        valueTypeUint16,
+        valueTypeInt16,
+        valueTypeInt32,
         valueTypeUint32,
+        valueTypeInt64,
+        valueTypeUint64,
         valueTypeFloat,
+        valueTypeDouble,
         valueTypeBool,
     } ValueType_t;
     explicit DNMetaData(QObject *parent = nullptr);

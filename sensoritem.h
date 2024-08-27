@@ -10,11 +10,12 @@ class SensorItem : public QObject
 public:
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString displayValue READ displayValue  NOTIFY displayValueChanged)
+
     explicit SensorItem(QObject *parent = nullptr, QString name = QString(), int sensorType=-1, DNValue value=DNValue());
     SensorItem(const SensorItem& other, QObject *parent = nullptr);
     const SensorItem& operator = (const SensorItem& other);
     int boatID() { return _boatID; }
-    DNValue value() { return _value; }
+    Q_INVOKABLE DNValue value() { return _value; }
     QString name() { return _name; }
     QString displayValue();
     QVariant maxAlarmValue() { return _maxAlarmValue; }
