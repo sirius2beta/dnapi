@@ -221,6 +221,9 @@ Item {
             anchors.leftMargin: 0
             anchors.rightMargin: 0
             dist:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(0).displayValue)/100
+            volt:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(1).displayValue)/1000
+            amp:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(2).displayValue)/100
+            rtk:DeNovoViewer.sensorManager.mav1Model.get(0).displayValue
 
         }
     }
