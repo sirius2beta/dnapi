@@ -136,6 +136,8 @@ QVariant DNValue::parseString(QString s, DNMetaData::ValueType_t type)
         }else{
            return QVariant(false);
         }
+    }else{
+        return QVariant(s.toInt());
     }
     return QVariant();
 }

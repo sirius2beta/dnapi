@@ -21,10 +21,14 @@ QString SensorItem::displayValue()
 {
     if(_value.dataType() == DNMetaData::valueTypeUint32){
         return QString::number(_value.data().toInt());
+    }else if(_value.dataType() == DNMetaData::valueTypeInt32){
+        return QString::number(_value.data().toInt());
     }else if(_value.dataType() == DNMetaData::valueTypeFloat){
         return QString::number(_value.data().toFloat());
     }else if(_value.dataType() == DNMetaData::valueTypeBool){
         return _value.data().toBool()?"On":"Off";
+    }else{
+        return QString::number(_value.data().toInt());
     }
 }
 
@@ -56,5 +60,7 @@ void SensorItem::setValue(DNValue value)
         emit displayValueChanged(QString::number(value.data().toFloat()));
     }else if(value.dataType() == DNMetaData::valueTypeBool){
         emit displayValueChanged(value.data().toBool()?"On":"Off");
+    }else{
+        emit displayValueChanged(QString::number(value.data().toInt()));
     }
 }

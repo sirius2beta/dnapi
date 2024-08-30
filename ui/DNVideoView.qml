@@ -5,7 +5,9 @@ import QtQuick.Controls.Material 2.15
 
 import DeNovoViewer 1.0
 import DeNovoViewer.Boat 1.0
+
 import DenovoUI 1.0
+
 
 import org.freedesktop.gstreamer.GLVideoItem 1.0
 
@@ -212,20 +214,13 @@ Item {
 
             }
         }
-        HUD{
-            visible: isFull
-            opacity: 0.8
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.leftMargin: 0
-            anchors.rightMargin: 0
-            dist:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(0).displayValue)/100
-            volt:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(1).displayValue)/1000
-            amp:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(2).displayValue)/100
-            rtk:DeNovoViewer.sensorManager.mav1Model.get(0).displayValue
 
-        }
+    }
+
+    VideoView{
+        visible: isFull
+        anchors.fill: parent
+        rollAngle:-parseFloat(DeNovoViewer.sensorManager.mav1Model.get(6).displayValue)*57.29
     }
 
     Component.onCompleted: {

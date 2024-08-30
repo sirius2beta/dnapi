@@ -1,15 +1,20 @@
 ﻿import QtQuick 2.15
+
+import DeNovoViewer 1.0
+import DeNovoViewer.Boat 1.0
+import DenovoUI 1.0
+
 Item {
 
 
 
-    VideoView{
+    DNVideoView{
         id: videoView0
         pipView: _pipView
         videoObjectName: "videoContent0"
     }
 
-    VideoView{
+    DNVideoView{
         id: videoView1
         pipView: _pipView
         _index: 1
@@ -23,7 +28,7 @@ Item {
         id: _pipView
         sizeRatio: 9/16
         anchors.left:           parent.left
-        anchors.top:         parent.top
+        anchors.top:         hud.bottom
         anchors.margins:        10
         item1:                  videoView0
         item2:                  videoView1
@@ -32,5 +37,21 @@ Item {
         show:                   true
     }
 
+    HUD{
+        id: hud
+        visible: true
+        opacity: 0.8
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.leftMargin: 0
+        anchors.rightMargin: 0
+        dist:parseInt(DeNovoViewer.sensorManager.mav0Model.get(0).displayValue)
+        volt:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(1).displayValue)/1000
+        amp:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(2).displayValue)/100
+        yaw:parseInt(DeNovoViewer.sensorManager.mav1Model.get(4).displayValue)/100
+        rtk:DeNovoViewer.sensorManager.mav1Model.get(0).displayValue
+
+    }
 
 }
