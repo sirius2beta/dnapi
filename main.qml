@@ -107,7 +107,7 @@ Window {
         anchors.margins: 15
         radius: 10
         height:parent.height/4
-        color: "#333333"
+        color: "#25252a"
         clip: true;
         ScrollView{
             anchors.fill: parent
@@ -147,10 +147,20 @@ Window {
                     }
                 }
                 // map not used for now
+                PositionSource {
+                    id: src
+                    updateInterval: 1000
+                    active: true
+                    onPositionChanged: {
+                            h_point.coordinate = src.position.coordinate;
+                            console.log("Coordinate:", coord.longitude, coord.latitude);
+                        }
 
+                }
                 Item{
                     Layout.preferredWidth: 400
                     Layout.fillHeight: true
+
                     Plugin {
                             id: mapPlugin
                             name: "osm" // "mapboxgl", "esri", ...
@@ -163,23 +173,42 @@ Window {
 
 
                     Map {
+                        id: mmap
                         anchors.fill: parent
                         plugin: mapPlugin
                         activeMapType: supportedMapTypes[3] // Cycle map provided by Thunderforest
 
-                        center: QtPositioning.coordinate(lat, lon) // Oslo 23.566986633107984, 119.63650339349202
+                        center: h_point
                         zoomLevel: 14
                         copyrightsVisible: false
                         MapQuickItem{
+                            id: h_point
+                            zoomLevel: parent.zoomLevel
+                            coordinate: QtPositioning.coordinate(25, 121.3)
+                            anchorPoint: Qt.point(sourceItem.width/2, sourceItem.height/2)
+                            sourceItem: Image{
+                                width:50
+                                height:50
+                                source: "res/home_pin.png"
+                                fillMode: Image.Stretch
+                            }
+                        }
+                        MapQuickItem{
                             id: b_point
                             zoomLevel: parent.zoomLevel
-                            coordinate: QtPositioning.coordinate(lat, lon)
+                            coordinate: QtPositioning.coordinate(lat,lon)
                             anchorPoint: Qt.point(sourceItem.width/2, sourceItem.height/2)
-                            sourceItem: Rectangle{
-                                width:10
-                                height:10
-                                color: 'green'
+                            sourceItem: Image{
+                                width:50
+                                height:50
+                                source: "res/navigation.png"
+                                fillMode: Image.Stretch
+                                transform: Rotation{origin.x:25; origin.y:25; angle:parseInt(DeNovoViewer.sensorManager.mav1Model.get(4).displayValue)/100}
                             }
+                            onCoordinateChanged: {
+                                mmap.center = coordinate
+                            }
+
                         }
                     }
 

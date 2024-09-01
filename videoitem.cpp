@@ -5,6 +5,8 @@
 #include <QQuickWindow>
 #include <QQuickItem>
 #include <QQmlEngine>
+#include <QSound>
+
 
 
 VideoItem::VideoItem(QObject *parent, DNCore* core, int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
@@ -198,6 +200,7 @@ void VideoItem::setConnectionPriority(int connectionType)
 
 void VideoItem::play()
 {
+    //QSound::play(":/imports/DenovoUI/images/79.wav");
     qDebug()<<"VideoItem::play, videoIndex:"<<_videoIndex<<", formatNo:"<<_formatNo;
     if(_boatID == -1 || _videoIndex == -1 || _formatNo == -1) return;
     int tempIndex = _videoIndex;

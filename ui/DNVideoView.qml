@@ -221,6 +221,7 @@ Item {
         visible: isFull
         anchors.fill: parent
         rollAngle:-parseFloat(DeNovoViewer.sensorManager.mav1Model.get(6).displayValue)*57.29
+        pitch:parseFloat(DeNovoViewer.sensorManager.mav1Model.get(5).displayValue)*57.29
     }
 
     Component.onCompleted: {
