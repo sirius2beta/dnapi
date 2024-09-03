@@ -47,12 +47,12 @@ Item {
         anchors.leftMargin: 0
         anchors.rightMargin: 0
         depth:parseInt(DeNovoViewer.sensorManager.mav0Model.get(0).displayValue)
-        volt:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(1).displayValue)/1000
+        volt:Math.round(parseFloat(DeNovoViewer.sensorManager.mav0Model.get(1).displayValue)*100)/100000
         amp:parseFloat(DeNovoViewer.sensorManager.mav0Model.get(2).displayValue)/100
         yaw:parseInt(DeNovoViewer.sensorManager.mav1Model.get(4).displayValue)/100
         temp: parseFloat(DeNovoViewer.sensorManager.cabinModel.get(0).displayValue)
         rtk:DeNovoViewer.sensorManager.mav1Model.get(0).displayValue
-        gs: parseFloat(DeNovoViewer.sensorManager.mav1Model.get(7).displayValue)
+        gs: Math.round(parseFloat(DeNovoViewer.sensorManager.mav1Model.get(7).displayValue)*100)/100
         z:2
 
     }
