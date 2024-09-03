@@ -76,7 +76,7 @@ void HeartBeat::HeartBeatLoop()
 {
     //qDebug()<<"HeartBeat::HeartBeatLoop started ("<<boat->name()<<", "<<boatIP<<")";
 
-    beat();
+    //beat();
     heartBeatTimer->start(1000);
     isHearBeatLoop = true;
     isAlive = false;
@@ -102,6 +102,8 @@ void HeartBeat::alive(QString ip, int ID)
             checkAliveTimer->start(2000);
             isHearBeatLoop = false;
             boat->connect(primary);
+            beat(); //boat heart beat may come first, we have to send a heartbeat first to let it know
+            //if we are primary
             emit sendMsg(QHostAddress(ip), _core->configManager()->message("FORMAT"), QString("q").toLocal8Bit());
             qDebug()<<"HeartBeat boatname:"<<boat->name();
 

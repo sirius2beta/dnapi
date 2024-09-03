@@ -206,7 +206,9 @@ Window {
                                 transform: Rotation{origin.x:25; origin.y:25; angle:parseInt(DeNovoViewer.sensorManager.mav1Model.get(4).displayValue)/100}
                             }
                             onCoordinateChanged: {
-                                mmap.center = coordinate
+                                    mmap.center = coordinate
+
+
                             }
 
                         }
