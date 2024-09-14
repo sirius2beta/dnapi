@@ -20,6 +20,7 @@ Item {
 
 
 
+
     PipState {
         id:         videoPipState
         pipView:    _root.pipView
@@ -37,6 +38,20 @@ Item {
         videoItem.setBoatID(DeNovoViewer.boatManager.getIDbyInex(_boatNo.currentIndex))
         console.log("init listview index:",_boatNo.currentIndex)
     }
+    property var labelMap : [
+        "person",         "bicycle",    "car",           "motorbike",     "aeroplane",   "bus",           "train",
+        "truck",          "boat",       "traffic light", "fire hydrant",  "stop sign",   "parking meter", "bench",
+        "bird",           "cat",        "dog",           "horse",         "sheep",       "cow",           "elephant",
+        "bear",           "zebra",      "giraffe",       "backpack",      "umbrella",    "handbag",       "tie",
+        "suitcase",       "frisbee",    "skis",          "snowboard",     "sports ball", "kite",          "baseball bat",
+        "baseball glove", "skateboard", "surfboard",     "tennis racket", "bottle",      "wine glass",    "cup",
+        "fork",           "knife",      "spoon",         "bowl",          "banana",      "apple",         "sandwich",
+        "orange",         "broccoli",   "carrot",        "hot dog",       "pizza",       "donut",         "cake",
+        "chair",          "sofa",       "pottedplant",   "bed",           "diningtable", "toilet",        "tvmonitor",
+        "laptop",         "mouse",      "remote",        "keyboard",      "cell phone",  "microwave",     "oven",
+        "toaster",        "sink",       "refrigerator",  "book",          "clock",       "vase",          "scissors",
+        "teddy bear",     "hair drier", "toothbrush"
+    ]
 
 
     Rectangle{
@@ -45,6 +60,7 @@ Item {
         color: isFull?"#333333":"#000000"
         radius: isFull? 10: 0
         clip: true
+        property real heightRatio: height/416
         GstGLVideoItem {
             id: video
             objectName: videoObjectName
@@ -65,6 +81,92 @@ Item {
                 source: "qrc:/res/videoMiddleIndicater.png"
             }
         }
+
+
+        Repeater{
+            model:5
+            Rectangle{
+                id:_detectbox2
+                Rectangle{
+                    width:4
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    color: "#ffffff"
+                    border.color: "#333333"
+                    border.width: 1
+                }
+                Rectangle{
+                    width:4
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    color: "#ffffff"
+                    border.color: "#333333"
+                    border.width: 1
+                }
+                Rectangle{
+                    height:4
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    color: "#ffffff"
+                    border.color: "#333333"
+                    border.width: 1
+                }
+                Rectangle{
+                    height:4
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    color: "#ffffff"
+                    border.color: "#333333"
+                    border.width: 1
+                }
+
+                color: "#66660000"
+                visible: isFull
+                x:(parent.width-parent.height)/2 + parseInt(DeNovoViewer.sensorManager.detection.get(index*6+1).displayValue)* parent.height/416
+                y:parseInt(DeNovoViewer.sensorManager.detection.get(index*6+2).displayValue)* parent.height/416
+                width: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+3).displayValue))* parent.height/416
+                height: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+4).displayValue))* parent.height/416
+                Rectangle{
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height:2
+                    width:10
+                }
+                Rectangle{
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height:10
+                    width:2
+                }
+                Text {
+                    id:label
+                    anchors.top: parent.bottom
+                    anchors.left: parent.left
+                    height:18
+                    width:80
+                    color: "#ffffff"
+                    font.family: "Segoe UI"
+                    text: labelMap[parseInt(DeNovoViewer.sensorManager.detection.get(index*6+0).displayValue)]
+                    font.pixelSize: 16
+                }
+                Text {
+                    id:dis
+                    anchors.top: label.bottom
+                    anchors.left: parent.left
+                    height:18
+                    width:80
+                    color: "#ffffff"
+                    font.family: "Segoe UI"
+                    text: Math.round(parseInt(DeNovoViewer.sensorManager.detection.get(index*6+5).displayValue/100))/10+" m"
+                    font.pixelSize: 16
+                }
+            }
+        }
+
 
         Rectangle{
             id: _toggle
