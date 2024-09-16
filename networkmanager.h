@@ -5,28 +5,29 @@
 #include <QUdpSocket>
 #include "boatmanager.h"
 
-class GPBCore;
+class DNCore;
 
 class NetworkManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit NetworkManager(QObject *parent = nullptr, GPBCore* core = nullptr);
+    explicit NetworkManager(QObject *parent = nullptr, DNCore* core = nullptr);
     void init();
 
 signals:
     void AliveResponse(QString ip, int ID);
-    void setFormat(int ID, QStringList format);
+    void setFormat(int ID, QByteArray data);
     void sensorMsg(int ID, QByteArray data);
 public slots:
-    void sendMsg(QHostAddress addr, char topic, QByteArray command);
+    void sendMsg(QHostAddress addr, uint8_t topic, QByteArray command = "");
+    void sendMsgbyID(int boatID, uint8_t topic, QByteArray command = "");
 
 protected slots:
     void onUDPMsg();
 private:
     QUdpSocket *serverSocket;
     QUdpSocket *clientSocket;
-    GPBCore* _core;
+    DNCore* _core;
 };
 
 #endif // NETWORKMANAGER_H

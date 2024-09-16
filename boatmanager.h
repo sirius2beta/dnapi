@@ -11,31 +11,32 @@
 #include <QQmlListProperty>
 #include "dnqmlobjectlistmodel.h"
 
-class GPBCore;
+class DNCore;
 class BoatManager: public QObject
 {
     Q_OBJECT
 public:
-    BoatManager(QObject* parent = nullptr, GPBCore* core = nullptr);
+    BoatManager(QObject* parent = nullptr, DNCore* core = nullptr);
     ~BoatManager();
-    Q_PROPERTY(DNQmlObjectListModel* boatListModel READ boatListModel CONSTANT)
+    Q_PROPERTY(DNQmlObjectListModel* boatListModel READ boatListModel NOTIFY onboatListModelChanged)
     QAbstractItemModel* model() const {return boatItemModel;}
     void init();
-    BoatItem* addBoat(int ID, QString boatname, QString PIP, QString SIP);
-    void deleteBoat(int index);
+    Q_INVOKABLE void addBoat();
+    Q_INVOKABLE void deleteBoat(int index);
 
-    BoatItem* getBoatbyIndex(int index);
+    Q_INVOKABLE BoatItem* getBoatbyIndex(int index);
     BoatItem* getBoatbyID(int ID);
-    int getIDbyInex(int index);
+    Q_INVOKABLE int getIDbyInex(int index);
     Q_INVOKABLE int getIndexbyID(int ID);
     DNQmlObjectListModel* boatListModel(void) { return &_boatListModel;}
     QString CurrentIP(QString boatname);
     //void setConnectionType(int connectiontype);
     int size();
 signals:
-    void BoatAdded();
+    void boatAdded();
     void connectionTypeChanged(int connectiontype);
     void connectionChanged(int ID);
+    void onboatListModelChanged(DNQmlObjectListModel* model);
 public slots:
     void onBoatNameChange(int ID, QString newname);
     void onIPChanged(int ID, bool primary);
@@ -48,7 +49,7 @@ private:
     QStandardItemModel* boatItemModel;
     QList<BoatItem*> _boatList;
     int _connectionType;
-    GPBCore* _core;
+    DNCore* _core;
     DNQmlObjectListModel _boatListModel;
 };
 

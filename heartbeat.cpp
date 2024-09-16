@@ -2,18 +2,17 @@
 #include <QDebug>
 
 #include "heartbeat.h"
-#include "dntypes.h"
 #include "networkmanager.h"
-#include "gpbcore.h"
+#include "dncore.h"
 
 
 
-HeartBeat::HeartBeat(QObject *parent, GPBCore *core): QObject(parent)
+HeartBeat::HeartBeat(QObject *parent, DNCore *core): QObject(parent)
 {
     _core = core;
 }
 
-HeartBeat::HeartBeat(BoatItem* boat, int port, bool isPrimary, QObject *parent, GPBCore *core): QObject(parent)
+HeartBeat::HeartBeat(BoatItem* boat, int port, bool isPrimary, QObject *parent, DNCore *core): QObject(parent)
 {
 
     _core = core;
@@ -77,7 +76,7 @@ void HeartBeat::HeartBeatLoop()
 {
     //qDebug()<<"HeartBeat::HeartBeatLoop started ("<<boat->name()<<", "<<boatIP<<")";
 
-    beat();
+    //beat();
     heartBeatTimer->start(1000);
     isHearBeatLoop = true;
     isAlive = false;
@@ -92,6 +91,7 @@ void HeartBeat::HeartBeatLoop()
 void HeartBeat::alive(QString ip, int ID)
 {
     if((ip == boatIP) && (ID == boat->ID())){
+        //qDebug()<<"get HeartBeat boatname:"<<boat->name();
         if(isHearBeatLoop == false){
 
             isAlive = true;
@@ -102,8 +102,9 @@ void HeartBeat::alive(QString ip, int ID)
             checkAliveTimer->start(2000);
             isHearBeatLoop = false;
             boat->connect(primary);
-            emit sendMsg(QHostAddress(ip), DNTypes::Quit, QString("q").toLocal8Bit());
-            emit sendMsg(QHostAddress(boat->name()), DNTypes::Sensor, QString("d").toLocal8Bit());
+            beat(); //boat heart beat may come first, we have to send a heartbeat first to let it know
+            //if we are primary
+            emit sendMsg(QHostAddress(ip), _core->configManager()->message("FORMAT"), QString("q").toLocal8Bit());
             qDebug()<<"HeartBeat boatname:"<<boat->name();
 
         }
@@ -127,7 +128,7 @@ void HeartBeat::beat()
         cmd_bytes[0] = boat->ID();
         cmd_bytes[1] = 'S';
     }
-    emit sendMsg(QHostAddress(boatIP), DNTypes::Heartbeat,cmd_bytes);
+    emit sendMsg(QHostAddress(boatIP), _core->configManager()->message("HEARTBEAT"),cmd_bytes);
 }
 
 void HeartBeat::checkAlive()

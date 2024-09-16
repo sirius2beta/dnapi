@@ -1,13 +1,13 @@
 ﻿#include "dnvideomanager.h"
 #include "dnapplication.h"
-#include "gpbcore.h"
-#include "dntypes.h"
+#include "dncore.h"
 //#include "QGCApplication.h"
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <cstring>
 
 
-DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
+DNVideoManager::DNVideoManager(QObject *parent, DNCore* core)
     : QObject{parent},
       _core(core)
 {
@@ -19,8 +19,8 @@ DNVideoManager::DNVideoManager(QObject *parent, GPBCore* core)
 
 DNVideoManager::~DNVideoManager()
 {
-    gst_element_set_state (_testpipeline, GST_STATE_NULL);
-    gst_object_unref (_testpipeline);
+    //gst_element_set_state (_testpipeline, GST_STATE_NULL);
+    //gst_object_unref (_testpipeline);
 
 }
 
@@ -52,26 +52,31 @@ void DNVideoManager::init()
 
 void DNVideoManager::initVideo()
 {
+    //有幾個視窗開幾個
     QQuickWindow* root = dnApp()->mainRootWindow();
-    QQuickItem* widget = root->findChild<QQuickItem*>("videoContent");
-    for(int i = 0; i < videoList.size(); i++){
-        if(i == 0){
-            videoList[i]->initVideo(widget);
-            //setVideoTest(widget);
-        }
-    }
+    QQuickItem* widget0 = root->findChild<QQuickItem*>("videoContent0");
+    videoList[0]->initVideo(widget0);
+    QQuickItem* widget1 = root->findChild<QQuickItem*>("videoContent1");
+    videoList[1]->initVideo(widget1);
+    //QQuickItem* widget2 = root->findChild<QQuickItem*>("videoContent2");
+    //videoList[2]->initVideo(widget2);
 }
 
-void DNVideoManager::initGstreamer(int argc, char* argv[])
+void DNVideoManager::initGstreamer()
 {
-
-
-    _testpipeline = gst_parse_launch("videotestsrc ! glupload ! qmlglsink name=sink",NULL);
-    _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
+    //_testpipeline = gst_parse_launch("videotestsrc ! glupload ! qml6glsink name=sink",NULL);
+    //_testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
 }
 
 void DNVideoManager::setVideoTest(QQuickItem* widget)
 {
+
+    GstElement* qmlglsink;
+    if ((qmlglsink = gst_element_factory_make("qmlglsink ", NULL)) == NULL) {
+        qDebug()<<"\u001b[38;5;203m"<<"**Fatal qmlglsink failed"<<"\033[0m";
+    }
+    _testpipeline = gst_parse_launch("videotestsrc ! glupload ! glcolorconvert ! qmlglsink name=sink",NULL);
+    _testsink = gst_bin_get_by_name((GstBin*)_testpipeline,"sink");
     g_object_set(_testsink, "widget", widget, NULL);
     gst_element_set_state (_testpipeline, GST_STATE_PLAYING);
 }
@@ -79,6 +84,7 @@ void DNVideoManager::setVideoTest(QQuickItem* widget)
 void DNVideoManager::addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort)
 {
     VideoItem* newvideoitem = new VideoItem(this, _core, index, title, boatID, videoNo, formatNo, PCPort);
+    QQmlEngine::setObjectOwnership(newvideoitem, QQmlEngine::CppOwnership);
     if(settings->value(QString("%1/w%2/videoinfo").arg(_core->config(),QString::number(newvideoitem->index()))) == 1){
         newvideoitem->setVideoInfo(true);
     }else{
@@ -94,45 +100,65 @@ void DNVideoManager::addVideoItem(int index, QString title, int boatID, int vide
 void DNVideoManager::onPlay(VideoItem* videoItem)
 {
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
-    QString msg = "video"+QString::number(videoItem->videoNo())+" "+videoItem->videoFormat()+" "+videoItem->encoder()+" nan"+" 90"+" "+QString::number(videoItem->port());
-    if(msg == QString("")) return;
-    emit sendMsg(ip, DNTypes::Command, msg.toLocal8Bit());
+    char rawdata[7];
+
+    uint8_t videoInexraw = videoItem->videoNo();
+    uint8_t formatIndexraw = videoItem->formatIndex();
+    uint8_t encoder = videoItem->encoder() == QString("h264")? 0:1;
+    int32_t port = videoItem->port();
+
+    memcpy(rawdata, &videoInexraw, sizeof(uint8_t));
+    memcpy(rawdata+1, &formatIndexraw, sizeof(uint8_t));
+    memcpy(rawdata+2, &encoder, sizeof(uint8_t));
+
+    memcpy(rawdata+3, &port, sizeof(int32_t));
+    QByteArray msg = QByteArray(rawdata,7);
+    qDebug()<<"DNVideoManager::onPlay:send: "+msg;
+    //if(msg == QString("")) return;
+    emit sendMsg(ip, _core->configManager()->message("COMMAND"), msg);
 }
 
 void DNVideoManager::onStop(VideoItem* videoItem)
 {
+
+    if(videoItem->videoNo() == -1){
+        return;
+    }
+
     QString videoNo = QString("video")+QString::number(videoItem->videoNo());
     if(_core->boatManager()->getBoatbyID(videoItem->boatID()) == 0){
-        qDebug()<<"Fatal:: DNVideoManager::onStop, boat ID:"<< videoItem->boatID()<<" not exist";
+        qDebug()<<"\u001b[38;5;203m"<<"Fatal:: DNVideoManager::onStop, boat ID:"<< videoItem->boatID()<<" not exist"<<"\033[0m";
         return;
     }
     QHostAddress ip = QHostAddress(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
-    emit sendMsg(ip, char(DNTypes::Quit), videoNo.toLocal8Bit());
+    emit sendMsg(ip, _core->configManager()->message("QUIT"), videoNo.toLocal8Bit());
+
 }
 
 void DNVideoManager::onBoatAdded()
 {
+    /*
     for(int i = 0; i<videoList.size(); i++){
         if(videoList[i]->boatID() == -1){
-            videoList[i]->setVideoNo(0);
+            videoList[i]->setVideoIndex(0);
         }
     }
+    */
 }
 
 void DNVideoManager::onRequestFormat(VideoItem* videoItem)
 {
     QHostAddress addr(_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP());
     qDebug()<<"DNVideoManager::onRequestFormat: currentIP:"<<_core->boatManager()->getBoatbyID(videoItem->boatID())->currentIP();
-    emit sendMsg(addr, DNTypes::Format,"qformat");
+    emit sendMsg(addr, _core->configManager()->message("FORMAT"), "");
 }
 
-void DNVideoManager::setVideoFormat(int ID, QStringList videoformat)
+void DNVideoManager::setVideoFormat(int ID, QByteArray data)
 {
     for(int i = 0; i < videoList.size(); i++){
         if(videoList[i]->boatID() == ID){
             qDebug()<<"set format, index:"<<_core->boatManager()->getIndexbyID(ID);
-            videoList[i]->setVideoFormat(videoformat);
-
+            videoList[i]->setVideoFormat(data);
         }
     }
 }

@@ -1,10 +1,8 @@
 ﻿#include "boatmanager.h"
-#include "gpbcore.h"
-#ifdef USE_QML
+#include "dncore.h"
 #include <QQmlEngine>
-#endif
 
-BoatManager::BoatManager(QObject* parent, GPBCore *core): QObject(parent),
+BoatManager::BoatManager(QObject* parent, DNCore *core): QObject(parent),
     _connectionType(0)
 {
     _core = core;
@@ -24,9 +22,9 @@ BoatManager::~BoatManager()
 
 void BoatManager::init()
 {
-    #ifdef USE_QML
+
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-    #endif
+
     qDebug()<<"BoatManager::init(): Initiating...";
     settings->beginGroup(QString("%1").arg(_core->config()));
     int size = settings->beginReadArray("boat");
@@ -82,26 +80,44 @@ void BoatManager::init()
     qDebug()<<"BoatManager::init(): Initiate complete";
 }
 
-BoatItem* BoatManager::addBoat(int ID, QString boatname, QString PIP, QString SIP)
+void BoatManager::addBoat()
 {
+
+    QVector<bool> indexfree(256, true);
+        int index = 0;
+        for(int i = 0; i< size(); i++){
+            indexfree[getBoatbyIndex(i)->ID()] = false;
+
+        }
+        for(int i =0; i<256; i++){
+            if(indexfree[i] == true){
+                index = i;
+
+                break;
+            }
+        }
+
 
 
     BoatItem* boat = new BoatItem(this);
-    boat->setID(ID);
-    boat->setName(boatname);
-    boat->setPIP(PIP);
-    boat->setSIP(SIP);
+    QQmlEngine::setObjectOwnership(boat, QQmlEngine::CppOwnership);
+    boat->setID(index);
+    boat->setName("unknown");
+    boat->setPIP("");
+    boat->setSIP("");
     _boatList.append(boat);
 
     _boatListModel.append(boat);
+    emit onboatListModelChanged(&_boatListModel);
+    emit boatAdded();
 
     int current = boatItemModel->rowCount();
-    QStandardItem* item1 = new QStandardItem(boatname);
+    QStandardItem* item1 = new QStandardItem("unknown");
     QStandardItem* item2 = new QStandardItem(QString("SB"));
-    item2->setData(PIP);
+    item2->setData("");
     item2->setBackground(QBrush(QColor(120,0,0)));
     QStandardItem* item3 = new QStandardItem(QString("SB"));
-    item3->setData(SIP);
+    item3->setData("");
     item3->setBackground(QBrush(QColor(120,0,0)));
     boatItemModel->setItem(current,0,item1);
     boatItemModel->setItem(current,1,item2);
@@ -126,21 +142,22 @@ BoatItem* BoatManager::addBoat(int ID, QString boatname, QString PIP, QString SI
     settings->endArray();
     settings->beginWriteArray("boat");
     settings->setArrayIndex(size);
-    settings->setValue(QString("boatname"), boatname);
-    settings->setValue(QString("ID"), ID);
+    settings->setValue(QString("boatname"), "unknown");
+    settings->setValue(QString("ID"), index);
     settings->setValue(QString("PIP"), "");
     settings->setValue(QString("SIP"), "");
     settings->endArray();
     settings->endGroup();
 
-    return boat;
 }
 
 void BoatManager::deleteBoat(int index)
 {
     int ID = getIndexbyID(index);
+    _boatListModel.removeAt(index);
     delete _boatList[index];
     _boatList.removeAt(index);
+
 
     settings->beginGroup(QString("%1").arg(_core->config()));
     settings->remove("");
@@ -159,7 +176,7 @@ void BoatManager::deleteBoat(int index)
     settings->endArray();
     settings->endGroup();
 
-    for(int i = 0; i < _core->videoManager()->size(); i++){
+    for(int i = 0; i < _core->videoManager()->count(); i++){
         if(_core->videoManager()->getVideoItem(i)->boatID() == ID){
             _core->videoManager()->getVideoItem(i)->stop();
         }
@@ -191,6 +208,9 @@ BoatItem* BoatManager::getBoatbyID(int ID)
 
 int BoatManager::getIDbyInex(int index)
 {
+    if(_boatList.size() == 0){
+        return -1;
+    }
     return _boatList[index]->ID();
 }
 
@@ -233,7 +253,7 @@ void BoatManager::onBoatNameChange(int ID, QString newname)
     qDebug()<<"++id:"<<ID;
     boatItemModel->item(index, 0)->setText(newname);
     settings->beginGroup(QString("%1").arg(_core->config()));
-    int size = settings->beginReadArray("boat");
+    //int size = settings->beginReadArray("boat");
     settings->setArrayIndex(index);
     settings->setValue("boatname",newname);
 
@@ -254,7 +274,7 @@ void BoatManager::onIPChanged(int ID, bool primary)
     }
 
     settings->beginGroup(QString("%1").arg(_core->config()));
-    int size = settings->beginReadArray("boat");
+    settings->beginReadArray("boat");
 
     settings->setArrayIndex(index);
     settings->setValue("PIP", boat->PIP());

@@ -8,29 +8,29 @@
 #include <QQuickItem>
 #include <gst/gst.h>
 
-#ifdef DNAPI_QML
-#include "videoitem_qml.h"
-#else
 #include "videoitem.h"
-#endif
 
 
-class GPBCore;
+
+class DNCore;
 
 class DNVideoManager : public QObject
 {
     Q_OBJECT
 public:
 
-    explicit DNVideoManager(QObject *parent = nullptr, GPBCore* core = nullptr);
-    void init();
+    explicit DNVideoManager(QObject *parent = nullptr, DNCore* core = nullptr);
+
     ~DNVideoManager();
+    Q_PROPERTY(int count READ count NOTIFY coutChanged);
+    Q_INVOKABLE VideoItem* getVideoItem(int index) { return videoList[index];}
+    void init();
     void initVideo();
-    void initGstreamer(int argc, char* argv[]);
+    void initGstreamer();
     void setVideoTest(QQuickItem* widget);
     void addVideoItem(int index, QString title, int boatID, int videoNo, int formatNo, int PCPort);
-    VideoItem* getVideoItem(int index) { return videoList[index];}
-    int size() { return videoList.size();  }
+
+    int count() { return videoList.size();  }
 
 
 public slots:
@@ -38,16 +38,16 @@ public slots:
     void onStop(VideoItem* videoItem);
     void onBoatAdded();
     void onRequestFormat(VideoItem* videoItem);
-    void setVideoFormat(int ID, QStringList videoformat);
+    void setVideoFormat(int ID, QByteArray data);
     void onConnectionChanged(int connectionType);
     void connectionChanged(int ID);
 signals:
     void sendMsg(QHostAddress addr, char topic, QByteArray command);
-
+    void coutChanged(int count);
 private:
     QVector<VideoItem*> videoList;
     QSettings* settings;
-    GPBCore* _core;
+    DNCore* _core;
     GstElement *_testpipeline;
     GstElement *_testsink;
 

@@ -1,112 +1,151 @@
 ﻿#include "sensormanager.h"
-#include "gpbcore.h"
+#include "dncore.h"
 #include <QByteArray>
 #include <QVariant>
-#ifdef USE_QML
 #include <QQmlEngine>
-#endif
 
-SensorManager::SensorManager(QObject *parent, GPBCore* core)
+SensorManager::SensorManager(QObject *parent, DNCore* core)
     : QObject{parent},
     _core(core)
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     settings = new QSettings("Ezosirius", "GPlayer_v1", this);
-    _sensorTypeModel = new QStandardItemModel;
 }
 
 void SensorManager::init()
 {
-    qDebug()<<"sensorManager::init(): Initiating...";
-    settings->beginGroup(QString("%1").arg(_core->config()));
+    qDebug()<<"sensorManager:: Initiating...";
 
-    for(int i = 0; i< _core->configManager()->sensorTypeList().size(); i++){
-        QString name = _core->configManager()->sensorTypeList()[i].name();
-        QStandardItem* item = new QStandardItem(name);
-        _sensorTypeModel->setItem(i,0,item);
-        qDebug()<<"  - Add sensor name: "<<name;
+    QVector<SensorGroup> _sensorGroupList = _core->configManager()->sensorGropList(); //從configmanager取得sensorgrouplist
+    //將_sensorGroupList轉存為_sensorGroupListModel
+
+    for(int i = 0; i< _sensorGroupList.count(); i++){
+        DNQmlObjectListModel* model = new DNQmlObjectListModel(this); // model為sensorgrouplist其中一個sensorGroup
+
+        for(int j = 0; j < _sensorGroupList[i].count(); j++){
+            model->append(_sensorGroupList[i][j]);
+
+        }
+        _sensorGroupListModel.append(model);
     }
+    SensorItem* sensor = qobject_cast<SensorItem*> (_sensorGroupListModel[4]->get(1));
+    qDebug()<<"type:"<<sensor->value().dataType();
+    qDebug()<<"sensorManager:: Initiate complete";
+}
 
-    int size = settings->beginReadArray("sensor");
+DNQmlObjectListModel* SensorManager::getSensorModel(int index)
+{
 
-    for(int i = 0; i < size; i++){
-        settings->setArrayIndex(i);
-        int boatID = settings->value("boatID").toInt();
-        DNMetaData::ValueType_t sensorType = DNMetaData::intToType(settings->value("sensorType").toInt());
-        QString sensorName = settings->value("sensorName").toString();
-        SensorItem* item = new SensorItem(this);
-        item->setBoatID(boatID);
-        item->setName(sensorName);
-        addSensor(item);
-
+    if(index<_sensorGroupListModel.size()){
+        return _sensorGroupListModel[index];
+    }else{
+        qDebug()<<"**Fatal: sensorManager:: getSensorModel: index out of range";
+        return nullptr;
     }
-    settings->endArray();
-    settings->endGroup();
-    qDebug()<<"sensorManager::init(): Initiate complete";
 }
 
-void SensorManager::addSensor(SensorItem* sensorItem)
-{
-    _sensorList.append(sensorItem);
-}
-
-void SensorManager::deleteSensor(int index)
-{
-    _sensorList.remove(index);
-}
 
 void SensorManager::onSensorMsg(int ID, QByteArray data)
 {
 
-    DNMetaData::ValueType_t datatype;
-    int sensortype;
+    //DNMetaData::ValueType_t datatype;
+    //qDebug()<<data;
+    int pos = 0; //byte readed
+
+    uint8_t sensorGroup;
+    DNQmlObjectListModel* sensorGroupModel;
     char* cdata = data.data();
-    if(_sensorList.size() == 0) return;
-    int readorder = 0;
-    for(int i = 0; i < data.size()/4; i++){
-        if(readorder == 0){
-            memcpy(&sensortype, cdata, sizeof(int));
-            qDebug()<<"SensorManager:: on msg: boat ID:"<<ID;
-            qDebug()<<"SensorManager:: on msg: size:"<<data.size()/4<<"bytes";
-            qDebug()<<"SensorManager:: on msg: sensor type:"<<sensortype;
-            cdata+=4;
-        }else if(readorder == 1){
-            //QByteArray sensordata(data.data()+i,1);
-            readorder = -1;
-            if(sensortype >= _core->configManager()->sensorTypeList().size()){
-                qDebug()<<"**Fatal SensorManager::Sensor type out of range, type index:"<<sensortype;
-                return;
-            }
-            DNValue value = _core->configManager()->sensorTypeList()[sensortype];
-            if(value.dataType() == DNMetaData::valueTypeUint32){
-                int i;
-                memcpy(&i, cdata, sizeof(int));
-                value.setValue(QVariant(i));
-                qDebug()<<"get int data: "<<i;
-                cdata+=4;
-            }else if(value.dataType() == DNMetaData::valueTypeFloat){
-                float f;
-                memcpy(&f, cdata, sizeof(float));
-                value.setValue(QVariant(f));
-                qDebug()<<"get float data: "<<f;
-                cdata+=4;
-            }else if(value.dataType() == DNMetaData::valueTypeBool){
-                int i;
-                memcpy(&i, cdata, sizeof(int));
-                value.setValue(QVariant(i));
-                qDebug()<<"get bool : "<<i;
-                cdata+=4;
-            }else{
-                qDebug()<<"**Fatal SensorManager::Data type out of range, type index:"<<value.dataType();
-                return;
-            }
-            for(int i = 0; i< _sensorList.size(); i++){
-                qDebug()<<"sensor list sensor-"<<i<<" : sensorType:"<<_sensorList[i]->value().SensorType()<<" , ID: "<<_sensorList[i]->boatID();
-                if(_sensorList[i]->boatID() == ID && _sensorList[i]->value().SensorType() == sensortype){
-                    _sensorList[i]->setValue(value);
-                }
-            }
+    memcpy(&sensorGroup, cdata+pos, sizeof(uint8_t));
+    pos+=sizeof(uint8_t);
+    if(_sensorGroupListModel.size() < sensorGroup){
+        qDebug()<<"**Fatal: sensorManager:: onSensorMsg: incoming sensorGroup index out of range";
+        return;
+    }else{
+         sensorGroupModel = _sensorGroupListModel[sensorGroup];
+    }
+
+    while(data.size()>pos){
+        //get sensor type
+        int8_t sensortype_i;
+        memcpy(&sensortype_i, cdata+pos, sizeof(int8_t));
+        //qDebug()<<sensortype_i;
+        pos+=sizeof(uint8_t);
+        if(sensortype_i >= sensorGroupModel->count()){
+            qDebug()<<"**Fatal: sensorManager:: onSensorMsg: incoming sensorType index out of range";
+            return;
+        }
+        SensorItem* sensor = qobject_cast<SensorItem*> (sensorGroupModel->get(sensortype_i));
+
+        //get sensor value
+
+        if(sensor->value().dataType() == DNMetaData::valueTypeUint8){
+            uint8_t value;
+            memcpy(&value, cdata+pos, sizeof(uint8_t));
+            pos+=sizeof(uint8_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint8)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeInt8){
+            int8_t value;
+            memcpy(&value, cdata+pos, sizeof(int8_t));
+            pos+=sizeof(int8_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(int8)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeUint16){
+            uint16_t value;
+            memcpy(&value, cdata+pos, sizeof(uint16_t));
+            pos+=sizeof(uint16_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint16)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeInt16){
+            int16_t value;
+            memcpy(&value, cdata+pos, sizeof(int16_t));
+            pos+=sizeof(int16_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(int16)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeUint32){
+            uint32_t value;
+            memcpy(&value, cdata+pos, sizeof(uint32_t));
+            pos+=sizeof(uint32_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint32)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeInt32){
+            int32_t value;
+            memcpy(&value, cdata+pos, sizeof(int32_t));
+            pos+=sizeof(int32_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(int32)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeUint64){
+            uint64_t value;
+            memcpy(&value, cdata+pos, sizeof(uint64_t));
+            pos+=sizeof(uint64_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint64)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeInt64){
+            int64_t value;
+            memcpy(&value, cdata+pos, sizeof(int64_t));
+            pos+=sizeof(int64_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(int64)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeDouble){
+            double value;
+            memcpy(&value, cdata+pos, sizeof(double));
+            pos+=sizeof(double);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(double)";
+            sensor->setValue(DNValue(value));
+        }else if(sensor->value().dataType() == DNMetaData::valueTypeFloat){
+            float value;
+            memcpy(&value, cdata+pos, sizeof(float));
+            pos+=sizeof(float);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(float)";
+            sensor->setValue(DNValue(value));
+        }else{
+            int value;
+            memcpy(&value, cdata+pos, sizeof(uint32_t));
+            pos+=sizeof(uint32_t);
+            //qDebug()<<"["<<sensortype_i<<"]"<<":"<<value<<"(uint32xx)";
+            sensor->setValue(DNValue(value));
         }
 
-        readorder ++;
+
     }
 }

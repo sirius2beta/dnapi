@@ -54,14 +54,20 @@ void BoatItem::setID(int ID)
 
 void BoatItem::setPIP(QString PIP)
 {
-    _PIP = PIP;
-    emit IPChanged(_ID, true);
+    if(PIP != _PIP){
+        _PIP = PIP;
+        emit IPChanged(_ID, true);
+        emit PIPChanged(PIP);
+    }
 }
 
 void BoatItem::setSIP(QString SIP)
 {
-    _SIP = SIP;
-    emit IPChanged(_ID, false);
+    if(SIP != _SIP){
+        _SIP = SIP;
+        emit IPChanged(_ID, false);
+        emit SIPChanged(SIP);
+    }
 }
 
 void BoatItem::setOS(int OS)
@@ -137,12 +143,15 @@ void BoatItem::connect(bool isPrimary)
 
     if(isPrimary){
         _primaryConnected = true;
+        emit primaryConnectedChanged(true);
     }else{
         _secondaryConnected = true;
+        emit secondaryConnectedChanged(true);
     }
-
-    qDebug()<<"BoatItem::connect "<<(isPrimary?"Primary":"Secondary")<<" "<<QString::number(_ID);
     emit connectStatusChanged(_ID, isPrimary, true);
+    qDebug()<<"BoatItem::connect "<<(isPrimary?"Primary":"Secondary")<<" "<<QString::number(_ID);
+
+
 
 }
 
@@ -177,15 +186,21 @@ void BoatItem::disconnect(bool isPrimary)
     }
 
     qDebug()<<"BoatItem::disconnect "<<(isPrimary?"Primary":"Secondary")<<" "<<QString::number(_ID);
+    if(isPrimary){
+        emit primaryConnectedChanged(false);
+    }else{
+        emit secondaryConnectedChanged(false);
+    }
     emit connectStatusChanged(_ID, isPrimary, false);
 }
 
-Device& BoatItem::getDevbyID(int ID)
+Device* BoatItem::getDevbyID(int ID)
 {
 
     for(int i = 0; i<devices.size(); i++){
         if(devices[i].ID == ID){
-            return devices[i];
+            return &devices[i];
         }
     }
+    return 0;
 }
