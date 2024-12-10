@@ -84,7 +84,7 @@ Item {
 
 
         Repeater{
-            model:5
+            model:10
             Rectangle{
                 id:_detectbox2
                 Rectangle{
@@ -126,10 +126,15 @@ Item {
 
                 color: "#66660000"
                 visible: isFull
-                x:(parent.width-parent.height)/2 + parseInt(DeNovoViewer.sensorManager.detection.get(index*6+1).displayValue)* parent.height/416
-                y:parseInt(DeNovoViewer.sensorManager.detection.get(index*6+2).displayValue)* parent.height/416
-                width: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+3).displayValue))* parent.height/416
-                height: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+4).displayValue))* parent.height/416
+                x:(parent.width-parent.height*4/3)/2 + parseInt(DeNovoViewer.sensorManager.detection.get(index*6+1).displayValue)* parent.height/640*(4/3)
+                y:parseInt(DeNovoViewer.sensorManager.detection.get(index*6+2).displayValue)* parent.height/480
+                width: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+3).displayValue))* (parent.height*4/3)/640
+                height: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+4).displayValue))* parent.height/480
+                //x:(parent.width-parent.height)/2 + parseInt(DeNovoViewer.sensorManager.detection.get(index*6+1).displayValue)* parent.height/416
+                //y:parseInt(DeNovoViewer.sensorManager.detection.get(index*6+2).displayValue)* parent.height/416
+                //width: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+3).displayValue))* parent.height/416
+                //height: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+4).displayValue))* parent.height/416
+
                 Rectangle{
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
