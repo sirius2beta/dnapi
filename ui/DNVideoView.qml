@@ -81,8 +81,8 @@ Item {
                 source: "qrc:/res/videoMiddleIndicater.png"
             }
         }
-
-
+//AI detectionbox
+/*
         Repeater{
             model:10
             Rectangle{
@@ -130,10 +130,6 @@ Item {
                 y:parseInt(DeNovoViewer.sensorManager.detection.get(index*6+2).displayValue)* parent.height/480
                 width: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+3).displayValue))* (parent.height*4/3)/640
                 height: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+4).displayValue))* parent.height/480
-                //x:(parent.width-parent.height)/2 + parseInt(DeNovoViewer.sensorManager.detection.get(index*6+1).displayValue)* parent.height/416
-                //y:parseInt(DeNovoViewer.sensorManager.detection.get(index*6+2).displayValue)* parent.height/416
-                //width: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+3).displayValue))* parent.height/416
-                //height: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+4).displayValue))* parent.height/416
 
                 Rectangle{
                     anchors.verticalCenter: parent.verticalCenter
@@ -172,7 +168,7 @@ Item {
             }
         }
 
-
+*/
         Rectangle{
             id: _toggle
             anchors.bottom: _control.top

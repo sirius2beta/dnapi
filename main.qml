@@ -271,7 +271,7 @@ Window {
     Component.onCompleted: {
         DeNovoViewer.controlManager.controls.get(0).setField(0,1000)
         dnvalue = DeNovoViewer.controlManager.controls.get(0).getField(0);
-        //console.log(parseInt(DeNovoViewer.sensorManager.mav1Model.get(1).displayValue))
+        console.log(parseInt(DeNovoViewer.sensorManager.mav1Model.get(1).displayValue))
         //console.log(parseInt(DeNovoViewer.sensorManager.mav1Model.get(0).displayValue))
 
     }
