@@ -57,6 +57,7 @@ Window {
         ColumnLayout{
             anchors.fill:parent
             anchors.margins: 5
+
             Button {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 70
@@ -65,6 +66,7 @@ Window {
                     id: _boatManagerIcon
                     source: "res/boatManager.png"
                 }
+                onClicked: popup.open()
 
 
             }
@@ -78,6 +80,23 @@ Window {
             Item {
                 Layout.fillHeight: true
             }
+        }
+        Popup {
+                id: popup
+                x: 50
+                y: 10
+                width: 200
+                height: 50
+                modal: true
+                focus: true
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+                padding: 10
+                contentItem: Text {
+                    text: "Version 3.0.0"
+                    font.family: "Segoe UI"
+                    font.pixelSize: 20
+                    color:"white"
+                }
         }
     }
 
@@ -240,16 +259,7 @@ Window {
 
 
     }
-    Popup {
-            id: popup
-            x: 100
-            y: 100
-            width: 200
-            height: 300
-            modal: true
-            focus: true
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-    }
+
 
     Item {
         id: overlay
