@@ -57,8 +57,10 @@ Item {
     Rectangle{
         id: background
         anchors.fill: parent
-        color: isFull?"#333333":"#000000"
-        radius: isFull? 10: 0
+        color: "#000000"
+        //radius: isFull? 10: 0
+        border.width: isFull?0:2
+        border.color: "#333333"
         clip: true
         property real heightRatio: height/416
         GstGLVideoItem {
@@ -178,7 +180,7 @@ Item {
             width:100
             radius:8
             color: "#333333"
-            visible: isFull
+            visible: false
             Rectangle{
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
@@ -205,13 +207,14 @@ Item {
 
         Rectangle{
             id: _control
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.bottom: quicktab.top
+            anchors.horizontalCenter: parent.horizontalCenter
             height:0
+            width:600
             color: "#333333"
             visible: isFull
             clip: true
+            radius:8
             Button{
                 id: _playButton
                 anchors.right: parent.right
@@ -318,7 +321,8 @@ Item {
             }
         }
 
-    }
+
+
 
     VideoView{
         visible: isFull
@@ -326,6 +330,21 @@ Item {
         rollAngle:-parseFloat(DeNovoViewer.sensorManager.mav1Model.get(6).displayValue)*57.29
         pitch:parseFloat(DeNovoViewer.sensorManager.mav1Model.get(5).displayValue)*57.29
     }
+    QuickTab{
+        id: quicktab
+        visible: isFull
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height:90
+        video_no: _videoNo.currentText
+        quality: _qualityNo.currentText
+        port: _index+5700
+        videoItem: videoItem
+
+    }
+
+}
 
     Component.onCompleted: {
         setIndex(_index)

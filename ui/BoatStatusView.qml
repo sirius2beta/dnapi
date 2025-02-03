@@ -8,8 +8,9 @@ import DeNovoViewer.Boat 1.0
 
 Item {
     Layout.preferredWidth: 300
-    Layout.fillHeight: true
+    Layout.preferredHeight: 500
     Layout.alignment: Qt.AlignLeft
+
     ListModel {
         id: demoModel2
         ListElement {
@@ -137,7 +138,6 @@ Item {
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        anchors.leftMargin: 15
 
         radius:5
         color: "#292b2d"
@@ -165,7 +165,7 @@ Item {
             anchors.right: parent.right
             anchors.left: parent.left
             anchors.bottom: parent.bottom
-            contentHeight: 1000
+            contentHeight: 500
             clip: true
 
 
