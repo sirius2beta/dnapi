@@ -160,130 +160,125 @@ Item {
                 color:"white"
             }
         }
-        ScrollView{
+
+
+        Item {
             anchors.top: _title.bottom
             anchors.right: parent.right
             anchors.left: parent.left
             anchors.bottom: parent.bottom
-            contentHeight: 500
-            clip: true
 
-
-
-            Item {
+            ColumnLayout{
                 anchors.fill: parent
-
-                ColumnLayout{
-                    anchors.fill: parent
-                    Text {
-                        text: "Cabin"
-                        Layout.preferredHeight: 10
-                        font.family: "Segoe UI"
-                        font.pixelSize: 16
-                        color:"#eeeeee"
-                    }
-                    ToolSeparator {
-                        orientation: Qt.Horizontal
-                        Layout.fillWidth: true
-                        bottomPadding: 0
-                    }
-                    ListView{
-                        topMargin: 0
-                        bottomMargin: 0
-                        Layout.preferredWidth: 250
-                        Layout.preferredHeight: 50
-                        id: _sensorListView
-                        clip: true
-                        model: DeNovoViewer.sensorManager.cabinModel
-                        delegate: sensorDelegate
-
-                    }
-                    Text {
-                        topPadding: 0
-                        text: "Battery"
-
-                        Layout.preferredHeight: 10
-                        font.family: "Segoe UI"
-                        font.pixelSize: 16
-                        color:"#eeeeee"
-                    }
-                    ToolSeparator {
-                        orientation: Qt.Horizontal
-                        Layout.fillWidth: true
-                        bottomPadding: 0
-                    }
-                    ListView{
-                        spacing: 2
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 90
-                        id: _battery0ListView
-                        clip: true
-                        model: DeNovoViewer.sensorManager.battery0Model
-                        delegate: sensorDelegate2
-
-                    }
-                    Text {
-                        topPadding: 0
-                        text: "KBest"
-
-                        Layout.preferredHeight: 10
-                        font.family: "Segoe UI"
-                        font.pixelSize: 16
-                        color:"#eeeeee"
-                    }
-                    ToolSeparator {
-                        orientation: Qt.Horizontal
-                        Layout.fillWidth: true
-                        bottomPadding: 0
-                    }
-                    ListView{
-                        spacing: 2
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 90
-                        id: _KbestView
-                        clip: true
-                        model: DeNovoViewer.sensorManager.kbestModel
-                        delegate: sensorDelegate2
-
-                    }
-                    Text {
-                        topPadding: 0
-                        text: "ARDUSIMPLE"
-
-                        Layout.preferredHeight: 10
-                        font.family: "Segoe UI"
-                        font.pixelSize: 16
-                        color:"#eeeeee"
-                    }
-                    ToolSeparator {
-                        orientation: Qt.Horizontal
-                        Layout.fillWidth: true
-                        bottomPadding: 0
-                    }
-                    ListView{
-                        spacing: 2
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 110
-                        id: _gpsModelView
-                        clip: true
-                        model: DeNovoViewer.sensorManager.ardusimpleModel
-                        delegate: sensorDelegate2
-
-                    }
-                    Item{
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                    }
+                Text {
+                    text: "Cabin"
+                    Layout.preferredHeight: 10
+                    font.family: "Segoe UI"
+                    font.pixelSize: 16
+                    color:"#eeeeee"
                 }
+                ToolSeparator {
+                    orientation: Qt.Horizontal
+                    Layout.fillWidth: true
+                    bottomPadding: 0
+                }
+                ListView{
+                    topMargin: 0
+                    bottomMargin: 0
+                    Layout.preferredWidth: 250
+                    Layout.preferredHeight: 50
+                    id: _sensorListView
+                    clip: true
+                    model: DeNovoViewer.sensorManager.cabinModel
+                    delegate: sensorDelegate
 
+                }
+                Text {
+                    topPadding: 0
+                    text: "Battery"
 
+                    Layout.preferredHeight: 10
+                    font.family: "Segoe UI"
+                    font.pixelSize: 16
+                    color:"#eeeeee"
+                }
+                ToolSeparator {
+                    orientation: Qt.Horizontal
+                    Layout.fillWidth: true
+                    bottomPadding: 0
+                }
+                ListView{
+                    spacing: 2
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 90
+                    id: _battery0ListView
+                    clip: true
+                    model: DeNovoViewer.sensorManager.battery0Model
+                    delegate: sensorDelegate2
 
+                }
+                Text {
+                    topPadding: 0
+                    text: "KBest"
+
+                    Layout.preferredHeight: 10
+                    font.family: "Segoe UI"
+                    font.pixelSize: 16
+                    color:"#eeeeee"
+                }
+                ToolSeparator {
+                    orientation: Qt.Horizontal
+                    Layout.fillWidth: true
+                    bottomPadding: 0
+                }
+                ListView{
+                    spacing: 2
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 90
+                    id: _KbestView
+                    clip: true
+                    model: DeNovoViewer.sensorManager.kbestModel
+                    delegate: sensorDelegate2
+
+                }
+                Text {
+                    topPadding: 0
+                    text: "ARDUSIMPLE"
+
+                    Layout.preferredHeight: 10
+                    font.family: "Segoe UI"
+                    font.pixelSize: 16
+                    color:"#eeeeee"
+                }
+                ToolSeparator {
+                    orientation: Qt.Horizontal
+                    Layout.fillWidth: true
+                    bottomPadding: 0
+                }
+                ListView{
+                    spacing: 2
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 110
+                    id: _gpsModelView
+                    clip: true
+                    model: DeNovoViewer.sensorManager.ardusimpleModel
+                    delegate: sensorDelegate2
+
+                }
+                Item{
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
             }
 
 
 
-
         }
+
+
+
+
+
 
 
     }
