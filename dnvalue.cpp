@@ -150,14 +150,12 @@ QByteArray DNValue::bytesData()
         memcpy(str1, &str2, sizeof(double));
         return QByteArray(str1,sizeof(uint));
     }else if(_type == DNMetaData::valueTypeBool){
-        if(_rawValue.toBool()){
-           return QByteArray(1,sizeof(bool));
-        }else{
-           return QByteArray(0, sizeof(bool));
-        }
-    }else{
-        qDebug()<<"DNValue::Fatal error: no data type "<<_type;
+        char str1[sizeof(float)];
+        bool str2 = _rawValue.toBool();
+        memcpy(str1, &str2, sizeof(bool));
+        return QByteArray(str1,sizeof(bool));
     }
+    return QByteArray();
 }
 
 DNValue::~DNValue()

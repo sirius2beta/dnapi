@@ -9,7 +9,7 @@ import DeNovoViewer.Boat 1.0
 import DenovoUI 1.0
 
 
-import org.freedesktop.gstreamer.GLVideoItem 1.0
+import org.freedesktop.gstreamer.Qt6GLVideoItem
 
 Item {
     id: _root
@@ -57,13 +57,11 @@ Item {
     Rectangle{
         id: background
         anchors.fill: parent
-        color: "#000000"
-        //radius: isFull? 10: 0
-        border.width: isFull?0:2
-        border.color: "#333333"
+        color: isFull?"#333333":"#000000"
+        radius: isFull? 10: 0
         clip: true
         property real heightRatio: height/416
-        GstGLVideoItem {
+        GstGLQt6VideoItem {
             id: video
             objectName: videoObjectName
             anchors.centerIn: parent
@@ -83,8 +81,8 @@ Item {
                 source: "qrc:/res/videoMiddleIndicater.png"
             }
         }
-//AI detectionbox
-/*
+
+
         Repeater{
             model:10
             Rectangle{
@@ -132,6 +130,10 @@ Item {
                 y:parseInt(DeNovoViewer.sensorManager.detection.get(index*6+2).displayValue)* parent.height/480
                 width: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+3).displayValue))* (parent.height*4/3)/640
                 height: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+4).displayValue))* parent.height/480
+                //x:(parent.width-parent.height)/2 + parseInt(DeNovoViewer.sensorManager.detection.get(index*6+1).displayValue)* parent.height/416
+                //y:parseInt(DeNovoViewer.sensorManager.detection.get(index*6+2).displayValue)* parent.height/416
+                //width: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+3).displayValue))* parent.height/416
+                //height: (parseInt(DeNovoViewer.sensorManager.detection.get(index*6+4).displayValue))* parent.height/416
 
                 Rectangle{
                     anchors.verticalCenter: parent.verticalCenter
@@ -170,7 +172,7 @@ Item {
             }
         }
 
-*/
+
         Rectangle{
             id: _toggle
             anchors.bottom: _control.top
@@ -180,7 +182,7 @@ Item {
             width:100
             radius:8
             color: "#333333"
-            visible: false
+            visible: isFull
             Rectangle{
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
@@ -207,14 +209,13 @@ Item {
 
         Rectangle{
             id: _control
-            anchors.bottom: quicktab.top
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
             height:0
-            width:600
             color: "#333333"
             visible: isFull
             clip: true
-            radius:8
             Button{
                 id: _playButton
                 anchors.right: parent.right
@@ -321,8 +322,7 @@ Item {
             }
         }
 
-
-
+    }
 
     VideoView{
         visible: isFull
@@ -330,21 +330,6 @@ Item {
         rollAngle:-parseFloat(DeNovoViewer.sensorManager.mav1Model.get(6).displayValue)*57.29
         pitch:parseFloat(DeNovoViewer.sensorManager.mav1Model.get(5).displayValue)*57.29
     }
-    QuickTab{
-        id: quicktab
-        visible: isFull
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height:90
-        video_no: _videoNo.currentText
-        quality: _qualityNo.currentText
-        port: _index+5700
-        videoItem: videoItem
-
-    }
-
-}
 
     Component.onCompleted: {
         setIndex(_index)

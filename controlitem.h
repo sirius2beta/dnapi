@@ -11,7 +11,7 @@ class ControlItem : public QObject
     Q_OBJECT
 public:
     Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString boatID READ boatID CONSTANT)
+    Q_PROPERTY(int boatID READ boatID CONSTANT)
     explicit ControlItem(QObject *parent, QString name, int controlType, QVector<DNValue> fields);
     ControlItem(const ControlItem& other, QObject *parent = nullptr);
     const ControlItem& operator = (const ControlItem& other);

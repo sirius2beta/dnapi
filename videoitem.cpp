@@ -5,7 +5,6 @@
 #include <QQuickWindow>
 #include <QQuickItem>
 #include <QQmlEngine>
-#include <QSound>
 
 
 
@@ -49,10 +48,10 @@ void VideoItem::initVideo(QQuickItem *widget)
     QString gstcmd;
      if(_encoder == "h264"){
          gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtph264depay ! avdec_h264 ! videoconvert  !\
-          glupload ! glcolorconvert ! qmlglsink name=sink").arg(QString::number(_PCPort));
+          glupload ! glcolorconvert ! qml6glsink name=sink").arg(QString::number(_PCPort));
      }else{
           gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtpjpegdepay ! jpegdec ! videoconvert  !\
-          glupload ! qmlglsink name=sink").arg(QString::number(_PCPort));
+          glupload ! qml6glsink name=sink").arg(QString::number(_PCPort));
      }
 
     if(!_isPlaying){
@@ -237,10 +236,10 @@ void VideoItem::setEncoder(QString encoder)
 
         if(_encoder == "h264"){
             gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtph264depay ! avdec_h264 ! videoconvert  !\
-             glimagesink name=mySink2").arg(QString::number(_PCPort));
+             qml6glsink name=mySink2").arg(QString::number(_PCPort));
         }else{
              gstcmd = QString("udpsrc port=%1 ! application/x-rtp, media=video, clock-rate=90000, payload=96 ! rtpjpegdepay ! jpegdec ! videoconvert  !\
-             glimagesink name=mySink2").arg(QString::number(_PCPort));
+             qml6glsink name=mySink2").arg(QString::number(_PCPort));
         }
         gst_element_set_state (_pipeline, GST_STATE_NULL);
 
